@@ -1,0 +1,91 @@
+classDiagram
+    direction TB
+
+    class Accesorio {
+        +id: int
+        +sku: str
+        +nombre: str
+        +categoria: CategoriaAccesorio
+        +descripcion: str
+        +precio_cop: int
+        +stock: int
+        +imagen_url: str
+        +motos_compatibles: list~Moto~
+        +hay_stock(cantidad: int) bool
+        +reservar(cantidad: int) None
+        +liberar(cantidad: int) None
+    }
+
+    class CategoriaAccesorio {
+        <<enumeration>>
+        CASCO
+        CHAQUETA
+        GUANTES
+        MALETA
+        MANTENIMIENTO
+    }
+
+    class Pedido {
+        +id: int
+        +usuario: Usuario
+        +direccion: Direccion
+        +items: list~ItemPedido~
+        +estado: EstadoPedido
+        +subtotal_cop: int
+        +costo_envio_cop: int
+        +creado_en: datetime
+        +reservado_hasta: datetime
+        +total_cop() int
+        +reserva_vencida(ahora: datetime) bool
+        +marcar_pagado() None
+        +expirar() None
+    }
+
+    class ItemPedido {
+        +accesorio: Accesorio
+        +cantidad: int
+        +precio_unitario_cop: int
+        +subtotal() int
+    }
+
+    class EstadoPedido {
+        <<enumeration>>
+        PENDIENTE_PAGO
+        PAGADO
+        EXPIRADO
+    }
+
+    class Direccion {
+        +id: int
+        +usuario: Usuario
+        +municipio: Municipio
+        +detalle: str
+        +telefono_contacto: str
+    }
+
+    class Municipio {
+        +codigo: str
+        +nombre: str
+        +departamento: Departamento
+    }
+
+    class Departamento {
+        +codigo: str
+        +nombre: str
+        +costo_envio_cop: int
+        +dias_envio: int
+    }
+
+    class Moto
+    class Usuario
+
+    Accesorio --> CategoriaAccesorio
+    Accesorio "*" -- "*" Moto : compatible con
+    Pedido *-- "1..*" ItemPedido
+    ItemPedido "*" --> "1" Accesorio
+    Pedido --> EstadoPedido
+    Pedido "*" --> "1" Usuario : lo hace
+    Pedido "*" --> "1" Direccion : se envia a
+    Direccion "*" --> "1" Usuario
+    Direccion "*" --> "1" Municipio
+    Municipio "*" --> "1" Departamento

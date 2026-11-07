@@ -1,0 +1,53 @@
+classDiagram
+    direction LR
+
+    class DominioError {
+        <<exception>>
+        +mensaje: str
+    }
+
+    class EntidadNoEncontradaError {
+        <<exception>>
+    }
+    class MotoNoDisponibleError {
+        <<exception>>
+    }
+    class CreditoInvalidoError {
+        <<exception>>
+    }
+    class TestDriveInvalidoError {
+        <<exception>>
+    }
+    class SinAsesorDisponibleError {
+        <<exception>>
+    }
+    class TransicionInvalidaError {
+        <<exception>>
+    }
+    class StockInsuficienteError {
+        <<exception>>
+    }
+    class PedidoInvalidoError {
+        <<exception>>
+    }
+    class ReservaVencidaError {
+        <<exception>>
+    }
+    class PagoInvalidoError {
+        <<exception>>
+    }
+    class FirmaInvalidaError {
+        <<exception>>
+    }
+
+    DominioError <|-- EntidadNoEncontradaError
+    DominioError <|-- MotoNoDisponibleError
+    DominioError <|-- CreditoInvalidoError
+    DominioError <|-- TestDriveInvalidoError
+    DominioError <|-- SinAsesorDisponibleError
+    DominioError <|-- TransicionInvalidaError
+    DominioError <|-- StockInsuficienteError
+    DominioError <|-- PedidoInvalidoError
+    DominioError <|-- ReservaVencidaError
+    DominioError <|-- PagoInvalidoError
+    DominioError <|-- FirmaInvalidaError

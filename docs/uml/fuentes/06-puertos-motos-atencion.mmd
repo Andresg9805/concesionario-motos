@@ -1,0 +1,91 @@
+classDiagram
+    direction LR
+
+    class RepositorioMotos {
+        <<interface>>
+        +listar(filtros: FiltrosMoto) list~Moto~
+        +buscar_por_id(id: int) Moto
+        +guardar(moto: Moto) Moto
+        +eliminar(id: int) None
+    }
+
+    class RepositorioMarcas {
+        <<interface>>
+        +listar() list~Marca~
+        +buscar_por_id(id: int) Marca
+    }
+
+    class RepositorioParametros {
+        <<interface>>
+        +obtener() ParametrosCosto
+        +guardar(parametros: ParametrosCosto) ParametrosCosto
+    }
+
+    class RepositorioBusquedas {
+        <<interface>>
+        +guardar(busqueda: Busqueda) Busqueda
+    }
+
+    class RepositorioClientes {
+        <<interface>>
+        +guardar(cliente: Cliente) Cliente
+        +buscar_por_correo(correo: str) Cliente
+    }
+
+    class RepositorioUsuarios {
+        <<interface>>
+        +guardar(usuario: Usuario) Usuario
+        +buscar_por_correo(correo: str) Usuario
+        +listar_asesores(marca_id: int) list~Usuario~
+    }
+
+    class RepositorioCotizaciones {
+        <<interface>>
+        +guardar(cotizacion: Cotizacion) Cotizacion
+        +buscar_por_codigo(codigo: str) Cotizacion
+        +listar_por_asesor(asesor_id: int) list~Cotizacion~
+        +listar_por_usuario(usuario_id: int) list~Cotizacion~
+        +contar_abiertas_por_asesor(marca_id: int) dict
+    }
+
+    class RepositorioTestDrives {
+        <<interface>>
+        +guardar(test_drive: TestDrive) TestDrive
+        +buscar_por_codigo(codigo: str) TestDrive
+        +listar_pendientes(asesor_id: int) list~TestDrive~
+    }
+
+    class ProveedorTasaCambio {
+        <<interface>>
+        +obtener_trm() TasaCambio
+    }
+
+    class FiltrosMoto {
+        <<value object>>
+        +marca_id: int
+        +tipo: TipoMoto
+        +categoria_licencia: CategoriaLicencia
+        +precio_min: int
+        +precio_max: int
+    }
+
+    class Moto
+    class Marca
+    class ParametrosCosto
+    class Busqueda
+    class Cliente
+    class Usuario
+    class Cotizacion
+    class TestDrive
+    class TasaCambio
+
+    RepositorioMotos ..> Moto
+    RepositorioMotos ..> FiltrosMoto
+    RepositorioMarcas ..> Marca
+    RepositorioParametros ..> ParametrosCosto
+    RepositorioBusquedas ..> Busqueda
+    RepositorioClientes ..> Cliente
+    RepositorioUsuarios ..> Usuario
+    RepositorioCotizaciones ..> Cotizacion
+    RepositorioTestDrives ..> TestDrive
+    ProveedorTasaCambio ..> TasaCambio

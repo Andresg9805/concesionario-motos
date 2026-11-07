@@ -1,0 +1,72 @@
+classDiagram
+    direction LR
+
+    class RepositorioAccesorios {
+        <<interface>>
+        +listar(categoria: CategoriaAccesorio, moto_id: int) list~Accesorio~
+        +buscar_por_id(id: int) Accesorio
+        +guardar(accesorio: Accesorio) Accesorio
+        +eliminar(id: int) None
+    }
+
+    class RepositorioUbicaciones {
+        <<interface>>
+        +listar_departamentos() list~Departamento~
+        +listar_municipios(departamento_codigo: str) list~Municipio~
+        +buscar_municipio(codigo: str) Municipio
+    }
+
+    class RepositorioDirecciones {
+        <<interface>>
+        +guardar(direccion: Direccion) Direccion
+        +buscar_por_id(id: int) Direccion
+        +listar_por_usuario(usuario_id: int) list~Direccion~
+    }
+
+    class RepositorioPedidos {
+        <<interface>>
+        +crear_con_reserva(pedido: Pedido) Pedido
+        +buscar_por_id(id: int) Pedido
+        +guardar(pedido: Pedido) Pedido
+        +listar_por_usuario(usuario_id: int) list~Pedido~
+        +listar_vencidos(ahora: datetime) list~Pedido~
+    }
+
+    class RepositorioPagos {
+        <<interface>>
+        +guardar(pago: Pago) Pago
+        +buscar_por_referencia(referencia: str) Pago
+        +registrar_evento(pago_id: int, checksum: str) bool
+    }
+
+    class RepositorioEnvios {
+        <<interface>>
+        +guardar(envio: Envio) Envio
+        +buscar_por_pedido(pedido_id: int) Envio
+        +listar() list~Envio~
+    }
+
+    class PasarelaPago {
+        <<interface>>
+        +datos_para_widget(pago: Pago) dict
+        +leer_evento(cuerpo: dict) ResultadoPago
+        +consultar_transaccion(transaccion_id: str) ResultadoPago
+    }
+
+    class Accesorio
+    class Departamento
+    class Municipio
+    class Direccion
+    class Pedido
+    class Pago
+    class Envio
+    class ResultadoPago
+
+    RepositorioAccesorios ..> Accesorio
+    RepositorioUbicaciones ..> Departamento
+    RepositorioUbicaciones ..> Municipio
+    RepositorioDirecciones ..> Direccion
+    RepositorioPedidos ..> Pedido
+    RepositorioPagos ..> Pago
+    RepositorioEnvios ..> Envio
+    PasarelaPago ..> ResultadoPago
