@@ -1,0 +1,104 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+' Definición de actores
+actor "Visitante" as Visitante
+actor "Cliente" as Cliente
+actor "Asesor" as Asesor
+actor "Administrador" as Admin
+actor "Wompi\n(Sistema Externo)" as Wompi
+actor "datos.gov.co\n(Sistema Externo)" as Gov
+
+' Herencia de actores
+Cliente --|> Visitante : hereda
+
+rectangle "Sistema: Candela Motors" {
+
+  package "Autenticación e Identidad" {
+    usecase "Iniciar Sesión\n(Cliente, Asesor, Administrador)" as UC_Login
+  }
+
+  package "Motos y Costo Real" {
+    usecase "Explorar Catálogo\n(Honda, Kawasaki, Yamaha)" as UC1
+    usecase "Filtrar por Licencia (A1/A2)" as UC_Filtro
+    usecase "Ver Detalle de Moto" as UC_Detalle
+    usecase "Buscar por Cuota" as UC2
+    usecase "Calcular Costo Real Mensual" as UC3
+    usecase "Aplicar Modo Trabajo" as UC_ModoTrabajo
+  }
+
+  package "Atención Personalizada" {
+    usecase "Cotizar Moto" as UC4
+    usecase "Pedir Test Drive" as UC5
+    usecase "Asignar Asesor por Marca" as UC6
+    usecase "Gestionar Atenciones\n(Nuevo, Contactado, Vendido, etc.)" as UC_Atenciones
+    usecase "Gestionar Cola de Test Drives" as UC7
+    usecase "Seguimiento con Código (CM-XXXX)" as UC8
+  }
+
+  package "Tienda de Accesorios" {
+    usecase "Explorar Accesorios\n(Visitante y Cliente)" as UC_Accesorios
+    usecase "Gestionar Carrito de Compras" as UC9
+    usecase "Gestionar Direcciones de Envío" as UC_Direcciones
+    usecase "Crear Pedido de Accesorios\n(Reserva de stock 15 min)" as UC10
+    usecase "Pagar con Wompi (Sandbox)" as UC11
+    usecase "Validar Webhook y Checksum" as UC12
+    usecase "Gestionar y Hacer Seguimiento de Envíos\n(Preparando, Enviado, En Camino, Entregado y Tiempos)" as UC13
+  }
+
+  package "Administración y Reportes" {
+    usecase "Gestionar Catálogos y Parámetros\n(Motos, Accesorios, Costos, SOAT)" as UC14
+    usecase "Consultar Radar de Demanda\n(DuckDB)" as UC15
+    usecase "Consultar Reporte de Ventas\n(DuckDB)" as UC16
+  }
+}
+
+' Relaciones del Visitante
+Visitante --> UC_Login
+Visitante --> UC1
+Visitante --> UC_Detalle
+Visitante --> UC2
+Visitante --> UC3
+Visitante --> UC4
+Visitante --> UC5
+Visitante --> UC8
+Visitante --> UC_Accesorios
+
+' Relaciones del Cliente (Hereda de Visitante, añade gestión de direcciones y compras)
+Cliente --> UC9
+Cliente --> UC_Direcciones
+Cliente --> UC10
+Cliente --> UC11
+Cliente --> UC13
+
+' Relaciones del Asesor
+Asesor --> UC_Login
+Asesor --> UC_Atenciones
+Asesor --> UC7
+
+' Relaciones del Administrador
+Admin --> UC_Login
+Admin --> UC14
+Admin --> UC15
+Admin --> UC16
+
+' Relaciones de Sistemas Externos
+Wompi --> UC12
+Gov --> UC1
+
+' Relaciones Include y Extend
+UC_Filtro ..> UC1 : <<extend>>
+UC_Detalle ..> UC1 : <<extend>>
+UC3 ..> UC_Detalle : <<extend>>
+UC_ModoTrabajo ..> UC3 : <<extend>>
+UC4 ..> UC6 : <<include>>
+UC4 ..> UC8 : <<include>>
+UC5 ..> UC6 : <<include>>
+UC5 ..> UC8 : <<include>>
+UC10 ..> UC_Direcciones : <<include>>
+UC10 ..> UC11 : <<include>>
+UC11 ..> UC12 : <<include>>
+UC11 ..> UC13 : <<include>>
+
+@enduml
