@@ -1,8 +1,16 @@
-# Concesionario de Motos
+# Candela Motors
 
-Página web de un concesionario de motos. Es el proyecto final de **Taller de Programación** en la Universidad Manuela Beltrán (UMB), segundo semestre de 2026.
+**Calidad japonesa.** Página web de un concesionario de motos japonesas: Honda, Kawasaki y Yamaha. Es el proyecto final de **Taller de Programación** en la Universidad Manuela Beltrán (UMB), segundo semestre de 2026.
 
-La página permite ver el catálogo de motos con filtros, ver el detalle de cada moto, pedir una cotización con simulador de crédito y agendar un test drive. Los asesores y el administrador entran con usuario y contraseña para manejar el inventario.
+No es una página folleto. Candela Motors ayuda a decidir con números reales y acompaña al cliente:
+
+- **Buscar por cuota:** dices cuánto puedes pagar al mes y qué licencia tienes (A1 o A2), y la página te muestra las motos que te alcanzan.
+- **Costo real mensual:** cuota, gasolina, SOAT, mantenimiento e impuesto, según cómo uses la moto. Con un modo trabajo para domiciliarios que muestra en cuántos meses se paga.
+- **Atención personalizada:** al cotizar o pedir un test drive te asignamos un asesor especialista en la marca y te damos un código para seguir tu atención, sin crear cuenta.
+- **Tienda de accesorios:** cascos, chaquetas y más, con pago virtual (Wompi en ambiente de pruebas) y seguimiento del envío.
+- **Radar de demanda:** el administrador ve qué busca la gente frente al inventario que tiene.
+
+El alcance completo, las reglas de negocio, el modelo de datos y la API están en [docs/alcance.md](docs/alcance.md).
 
 **Fecha de entrega:** martes 17 de noviembre de 2026
 
@@ -24,7 +32,9 @@ La página permite ver el catálogo de motos con filtros, ver el detalle de cada
 | Arquitectura | Hexagonal (dominio, aplicación, infraestructura, API) |
 | Base de datos | SQLAlchemy 2.0 con SQLite en desarrollo |
 | Reportes | DuckDB |
-| Seguridad | JWT con roles |
+| Seguridad | JWT con roles (cliente, asesor y administrador) |
+| Pagos | Wompi en ambiente de pruebas (sandbox) |
+| Datos abiertos | TRM y DIVIPOLA de datos.gov.co |
 | Frontend | Angular |
 | Calidad | pytest, ruff, mypy, mutmut |
 | Despliegue | Docker y GitHub Actions |
