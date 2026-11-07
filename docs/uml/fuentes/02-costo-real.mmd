@@ -1,0 +1,61 @@
+classDiagram
+    direction LR
+
+    class CalculadoraCostoReal {
+        <<service>>
+        +calcular(moto: Moto, plan: PlanCredito, perfil: PerfilUso, parametros: ParametrosCosto) CostoMensual
+        +meses_para_pagarse(costo: CostoMensual, perfil: PerfilUso, plan: PlanCredito) int
+    }
+
+    class PerfilUso {
+        <<value object>>
+        +km_mes: int
+        +uso: UsoMoto
+        +ganancia_diaria_cop: int
+        +dias_trabajo_mes: int
+        +ganancia_mensual() int
+    }
+
+    class UsoMoto {
+        <<enumeration>>
+        CIUDAD
+        CARRETERA
+        TRABAJO
+    }
+
+    class CostoMensual {
+        <<value object>>
+        +cuota_credito_cop: int
+        +gasolina_cop: int
+        +soat_cop: int
+        +mantenimiento_cop: int
+        +impuesto_cop: int
+        +total() int
+    }
+
+    class ParametrosCosto {
+        +precio_galon_cop: int
+        +porcentaje_impuesto: float
+        +tarifas_soat: list~TarifaSoat~
+        +soat_mensual(cilindraje_cc: int) int
+        +impuesto_mensual(precio_cop: int, cilindraje_cc: int) int
+    }
+
+    class TarifaSoat {
+        <<value object>>
+        +cilindraje_min: int
+        +cilindraje_max: int
+        +valor_anual_cop: int
+        +aplica(cilindraje_cc: int) bool
+    }
+
+    class Moto
+    class PlanCredito
+
+    CalculadoraCostoReal ..> Moto : usa
+    CalculadoraCostoReal ..> PlanCredito : usa
+    CalculadoraCostoReal ..> PerfilUso : usa
+    CalculadoraCostoReal ..> ParametrosCosto : usa
+    CalculadoraCostoReal ..> CostoMensual : crea
+    PerfilUso --> UsoMoto
+    ParametrosCosto *-- "*" TarifaSoat

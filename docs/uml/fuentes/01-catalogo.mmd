@@ -1,0 +1,77 @@
+classDiagram
+    direction TB
+
+    class Marca {
+        +id: int
+        +nombre: str
+        +color_hex: str
+        +descripcion: str
+    }
+
+    class Moto {
+        +id: int
+        +marca: Marca
+        +modelo: str
+        +anio: int
+        +cilindraje_cc: int
+        +tipo: TipoMoto
+        +categoria_licencia: CategoriaLicencia
+        +precio_cop: int
+        +stock: int
+        +consumo_km_galon: float
+        +costo_mantenimiento_km_cop: int
+        +descripcion: str
+        +imagen_url: str
+        +esta_disponible() bool
+        +apta_para(licencia: CategoriaLicencia) bool
+        +precio_en_usd(trm: TasaCambio) float
+        +categoria_por_cilindraje(cilindraje_cc: int)$ CategoriaLicencia
+    }
+
+    class TipoMoto {
+        <<enumeration>>
+        CALLE
+        DEPORTIVA
+        DOBLE_PROPOSITO
+        SCOOTER
+    }
+
+    class CategoriaLicencia {
+        <<enumeration>>
+        A1
+        A2
+    }
+
+    class TasaCambio {
+        <<value object>>
+        +valor: float
+        +fecha: date
+    }
+
+    class PlanCredito {
+        <<value object>>
+        +precio_cop: int
+        +cuota_inicial_cop: int
+        +plazo_meses: int
+        +tasa_mensual: float
+        +monto_financiado() int
+        +cuota_mensual() int
+        +precio_maximo_para_cuota(cuota: int, cuota_inicial: int, plazo: int, tasa: float)$ int
+    }
+
+    class Busqueda {
+        +id: int
+        +fecha: datetime
+        +cuota_maxima_cop: int
+        +cuota_inicial_cop: int
+        +categoria_licencia: CategoriaLicencia
+        +uso: UsoMoto
+        +marca_id: int
+        +cantidad_resultados: int
+    }
+
+    Moto "*" --> "1" Marca : pertenece a
+    Moto --> TipoMoto
+    Moto --> CategoriaLicencia
+    Moto ..> TasaCambio : usa
+    PlanCredito ..> Moto : precio de

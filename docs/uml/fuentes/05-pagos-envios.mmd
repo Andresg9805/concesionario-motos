@@ -1,0 +1,73 @@
+classDiagram
+    direction TB
+
+    class Pedido
+
+    class Pago {
+        +id: int
+        +pedido: Pedido
+        +referencia: str
+        +transaccion_id: str
+        +metodo: MetodoPago
+        +estado: EstadoPago
+        +monto_cop: int
+        +monto_en_centavos() int
+        +aprobar(transaccion_id: str) None
+        +rechazar() None
+    }
+
+    class MetodoPago {
+        <<enumeration>>
+        TARJETA
+        NEQUI
+        PSE
+    }
+
+    class EstadoPago {
+        <<enumeration>>
+        PENDIENTE
+        APROBADO
+        RECHAZADO
+        ERROR
+    }
+
+    class ResultadoPago {
+        <<value object>>
+        +referencia: str
+        +transaccion_id: str
+        +estado: EstadoPago
+        +monto_cop: int
+    }
+
+    class Envio {
+        +id: int
+        +pedido: Pedido
+        +numero_guia: str
+        +costo_cop: int
+        +estado: EstadoEnvio
+        +eventos: list~EventoEnvio~
+        +avanzar(nuevo: EstadoEnvio, nota: str) None
+    }
+
+    class EstadoEnvio {
+        <<enumeration>>
+        PREPARANDO
+        ENVIADO
+        EN_CAMINO
+        ENTREGADO
+    }
+
+    class EventoEnvio {
+        +estado: EstadoEnvio
+        +fecha: datetime
+        +nota: str
+    }
+
+    Pedido "1" <-- "*" Pago : intento de pago
+    Pago --> MetodoPago
+    Pago --> EstadoPago
+    ResultadoPago --> EstadoPago
+    Pago ..> ResultadoPago : se actualiza con
+    Pedido "1" <-- "0..1" Envio : despacha
+    Envio --> EstadoEnvio
+    Envio *-- "*" EventoEnvio
