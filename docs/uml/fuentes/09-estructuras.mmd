@@ -1,0 +1,54 @@
+classDiagram
+    direction LR
+
+    class Nodo~T~ {
+        +valor: T
+        +siguiente: Nodo
+    }
+
+    class ColaTestDrives {
+        -frente: Nodo
+        -final: Nodo
+        -cantidad: int
+        +encolar(test_drive: TestDrive) None
+        +desencolar() TestDrive
+        +ver_frente() TestDrive
+        +esta_vacia() bool
+        +tamano() int
+    }
+
+    class AgendaTestDrives {
+        -colas: dict
+        +encolar(asesor_id: int, test_drive: TestDrive) None
+        +atender_siguiente(asesor_id: int) TestDrive
+        +pendientes(asesor_id: int) int
+    }
+
+    class PilaSimulaciones {
+        -cima: Nodo
+        -cantidad: int
+        +apilar(plan: PlanCredito) None
+        +desapilar() PlanCredito
+        +ver_cima() PlanCredito
+        +esta_vacia() bool
+    }
+
+    class NodoArbol {
+        +moto: Moto
+        +izquierdo: NodoArbol
+        +derecho: NodoArbol
+    }
+
+    class ArbolMotosPorPrecio {
+        -raiz: NodoArbol
+        +insertar(moto: Moto) None
+        +buscar_rango(minimo: int, maximo: int) list~Moto~
+        +inorden() list~Moto~
+    }
+
+    AgendaTestDrives o-- "*" ColaTestDrives : una por asesor
+    ColaTestDrives o-- Nodo
+    PilaSimulaciones o-- Nodo
+    ArbolMotosPorPrecio o-- NodoArbol
+    NodoArbol --> NodoArbol : hijos
+    Nodo --> Nodo : siguiente
