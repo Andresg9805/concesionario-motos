@@ -1,0 +1,105 @@
+classDiagram
+    direction TB
+
+    class Usuario {
+        +id: int
+        +nombre: str
+        +correo: str
+        +telefono: str
+        +hash_contrasena: str
+        +rol: Rol
+        +marca_especialidad: Marca
+        +es_admin() bool
+        +es_asesor() bool
+        +enlace_whatsapp() str
+    }
+
+    class Rol {
+        <<enumeration>>
+        CLIENTE
+        ASESOR
+        ADMIN
+    }
+
+    class Cliente {
+        +id: int
+        +nombre: str
+        +correo: str
+        +telefono: str
+        +usuario: Usuario
+    }
+
+    class Cotizacion {
+        +id: int
+        +codigo_seguimiento: str
+        +cliente: Cliente
+        +moto: Moto
+        +asesor: Usuario
+        +fecha: date
+        +plan: PlanCredito
+        +estado: EstadoAtencion
+        +cuota_mensual() int
+        +cambiar_estado(nuevo: EstadoAtencion) None
+        +esta_abierta() bool
+    }
+
+    class EstadoAtencion {
+        <<enumeration>>
+        NUEVO
+        CONTACTADO
+        TEST_DRIVE
+        NEGOCIANDO
+        VENDIDO
+        DESCARTADO
+    }
+
+    class TestDrive {
+        +id: int
+        +codigo_seguimiento: str
+        +cliente: Cliente
+        +moto: Moto
+        +asesor: Usuario
+        +fecha_solicitud: datetime
+        +fecha_programada: datetime
+        +estado: EstadoTestDrive
+        +programar(fecha: datetime) None
+        +marcar_realizado() None
+        +cancelar() None
+    }
+
+    class EstadoTestDrive {
+        <<enumeration>>
+        PENDIENTE
+        PROGRAMADO
+        REALIZADO
+        CANCELADO
+    }
+
+    class AsignadorAsesor {
+        <<service>>
+        +elegir(asesores: list~Usuario~, abiertas_por_asesor: dict) Usuario
+    }
+
+    class GeneradorCodigo {
+        <<service>>
+        +nuevo_codigo()$ str
+    }
+
+    class Moto
+    class Marca
+    class PlanCredito
+
+    GeneradorCodigo ..> Cotizacion : codigo
+    EstadoAtencion <-- Cotizacion
+    EstadoTestDrive <-- TestDrive
+    Cotizacion *-- "1" PlanCredito
+    Cotizacion "*" --> "1" Cliente : la pide
+    TestDrive "*" --> "1" Cliente : lo pide
+    Cotizacion "*" --> "1" Moto : de
+    TestDrive "*" --> "1" Moto : de
+    Cotizacion "*" --> "1" Usuario : asesor
+    TestDrive "*" --> "1" Usuario : asesor
+    Cliente "0..1" --> "0..1" Usuario : cuenta
+    AsignadorAsesor ..> Usuario : elige
+    Usuario "*" --> "0..1" Marca : especialista en
+    Usuario --> Rol
