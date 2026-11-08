@@ -17,6 +17,7 @@ rectangle "Sistema: Candela Motors" {
 
   package "Autenticación e Identidad" {
     usecase "Iniciar Sesión\n(Cliente, Asesor, Administrador)" as UC_Login
+    usecase "Registrarse" as UC_Registro
   }
 
   package "Motos y Costo Real" {
@@ -32,9 +33,10 @@ rectangle "Sistema: Candela Motors" {
     usecase "Cotizar Moto" as UC4
     usecase "Pedir Test Drive" as UC5
     usecase "Asignar Asesor por Marca" as UC6
+    usecase "Generar Código de Seguimiento\n(CM-XXXX)" as UC_GenerarCodigo
+    usecase "Consultar Seguimiento con Código" as UC_ConsultarCodigo
     usecase "Gestionar Atenciones\n(Nuevo, Contactado, Vendido, etc.)" as UC_Atenciones
     usecase "Gestionar Cola de Test Drives" as UC7
-    usecase "Seguimiento con Código (CM-XXXX)" as UC8
   }
 
   package "Tienda de Accesorios" {
@@ -44,7 +46,8 @@ rectangle "Sistema: Candela Motors" {
     usecase "Crear Pedido de Accesorios\n(Reserva de stock 15 min)" as UC10
     usecase "Pagar con Wompi (Sandbox)" as UC11
     usecase "Validar Webhook y Checksum" as UC12
-    usecase "Gestionar y Hacer Seguimiento de Envíos\n(Preparando, Enviado, En Camino, Entregado y Tiempos)" as UC13
+    usecase "Consultar Estado del Envío" as UC_ConsultarEnvio
+    usecase "Gestionar Envíos\n(Preparando, Enviado, En Camino, Entregado y Tiempos)" as UC_GestionarEnvios
   }
 
   package "Administración y Reportes" {
@@ -55,22 +58,23 @@ rectangle "Sistema: Candela Motors" {
 }
 
 ' Relaciones del Visitante
-Visitante --> UC_Login
 Visitante --> UC1
 Visitante --> UC_Detalle
 Visitante --> UC2
 Visitante --> UC3
 Visitante --> UC4
 Visitante --> UC5
-Visitante --> UC8
+Visitante --> UC_ConsultarCodigo
 Visitante --> UC_Accesorios
 
-' Relaciones del Cliente (Hereda de Visitante, añade gestión de direcciones y compras)
+' Relaciones del Cliente (Hereda de Visitante, añade login, registro, direcciones y compras)
+Cliente --> UC_Login
+Cliente --> UC_Registro
 Cliente --> UC9
 Cliente --> UC_Direcciones
 Cliente --> UC10
 Cliente --> UC11
-Cliente --> UC13
+Cliente --> UC_ConsultarEnvio
 
 ' Relaciones del Asesor
 Asesor --> UC_Login
@@ -79,13 +83,15 @@ Asesor --> UC7
 
 ' Relaciones del Administrador
 Admin --> UC_Login
+Admin --> UC_GestionarEnvios
 Admin --> UC14
 Admin --> UC15
 Admin --> UC16
 
 ' Relaciones de Sistemas Externos
+Wompi --> UC11
 Wompi --> UC12
-Gov --> UC1
+Gov --> UC_Detalle
 
 ' Relaciones Include y Extend
 UC_Filtro ..> UC1 : <<extend>>
@@ -93,12 +99,11 @@ UC_Detalle ..> UC1 : <<extend>>
 UC3 ..> UC_Detalle : <<extend>>
 UC_ModoTrabajo ..> UC3 : <<extend>>
 UC4 ..> UC6 : <<include>>
-UC4 ..> UC8 : <<include>>
+UC4 ..> UC_GenerarCodigo : <<include>>
 UC5 ..> UC6 : <<include>>
-UC5 ..> UC8 : <<include>>
+UC5 ..> UC_GenerarCodigo : <<include>>
 UC10 ..> UC_Direcciones : <<include>>
 UC10 ..> UC11 : <<include>>
 UC11 ..> UC12 : <<include>>
-UC11 ..> UC13 : <<include>>
 
 @enduml
