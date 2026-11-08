@@ -1,137 +1,152 @@
-1. Requisitos Funcionales (RF)
-Módulo: Motos y Costo Real
-RF-01: Búsqueda y filtrado de motos por capacidad financiera y categoría de licencia
+# Especificación de Requisitos de Software: Candela Motors
+
+---
+
+## 1. Requisitos Funcionales (RF)
+
+### Módulo 1: Motos y Costo Real
+
+* **RF-01: Búsqueda y filtrado de motos por capacidad financiera y categoría de licencia**
+  * **Descripción:** El sistema debe calcular el precio máximo financiable mediante la fórmula de amortización fija francesa y retornar las motocicletas de las marcas oficiales que se ajusten al presupuesto y a la categoría de licencia del usuario.
+  * **Reglas asociadas:** RN-01, RN-02, RN-03.
+  * **Entradas:** Cuota mensual máxima (`int`), cuota inicial (`int`), plazo en meses (`int`), categoría de licencia (`A1` o `A2`) y opcionalmente marca (`Honda`, `Kawasaki`, `Yamaha`).
+  * **Salida:** Lista de motocicletas cuyo precio de venta sea menor o igual al capital máximo calculado. Si el usuario selecciona licencia `A1`, solo deben retornarse motocicletas de cilindraje menor o igual a 125 cc.
+
+* **RF-02: Estimación de costo real mensual y simulación en modo trabajo**
+  * **Descripción:** El sistema debe calcular el costo operativo mensual total de una motocicleta integrando cuota crediticia estimada, consumo de combustible según perfil de uso (`CIUDAD`, `CARRETERA`, `TRABAJO`), SOAT prorrateado, mantenimiento proyectado e impuesto vehicular.
+  * **Reglas asociadas:** RN-03.
+  * **Entradas:** Identificador de la moto (`moto_id`), kilómetros promedio mensuales (`km_mes`), perfil de uso (`CIUDAD`, `CARRETERA`, `TRABAJO`), cuota inicial, plazo y parámetros opcionales de modo trabajo (ganancia neta diaria esperada y días trabajados por mes).
+  * **Salida:** Desglose mensual detallado en pesos colombianos (COP) y, si se activa modo trabajo, el balance neto mensual y la proyección de meses requeridos para recuperar la inversión.
+
+* **RF-03: Visualización de catálogo y detalle con conversión de divisa en paralelo**
+  * **Descripción:** El sistema debe presentar el catálogo de motocicletas y la ficha técnica individual con sus especificaciones, una única imagen principal (`imagen_url`) y el precio de referencia en dólares estadounidenses (USD) calculado de forma concurrente con la TRM vigente.
+  * **Reglas asociadas:** RN-01.
+  * **Entradas:** Identificador de la moto (`moto_id`).
+  * **Salida:** Ficha técnica de la moto, enlace a imagen principal (`imagen_url`), precio oficial en COP y precio referencial en USD obtenido mediante consulta paralela a la TRM.
+
+---
+
+### Módulo 2: Atención Personalizada
+
+* **RF-04: Generación de cotización con asignación balanceada de asesor especialista**
+  * **Descripción:** El sistema debe registrar solicitudes de cotización formal, asociar automáticamente al asesor especialista de la marca que tenga la menor carga de atenciones abiertas y emitir un código de seguimiento alfanumérico único.
+  * **Reglas asociadas:** RN-01, RN-04, RN-05.
+  * **Entradas:** Datos de contacto del solicitante (nombre, correo, teléfono), `moto_id`, cuota inicial y plazo.
+  * **Salida:** Registro de cotización en estado `NUEVO`, enlace de WhatsApp directo al asesor especialista asignado y código único con formato `CM-XXXX`.
+
+* **RF-05: Agendamiento y gestión de turnos para prueba de manejo (Test Drive)**
+  * **Descripción:** El sistema debe permitir a cualquier visitante solicitar una prueba de manejo para un modelo en catálogo, incorporando la solicitud en la cola de turnos FIFO del asesor especialista de la marca.
+  * **Reglas asociadas:** RN-04, RN-05.
+  * **Entradas:** Datos de contacto del solicitante (nombre, correo, teléfono), `moto_id` y fecha preferencial.
+  * **Salida:** Registro del test drive en estado `PENDIENTE` en la cola del asesor y código de seguimiento único `CM-XXXX` para el usuario.
+
+* **RF-06: Consulta pública de trazabilidad mediante código de seguimiento**
+  * **Descripción:** El sistema debe permitir la consulta inmediata del estado de una cotización o test drive mediante el ingreso del código de seguimiento, sin requerir registro ni inicio de sesión.
+  * **Reglas asociadas:** RN-05.
+  * **Entradas:** Código de seguimiento (`CM-XXXX`).
+  * **Salida:** Estado de la atención (`NUEVO`, `CONTACTADO`, `TEST_DRIVE`, `NEGOCIANDO`, `VENDIDO`, `DESCARTADO`) o del test drive (`PENDIENTE`, `PROGRAMADO`, `REALIZADO`, `CANCELADO`), nombre del asesor asignado y marca consultada.
 
-Descripción: El sistema debe calcular el precio máximo financiable mediante la fórmula de amortización fija francesa y retornar exclusivamente las motocicletas compatibles con dicho presupuesto y la categoría de licencia del usuario.
+* **RF-07: Gestión de atenciones y turnos por parte del Asesor**
+  * **Descripción:** El sistema debe permitir a un usuario con rol `ASESOR` consultar las cotizaciones que tiene asignadas, avanzar el estado de la atención en su embudo y desencolar el siguiente turno de su lista de test drives.
+  * **Reglas asociadas:** RN-04, RN-10.
+  * **Entradas:** Token de autenticación de asesor, `cotizacion_id`, nuevo estado de atención (`CONTACTADO`, `TEST_DRIVE`, `NEGOCIANDO`, `VENDIDO`, `DESCARTADO`).
+  * **Salida:** Estado de atención actualizado y datos de la siguiente prueba de manejo a atender de su cola.
 
-Reglas asociadas: RN-01, RN-02, RN-03.
+---
 
-Entradas: Cuota mensual máxima (int), cuota inicial (int), plazo en meses (int), categoría de licencia (A1 o A2) y opcionalmente marca (Honda, Kawasaki, Yamaha).
+### Módulo 3: Tienda de Accesorios y Envíos
 
-Salida: Lista de motocicletas cuyo precio de venta sea menor o igual al capital máximo calculado. Si el usuario selecciona licencia A1, solo deben retornarse motocicletas de cilindraje menor o igual a 125 cc.
+* **RF-08: Catálogo de accesorios y compatibilidad por modelo de moto**
+  * **Descripción:** El sistema debe listar los accesorios disponibles permitiendo filtrar por categoría y por compatibilidad con modelos específicos de moto.
+  * **Reglas asociadas:** N/A (Tienda).
+  * **Entradas:** Parámetros de consulta opcionales: categoría de accesorio y `moto_id`.
+  * **Salida:** Lista de accesorios disponibles con nombre, descripción, precio en COP, stock actual, `imagen_url` y lista de motos compatibles.
 
-RF-02: Estimación de costo real mensual y simulación en modo trabajo
+* **RF-09: Carrito de compras y gestión de direcciones del cliente (DIVIPOLA)**
+  * **Descripción:** El sistema debe permitir al cliente autenticado agregar accesorios a un carrito de compras y registrar múltiples direcciones de entrega validadas contra los departamentos y municipios oficiales de Colombia (DANE / DIVIPOLA).
+  * **Reglas asociadas:** RN-10, RN-11.
+  * **Entradas:** Token de cliente, datos de dirección (departamento, municipio, nomenclatura, barrio, código postal).
+  * **Salida:** Direcciones guardadas asociadas al perfil del cliente y consulta de tarifas de envío según el departamento seleccionado.
 
-Descripción: El sistema debe calcular el costo operativo mensual total de una motocicleta seleccionada integrando cuota crediticia estimada, consumo de combustible, SOAT, mantenimiento proyectado e impuestos.
+* **RF-10: Creación de pedido con dirección guardada y reserva de inventario**
+  * **Descripción:** El sistema debe validar stock, calcular el costo total oficial en el backend sumando el flete departamental, reservar existencias por 15 minutos exactos y crear el pedido a partir de una dirección guardada del cliente.
+  * **Reglas asociadas:** RN-06, RN-07, RN-10, RN-11.
+  * **Entradas:** Token de autenticación del cliente, listado de ítems (`accesorio_id`, `cantidad`) y `direccion_id` guardada previamente.
+  * **Salida:** Pedido en estado `PENDIENTE_PAGO`, bloqueo de inventario con vencimiento a 15 minutos, registro de pago `PENDIENTE` y datos cifrados para inicializar el widget de Wompi.
 
-Reglas asociadas: RN-03.
+* **RF-11: Procesamiento asíncrono e idempotente de avisos de Wompi (Webhook)**
+  * **Descripción:** El sistema debe recibir avisos de pago de Wompi, validar su firma criptográfica SHA-256 e ignorar eventos duplicados mediante el registro del checksum del evento.
+  * **Reglas asociadas:** RN-08, RN-09.
+  * **Entradas:** Payload JSON del evento `transaction.updated` y firma SHA-256.
+  * **Salida:** Si el pago es `APROBADO`, el pedido pasa a `PAGADO` y se genera el registro de envío con evento `PREPARANDO`. Si es rechazado, se conserva el pedido para reintento. Si el evento ya fue procesado (mismo checksum), retorna HTTP 200 sin reprocesar.
 
-Entradas: Identificador de la moto (moto_id), kilómetros promedio mensuales (km_mes), tipo de uso (urbano/mixto), cuota inicial, plazo y parámetros opcionales de modo trabajo (ganancia neta diaria esperada y días trabajados por mes).
+* **RF-12: Expiración automática y liberación de existencias por reserva vencida**
+  * **Descripción:** El sistema debe ejecutar una tarea en segundo plano que identifique pedidos con más de 15 minutos en `PENDIENTE_PAGO` sin confirmación de pago.
+  * **Reglas asociadas:** RN-07.
+  * **Entradas:** Marca de tiempo actual y registros de pedidos pendientes.
+  * **Salida:** Transición de pedidos a `EXPIRADO` y retorno automático de las cantidades al stock disponible.
 
-Salida: Desglose mensual detallado en pesos colombianos (COP) y, en modo trabajo, el retorno de inversión indicando el número estimado de meses requeridos para amortizar el vehículo.
+* **RF-13: Gestión y avance de envíos por el Administrador**
+  * **Descripción:** El sistema debe permitir a un usuario con rol `ADMIN` consultar todos los pedidos y avanzar secuencialmente el estado del despacho (`PREPARANDO` → `ENVIADO` → `EN_CAMINO` → `ENTREGADO`).
+  * **Reglas asociadas:** RN-08.
+  * **Entradas:** Token de administrador, `envio_id` y nuevo estado del envío.
+  * **Salida:** Estado de envío actualizado y nuevo registro histórico incorporado a la línea de tiempo de seguimiento.
 
-RF-03: Visualización de catálogo y detalle con conversión de divisa en paralelo
+---
 
-Descripción: El sistema debe presentar el catálogo de motocicletas permitiendo consultar la ficha técnica individual y su precio de referencia en dólares estadounidenses (USD) de forma simultánea.
+### Módulo 4: Autenticación, Administración y Analítica
 
-Reglas asociadas: RN-01.
+* **RF-14: Registro y autenticación de usuarios con control de acceso RBAC**
+  * **Descripción:** El sistema debe permitir el autoregistro de clientes y el inicio de sesión para todos los roles (`CLIENTE`, `ASESOR`, `ADMIN`) emitiendo un token JWT firmado.
+  * **Reglas asociadas:** RN-10, RN-12.
+  * **Entradas:** Datos de registro (nombre, correo, teléfono, contraseña) o credenciales de acceso (correo, contraseña).
+  * **Salida:** Creación del usuario con rol `CLIENTE` o token JWT con rol correspondiente y tiempo de expiración.
 
-Entradas: Identificador de la moto (moto_id).
+* **RF-15: Mantenimiento y CRUD de catálogo y parámetros de costo por Administrador**
+  * **Descripción:** El sistema debe permitir a un administrador crear, actualizar y desactivar motos y accesorios, así como configurar los parámetros financieros globales (precio del galón de gasolina, tarifas de SOAT e impuesto vehicular).
+  * **Reglas asociadas:** RN-01.
+  * **Entradas:** Token de administrador y datos del recurso a modificar (`Moto`, `Accesorio` o `ParametrosCosto`).
+  * **Salida:** Registros persistidos y actualizados en la base de datos relacional.
 
-Salida: Datos técnicos del vehículo, galería multimedia por marca y precio en COP junto al equivalente calculado en USD a partir de la TRM del día obtenida de manera concurrente.
+* **RF-16: Generación analítica de Radar de Demanda con DuckDB**
+  * **Descripción:** El sistema debe cruzar las búsquedas guardadas por cuota frente al inventario físico para generar un radar de demanda que identifique brechas de producto.
+  * **Reglas asociadas:** N/A (Analítica).
+  * **Entradas:** Token de administrador, rango de fechas y filtros de marca/cilindraje.
+  * **Salida:** Reporte OLAP en DuckDB con volumen de búsquedas, marcas y rangos de cuota más demandados frente a las existencias.
 
-Módulo: Atención Personalizada
-RF-04: Generación de cotización con asignación balanceada de asesor especialista
+* **RF-17: Generación de reporte analítico de ventas con DuckDB**
+  * **Descripción:** El sistema debe calcular métricas de ventas de accesorios (ingresos brutos, ticket promedio, productos estrella y ventas por departamento) mediante consultas analíticas.
+  * **Reglas asociadas:** N/A (Analítica).
+  * **Entradas:** Token de administrador y periodo de consulta.
+  * **Salida:** Reporte agregado de facturación y volumen de ventas generado mediante DuckDB.
 
-Descripción: El sistema debe registrar solicitudes de cotización formal, asociar automáticamente un asesor comercial especialista en la marca elegida con menor carga activa y emitir un código alfanumérico único de atención.
+---
 
-Reglas asociadas: RN-01, RN-04, RN-05.
+## 2. Requisitos No Funcionales (RNF)
 
-Entradas: Datos de contacto del solicitante (nombre, correo, teléfono), moto_id, cuota inicial y plazo.
+* **RNF-01 (Seguridad - Cifrado de Credenciales):** El sistema debe almacenar las contraseñas de los usuarios utilizando el algoritmo `bcrypt` con un factor de trabajo no menor a 12 rondas de salting, garantizando que ninguna credencial resida en texto plano.
+  * *Regla asociada:* RN-12.
 
-Salida: Registro de cotización generado en estado NUEVO, enlace directo de contacto hacia la línea de WhatsApp del asesor asignado y código de seguimiento único con formato CM-XXXX.
+* **RNF-02 (Seguridad - Autenticación y Autorización RBAC):** El sistema debe proteger los endpoints mediante JSON Web Tokens (JWT) firmados con algoritmo HMAC-SHA256, expiración estricta (`JWT_EXPIRA_MINUTOS`) y restricción de acceso según el rol (`CLIENTE`, `ASESOR`, `ADMIN`).
 
-RF-05: Agendamiento y gestión de turnos para prueba de manejo (Test Drive)
+* **RNF-03 (Seguridad - Mitigación BOLA / OWASP API1):** La API debe verificar la propiedad del recurso en rutas privadas (`/mis-...`, `/cotizaciones/{id}/estado`). Si el recurso no pertenece al usuario autenticado, el sistema debe responder `HTTP 404 Not Found` para evitar enumeración.
+  * *Regla asociada:* RN-10.
 
-Descripción: El sistema debe permitir a cualquier visitante solicitar una prueba de manejo para un modelo específico, incorporando la solicitud en la cola de turnos del asesor correspondiente según su carga laboral.
+* **RNF-04 (Seguridad - Integridad de Webhooks e Idempotencia por Evento):** El webhook de pagos debe recalcular el checksum SHA-256 usando el secreto de eventos (`WOMPI_SECRETO_EVENTOS`). Si no coincide, responderá `HTTP 401 Unauthorized`. Si el checksum del evento ya fue registrado previamente, retornará `HTTP 200 OK` sin reprocesar.
+  * *Regla asociada:* RN-09.
 
-Reglas asociadas: RN-04, RN-05.
+* **RNF-05 (Disponibilidad y Resiliencia - Circuit Breaker):** La consulta externa de la TRM en datos.gov.co debe ejecutarse con cliente HTTP asíncrono y un patrón *Circuit Breaker* (Cerrado, Abierto, Semiabierto). Si el servicio falla reiteradamente, el circuito se abre y el sistema responde con el último valor conocido o degrada a mostrar solo precios en COP.
 
-Entradas: Datos del solicitante, número de licencia de conducción, fecha preferencial, sede y moto_id.
+* **RNF-06 (Rendimiento - Latencia de Respuestas):** El backend debe resolver el 95% de las consultas de catálogo y costo real en menos de 300 ms bajo carga normal, empleando `asyncio.gather` para operaciones concurrentes independientes.
 
-Salida: Registro del test drive en estado PENDIENTE encolado para el asesor especialista, y código de seguimiento CM-XXXX retornado al usuario.
+* **RNF-07 (Usabilidad y Accesibilidad - Principios Heurísticos de Nielsen):** La interfaz web debe aplicar consistencia visual basada en la identidad oficial de cada marca (Rojo Honda, Verde Kawasaki, Azul Yamaha) y ofrecer mensajes de retroalimentación claros ante validaciones de formularios.
+  * *Regla asociada:* RN-01.
 
-RF-06: Consulta pública de trazabilidad mediante código de seguimiento
+* **RNF-08 (Mantenibilidad - Arquitectura Hexagonal y DDD):** La capa de dominio (`domain`) no debe tener dependencias de frameworks ni de infraestructura. Las entidades y casos de uso solo interactúan con puertos abstractos (`abc.ABC`).
 
-Descripción: El sistema debe permitir la consulta pública e inmediata del estado actual de una cotización o prueba de manejo mediante el ingreso de su identificador alfanumérico, sin exigir inicio de sesión previo.
+* **RNF-09 (Portabilidad - Aislamiento en Contenedores):** La aplicación debe ejecutarse de forma homogénea en Docker y `docker-compose`, desacoplando servicios de backend (FastAPI/Uvicorn), frontend (Angular/Nginx) y volumen de persistencia para SQLite.
 
-Reglas asociadas: RN-05.
-
-Entradas: Código de seguimiento (CM-XXXX).
-
-Salida: Estado de la atención (NUEVO, CONTACTADO, TEST_DRIVE, NEGOCIANDO, VENDIDO, DESCARTADO) o del test drive (PENDIENTE, PROGRAMADO, REALIZADO, CANCELADO), nombre del asesor asignado y marca consultada.
-
-Módulo: Tienda de Accesorios y Pagos
-RF-07: Creación de pedido con reserva transaccional de inventario y cálculo de envío
-
-Descripción: El sistema debe validar la disponibilidad de existencias, bloquear el stock correspondiente durante 15 minutos exactos y consolidar el monto total del pedido en el backend a partir de los precios oficiales de la base de datos y la tarifa del departamento de destino.
-
-Reglas asociadas: RN-06, RN-07, RN-10, RN-11.
-
-Entradas: Token de autenticación del cliente, listado de ítems (accesorio_id, cantidad) y dirección de entrega (municipio_id, departamento).
-
-Salida: Registro del pedido en estado PENDIENTE_PAGO, bloqueo de inventario con expiración a 15 minutos, registro de pago PENDIENTE, desglose de costos (subtotal accesorios + costo envío departamental) y parámetros firmados para inicializar el widget de Wompi.
-
-RF-08: Procesamiento asíncrono e idempotente de eventos de pago (Webhook Wompi)
-
-Descripción: El sistema debe recibir notificaciones de transacciones emitidas por la pasarela de pagos Wompi, validar su integridad criptográfica y actualizar el estado de los pedidos evitando procesamiento duplicado.
-
-Reglas asociadas: RN-08, RN-09.
-
-Entradas: Payload JSON del evento transaction.updated junto con checksum SHA-256 en cabecera o propiedad de firma.
-
-Salida: Transición del pago a APROBADO o RECHAZADO. Si es aprobado, transición inmediata del pedido a PAGADO y generación del registro de envío; si es rechazado, conservación del estado para reintento dentro del plazo de reserva. Retorno HTTP 200 para eventos repetidos previamente procesados.
-
-RF-09: Expiración automática y liberación de existencias por reserva vencida
-
-Descripción: El sistema debe contar con un proceso en segundo plano que identifique de forma periódica aquellos pedidos que superen el límite de 15 minutos sin confirmación de pago aprobada.
-
-Reglas asociadas: RN-07.
-
-Entradas: Marca de tiempo actual y registros de pedidos en estado PENDIENTE_PAGO.
-
-Salida: Actualización del pedido al estado EXPIRADO y restitución automática de las unidades al inventario disponible de cada accesorio involucrado.
-
-Módulo: Administración y Reportes
-RF-10: Generación analítica de radar de demanda e inventario con DuckDB
-
-Descripción: El sistema debe proporcionar a los administradores métricas analíticas comparativas entre las búsquedas de motocicletas realizadas por los visitantes y el inventario real disponible en el concesionario.
-
-Reglas asociadas: N/A (Módulo de Analítica).
-
-Entradas: Parámetros de rango de fechas y filtros de marca/cilindraje solicitados por un usuario con rol ADMIN.
-
-Salida: Métricas agregadas generadas mediante consultas OLAP en DuckDB con volumen de búsquedas por cuota, relación demanda vs. stock y modelos con mayor tasa de cotización.
-
-2. Requisitos No Funcionales (RNF)
-RNF-01 (Seguridad - Cifrado de Credenciales): El sistema debe almacenar todas las contraseñas de los usuarios utilizando el algoritmo de derivación de claves bcrypt con un factor de trabajo (cost factor) no menor a 12 rondas de salting, garantizando que ninguna credencial resida en texto claro en reposo ni en memoria persistida.
-
-Regla asociada: RN-12.
-
-RNF-02 (Seguridad - Autenticación y Autorización RBAC): El sistema debe gestionar el acceso mediante tokens de autenticación JSON Web Tokens (JWT) firmados criptográficamente mediante algoritmo HMAC-SHA256, con tiempo de caducidad estricto (JWT_EXPIRA_MINUTOS) y control de acceso basado en roles (CLIENTE, ASESOR, ADMIN) para cada endpoint de la API.
-
-RNF-03 (Seguridad - Mitigación BOLA / OWASP API1): La API debe implementar validación de propiedad a nivel de objeto en todas las rutas bajo el prefijo /mis-... y operaciones sobre cotizaciones. Si un usuario intenta acceder o modificar un recurso que no le pertenece, el sistema debe responder con código HTTP 404 Not Found en lugar de 403 Forbidden, impidiendo la enumeración de recursos no autorizados.
-
-Regla asociada: RN-10.
-
-RNF-04 (Seguridad - Integridad de Webhooks e Idempotencia): El endpoint receptor del webhook de Wompi debe recalcular el checksum SHA-256 concatenando las propiedades requeridas de la transacción con el secreto de eventos (WOMPI_SECRETO_EVENTOS). Si la firma no coincide, debe rechazar la solicitud con HTTP 401 Unauthorized. Las solicitudes con transacciones ya procesadas deben retornar HTTP 200 OK sin alterar el estado del pedido.
-
-Regla asociada: RN-09.
-
-RNF-05 (Disponibilidad y Resiliencia - Circuit Breaker): La integración con la API de datos abiertos para la consulta de la TRM debe operar de manera asíncrona mediante un cliente HTTP no bloqueante y estar protegida por un patrón Circuit Breaker de tres estados (Cerrado, Abierto, Semiabierto). Ante caídas consecutivas del servicio externo, el circuito debe abrirse inmediatamente y responder con el último valor en caché o degradar la visualización a pesos colombianos sin interrumpir el flujo.
-
-RNF-06 (Rendimiento - Latencia de Respuestas): El backend debe resolver el 95% de las peticiones de lectura del catálogo y consultas de costo real en un tiempo de respuesta inferior a 300 milisegundos bajo condiciones de concurrencia regular, recurriendo a asyncio.gather para la ejecución simultánea de consultas independientes.
-
-RNF-07 (Usabilidad y Accesibilidad - Principios Heurísticos de Nielsen): La interfaz de usuario debe satisfacer las heurísticas de visibilidad del estado del sistema y coherencia, utilizando un código visual por fabricante: Rojo para Honda, Verde para Kawasaki y Azul para Yamaha, manteniendo elementos de ayuda contextual y mensajes claros ante errores de validación.
-
-Regla asociada: RN-01.
-
-RNF-08 (Mantenibilidad - Arquitectura Hexagonal y DDD): El backend debe respetar de forma estricta la separación arquitectónica Hexagonal (Puertos y Adaptadores). La capa de dominio (domain) no debe poseer dependencias de frameworks web (FastAPI), bases de datos (SQLAlchemy) ni librerías externas. La lógica de negocio debe encapsularse en entidades, servicios de dominio y casos de uso acoplados únicamente a interfaces abstractas (abc.ABC).
-
-RNF-09 (Portabilidad - Aislamiento en Contenedores): El sistema completo debe ser desplegable en entornos Linux/macOS/Windows mediante contenedores Docker y orquestación con docker-compose, separando el servicio de backend (Uvicorn), el frontend (Nginx) y persistiendo la base de datos relacional a través de volúmenes de almacenamiento.
-
-RNF-10 (Calidad de Código y Pruebas Automatizadas): El código base debe cumplir con la especificación de estilo y análisis estático de ruff con un límite estricto de 100 caracteres por línea y tipado estático verificado. Los casos de uso y la lógica de dominio deben alcanzar cobertura de pruebas unitarias automatizadas con pytest.
-
+* **RNF-10 (Calidad de Código y Pruebas Automatizadas):** El código debe cumplir con las reglas de estilo de `ruff` (límite de 100 caracteres por línea) y contar con suite de pruebas unitarias automatizadas con `pytest`.
 
 ---
 
@@ -139,193 +154,248 @@ RNF-10 (Calidad de Código y Pruebas Automatizadas): El código base debe cumpli
 
 ### HU-01: Búsqueda de motos según capacidad de pago mensual
 * **Como:** Visitante del concesionario web.
-* **Quiero:** Filtrar el catálogo de motos ingresando cuánto dinero puedo pagar cada mes y qué licencia de conducción tengo.
-* **Para:** Conocer qué opciones se ajustan a mi bolsillo sin tener que revisar modelos fuera de mi presupuesto ni de mi habilitación legal.
-* **Prioridad:** Alta (Obligatorio).
+* **Quiero:** Filtrar el catálogo de motos ingresando mi cuota mensual máxima y mi tipo de licencia.
+* **Para:** Ver únicamente los modelos que puedo pagar y que puedo conducir legalmente.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-01, RN-02, RN-03.
 
 **Criterios de Aceptación:**
 * **Escenario 1: Filtrado exitoso para conductor con licencia A1**
-  * **Dado** que un visitante ingresa una cuota mensual máxima de $350.000 COP, un plazo de 36 meses y una cuota inicial de $1.000.000 COP.
-  * **Y** selecciona que posee licencia de conducción categoría "A1".
+  * **Dado** que un visitante ingresa una cuota mensual máxima de $350.000 COP, un plazo de 36 meses, cuota inicial de $1.000.000 COP y licencia "A1".
   * **Cuando** solicita la búsqueda de motocicletas.
-  * **Entonces** el sistema calcula el precio máximo de adquisición mediante la fórmula de amortización fija.
-  * **Y** muestra únicamente motos de las marcas Honda, Kawasaki o Yamaha cuyo valor total sea igual o menor a dicho capital y cuyo cilindraje no exceda los 125 cc (cumpliendo RN-01 y RN-02).
+  * **Entonces** el sistema calcula el precio máximo de adquisición con la fórmula de amortización fija y lista solo motos Honda, Kawasaki o Yamaha de cilindraje menor o igual a 125 cc cuyo precio encaje en el valor calculado.
 * **Escenario 2: Restricción de modelos con licencia A1**
-  * **Dado** que existen motocicletas en catálogo con cilindraje de 150 cc o superior cuyo precio encaja en la cuota del usuario.
-  * **Cuando** el usuario busca con licencia "A1" seleccionada.
-  * **Entonces** el sistema omite dichos modelos del listado de resultados (cumpliendo RN-02).
+  * **Dado** que existen motos en catálogo de cilindraje superior a 125 cc que entran en el rango de cuota.
+  * **Cuando** el usuario busca con licencia "A1".
+  * **Entonces** el sistema excluye automáticamente dichas motos del listado.
 
 ---
 
 ### HU-02: Simulación de costo real mensual y modo trabajo
-* **Como:** Visitante interesado en adquirir una moto para transporte personal o trabajo.
-* **Quiero:** Calcular el costo total mensual proyectado (combustible, seguro, impuestos y mantenimiento) e ingresar parámetros de ingresos por domicilio si elijo modo trabajo.
-* **Para:** Evaluar si el vehículo es financieramente sostenible con mis ingresos diarios proyectados.
-* **Prioridad:** Alta (Obligatorio).
+* **Como:** Visitante interesado en comprar una moto.
+* **Quiero:** Calcular el costo total mensual proyectado seleccionando mi tipo de uso (ciudad, carretera o trabajo).
+* **Para:** Conocer el gasto real de mantenimiento y saber en cuántos meses se paga la moto si trabajo en ella.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-03.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Cálculo estándar de costo de posesión**
-  * **Dado** que el usuario visualiza el detalle de una motocicleta.
-  * **Cuando** ingresa un estimado de 800 km recorridos por mes y un plan de crédito de 24 cuotas.
-  * **Entonces** el sistema calcula y muestra el costo total mensual consolidado sumando la cuota crediticia, la proporción mensual del SOAT, el impuesto vehicular, el mantenimiento preventivo y el gasto de combustible proyectado.
-* **Escenario 2: Activación del cálculo para modo trabajo**
-  * **Dado** que el usuario activa la casilla de "Modo Trabajo".
-  * **Cuando** digita una ganancia neta diaria estimada de $80.000 COP y 26 días laborales al mes.
-  * **Entonces** el sistema descuenta el costo real mensual del ingreso proyectado y presenta el flujo neto mensual restante y la estimación de meses requeridos para recuperar la inversión total del vehículo.
+* **Escenario 1: Cálculo con uso estándar**
+  * **Dado** que el usuario visualiza el detalle de una moto e ingresa 800 km/mes, plazo de 24 cuotas y selecciona perfil de uso "CIUDAD".
+  * **Cuando** solicita calcular el costo real.
+  * **Entonces** el sistema muestra el costo total mensual sumando cuota, combustible según el perfil, SOAT proporcional, impuesto y mantenimiento preventivo.
+* **Escenario 2: Simulación en modo trabajo**
+  * **Dado** que el usuario selecciona perfil de uso "TRABAJO" e ingresa ganancia diaria de $80.000 COP y 26 días de labor al mes.
+  * **Cuando** ejecuta el cálculo.
+  * **Entonces** el sistema resta el costo mensual de los ingresos proyectados y muestra la ganancia neta y el número estimado de meses para amortizar la moto.
 
 ---
 
-### HU-03: Solicitud de cotización con asignación de asesor de marca
-* **Como:** Visitante interesado en comprar una motocicleta.
-* **Quiero:** Enviar mis datos de contacto para cotizar un modelo sin necesidad de registrar una cuenta.
-* **Para:** Recibir asesoría comercial experta en la marca de la moto y poder hacer seguimiento directo.
-* **Prioridad:** Alta (Obligatorio).
+### HU-03: Solicitud de cotización con asesor de marca
+* **Como:** Visitante del catálogo.
+* **Quiero:** Enviar una solicitud de cotización sin crear una cuenta.
+* **Para:** Recibir asesoría de un especialista en la marca y tener un código para consultar el avance.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-01, RN-04, RN-05.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Asignación balanceada de asesor especialista**
-  * **Dado** que existen dos asesores registrados para la marca "Yamaha", uno con 4 atenciones activas y otro con 2 atenciones activas.
-  * **Cuando** un visitante completa el formulario de cotización para una moto Yamaha.
-  * **Entonces** el sistema asigna la cotización al asesor con 2 atenciones activas (cumpliendo RN-04).
-  * **Y** genera un código de seguimiento único con estructura `CM-XXXX` (cumpliendo RN-05).
-  * **Y** presenta en pantalla el nombre del asesor junto con un enlace dinámico directo a su WhatsApp.
+* **Escenario 1: Asignación balanceada de asesor**
+  * **Dado** que hay dos asesores registrados para la marca de la moto, uno con 4 atenciones abiertas y otro con 2.
+  * **Cuando** el visitante envía el formulario con sus datos de contacto y plan de pago.
+  * **Entonces** el sistema asigna la cotización al asesor con 2 atenciones, genera un código único `CM-XXXX` y muestra en pantalla el nombre del asesor y el enlace a su WhatsApp.
 
 ---
 
-### HU-04: Consulta de estado de atención mediante código único
-* **Como:** Visitante que radicó una cotización o solicitud de test drive.
-* **Quiero:** Ingresar mi código de seguimiento en la web.
-* **Para:** Conocer el estado actual del trámite sin tener que iniciar sesión ni llamar al concesionario.
-* **Prioridad:** Alta (Obligatorio).
+### HU-04: Agendamiento de prueba de manejo (Test Drive)
+* **Como:** Visitante interesado en probar una motocicleta.
+* **Quiero:** Solicitar un test drive indicando mis datos de contacto, el modelo y mi fecha preferencial.
+* **Para:** Agendar una prueba de manejo atendida por un asesor especialista.
+* **Prioridad:** Obligatorio.
+* **Reglas de Negocio:** RN-04, RN-05.
+
+**Criterios de Aceptación:**
+* **Escenario 1: Encolamiento de test drive**
+  * **Dado** que un visitante completa el formulario con nombre, teléfono, correo, moto elegida y fecha preferencial.
+  * **Cuando** envía la solicitud.
+  * **Entonces** el sistema crea el registro en estado `PENDIENTE` dentro de la cola del asesor de la marca con menor carga y entrega al usuario un código `CM-XXXX`.
+
+---
+
+### HU-05: Consulta pública de seguimiento con código
+* **Como:** Visitante que solicitó una cotización o test drive.
+* **Quiero:** Digitar mi código alfanumérico en el módulo de seguimiento.
+* **Para:** Verificar en qué estado se encuentra mi trámite sin iniciar sesión.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-05.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Consulta de código válido**
-  * **Dado** que un usuario ingresa a la vista pública de seguimiento.
-  * **Cuando** digita un código existente con formato `CM-1042`.
-  * **Entonces** el sistema retorna el estado de avance (`NUEVO`, `CONTACTADO`, `TEST_DRIVE`, `NEGOCIANDO`, `VENDIDO` o `DESCARTADO`), la fecha de registro y la marca de interés.
-* **Escenario 2: Consulta de código inexistente**
-  * **Dado** que un usuario digita un código `CM-9999` que no está en la base de datos.
-  * **Cuando** presiona el botón de consulta.
-  * **Entonces** el sistema retorna un error HTTP 404 e informa que el código ingresado no existe.
+* **Escenario 1: Código válido**
+  * **Dado** que el usuario ingresa un código existente `CM-1020`.
+  * **Cuando** presiona consultar.
+  * **Entonces** el sistema muestra el estado de la atención o del test drive, la fecha y la marca asociada.
+* **Escenario 2: Código no registrado**
+  * **Dado** que el usuario ingresa un código que no existe en el sistema.
+  * **Cuando** presiona consultar.
+  * **Entonces** el sistema responde un error HTTP 404 indicando que el registro no fue encontrado.
 
 ---
 
-### HU-05: Gestión de cola de atenciones y turnos del asesor
-* **Como:** Asesor comercial de Candela Motors.
-* **Quiero:** Visualizar mis cotizaciones asignadas y avanzar la cola de mis solicitudes de test drive.
-* **Para:** Contactar a los clientes interesados y registrar el progreso del ciclo de ventas.
-* **Prioridad:** Alta (Obligatorio).
+### HU-06: Gestión de atenciones y turnos en panel del asesor
+* **Como:** Asesor comercial de una marca.
+* **Quiero:** Consultar mis cotizaciones y atender el siguiente turno de mi cola de test drives.
+* **Para:** Registrar el contacto con los clientes y gestionar mis pruebas de manejo en orden.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-04, RN-10.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Visualización exclusiva de asignaciones propias**
-  * **Dado** que un usuario con rol `ASESOR` ha iniciado sesión.
-  * **Cuando** consulta su panel de atenciones.
-  * **Entonces** el sistema lista únicamente las cotizaciones asignadas a su identificador de asesor, organizadas por estado.
-* **Escenario 2: Restricción de modificación de atención ajena**
-  * **Dado** que el asesor autenticado intenta enviar una petición PATCH para modificar el estado de una cotización asignada a otro asesor.
-  * **Cuando** el servidor evalúa la solicitud.
-  * **Entonces** el sistema rechaza la operación respondiendo `HTTP 404 Not Found` (cumpliendo RN-10 y mitigando BOLA).
+* **Escenario 1: Visualización restringida a clientes propios**
+  * **Dado** que un asesor ha iniciado sesión.
+  * **Cuando** consulta sus cotizaciones.
+  * **Entonces** el sistema lista únicamente las que le pertenecen y no las de otros asesores.
+* **Escenario 2: Intento de modificar atención ajena**
+  * **Dado** que un asesor intenta enviar un cambio de estado para una cotización de otro asesor.
+  * **Cuando** el servidor procesa la petición.
+  * **Entonces** el sistema retorna HTTP 404 (mitigando BOLA).
 
 ---
 
-### HU-06: Registro e inicio de sesión de clientes con protección de identidad
+### HU-07: Registro e inicio de sesión de clientes
 * **Como:** Comprador de accesorios.
-* **Quiero:** Registrar una cuenta personal y autenticarme con correo y contraseña.
-* **Para:** Guardar mis direcciones de despacho y realizar compras virtuales seguras.
-* **Prioridad:** Alta (Obligatorio).
+* **Quiero:** Registrar una cuenta y autenticarme con mis credenciales.
+* **Para:** Guardar mis direcciones de despacho y realizar compras seguras.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-10, RN-12.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Registro con hash de contraseña**
+* **Escenario 1: Registro seguro con hash bcrypt**
   * **Dado** que un nuevo cliente envía sus datos mediante `POST /auth/registro`.
-  * **Cuando** el backend procesa la petición.
-  * **Entonces** almacena la clave bajo un hash seguro generado con bcrypt (cumpliendo RN-12).
-  * **Y** la respuesta omite cualquier campo relacionado con el hash de la contraseña.
-* **Escenario 2: Autenticación exitosa y emisión de JWT**
-  * **Dado** que el cliente envía credenciales válidas en `POST /auth/login`.
-  * **Cuando** la verificación de contraseña con bcrypt es satisfactoria.
-  * **Entonces** el backend responde un token JWT con el id del usuario, el rol `CLIENTE` y una marca de expiración (`exp`) estricta.
+  * **Cuando** se crea el usuario.
+  * **Entonces** la contraseña se guarda cifrada con bcrypt y la respuesta no incluye el hash de la contraseña.
+* **Escenario 2: Login con entrega de JWT**
+  * **Dado** que un usuario ingresa sus credenciales correctas en `POST /auth/login`.
+  * **Cuando** el backend valida las credenciales.
+  * **Entonces** retorna un token JWT que contiene el ID de usuario, rol `CLIENTE` y tiempo de expiración.
 
 ---
 
-### HU-07: Creación de pedido y pago con reserva temporal de stock
+### HU-08: Creación de pedido con dirección guardada y reserva de stock
 * **Como:** Cliente registrado autenticado.
-* **Quiero:** Enviar mi carrito de accesorios a la pasarela de pagos Wompi.
-* **Para:** Cancelar mi pedido de forma segura mediante Nequi, PSE o tarjeta sin perder las unidades mientras pago.
-* **Prioridad:** Alta (Obligatorio).
-* **Reglas de Negocio:** RN-06, RN-07, RN-11.
+* **Quiero:** Crear un pedido eligiendo una de mis direcciones guardadas y reservar el stock.
+* **Para:** Garantizar la disponibilidad de los accesorios durante el proceso de pago virtual.
+* **Prioridad:** Obligatorio.
+* **Reglas de Negocio:** RN-06, RN-07, RN-10, RN-11.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Reserva de inventario y cálculo de precio en servidor**
-  * **Dado** que un cliente autenticado tiene artículos en su carrito y selecciona una dirección de envío en Antioquia.
-  * **Cuando** ejecuta `POST /pedidos`.
-  * **Entonces** el backend calcula el total con los precios de la base de datos (ignorando cualquier valor enviado por el cliente, cumpliendo RN-06).
-  * **Y** suma la tarifa de flete correspondiente al departamento de destino (cumpliendo RN-11).
-  * **Y** descuenta transaccionalmente el stock reservándolo por 15 minutos exactos con estado de pedido `PENDIENTE_PAGO` (cumpliendo RN-07).
-  * **Y** retorna la referencia y la firma de integridad para abrir el widget de Wompi en centavos COP.
+* **Escenario 1: Creación con precio de backend y reserva**
+  * **Dado** que un cliente autenticado tiene accesorios en su carrito y selecciona una `direccion_id` guardada.
+  * **Cuando** envía `POST /pedidos`.
+  * **Entonces** el backend calcula el total con precios de la base de datos, agrega el flete del departamento de la dirección, descuenta el stock reservándolo por 15 minutos en estado `PENDIENTE_PAGO` y entrega los datos para abrir el widget de Wompi.
 
 ---
 
-### HU-08: Confirmación de pago mediante Webhook de Wompi y alta de envío
-* **Como:** Sistema de Candela Motors.
-* **Quiero:** Recibir y autenticar la notificación asíncrona de Wompi.
-* **Para:** Confirmar el pedido pagado e iniciar automáticamente el proceso logístico de despacho.
-* **Prioridad:** Alta (Obligatorio).
+### HU-09: Confirmación de pago e idempotencia por checksum de evento
+* **Como:** Sistema Candela Motors.
+* **Quiero:** Recibir el aviso de pago de Wompi, validar la firma y verificar el checksum del evento.
+* **Para:** Aprobar el pedido y generar el envío sin duplicar órdenes ante múltiples avisos de una transacción.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-08, RN-09.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Transacción aprobada con firma válida**
-  * **Dado** que Wompi envía una notificación a `POST /pagos/webhook` con estado `APPROVED`.
-  * **Cuando** el backend valida que el hash SHA-256 coincide con el secreto del comercio (`WOMPI_SECRETO_EVENTOS`).
-  * **Entonces** el pedido cambia a estado `PAGADO`.
-  * **Y** se genera automáticamente la orden de envío con número de guía y evento inicial `PREPARANDO` (cumpliendo RN-08 y RN-09).
-* **Escenario 2: Notificación con firma inválida o adulterada**
-  * **Dado** que un atacante envía una petición con un checksum incorrecto hacia `/pagos/webhook`.
-  * **Cuando** el backend recalcula la firma de integridad.
-  * **Entonces** rechaza la petición con `HTTP 401 Unauthorized` sin alterar el pedido ni crear envíos (cumpliendo RN-09).
-* **Escenario 3: Notificación de evento duplicado (Idempotencia)**
-  * **Dado** que un evento ya aprobado es enviado nuevamente por Wompi.
-  * **Cuando** el backend verifica que el identificador de la transacción ya fue procesado.
-  * **Entonces** responde `HTTP 200 OK` inmediatamente sin alterar el inventario ni duplicar la guía de envío.
+* **Escenario 1: Aviso de pago aprobado y creación de envío**
+  * **Dado** que llega un webhook de Wompi con estado `APPROVED` y firma válida.
+  * **Cuando** el checksum del evento no ha sido registrado previamente.
+  * **Entonces** el pedido cambia a `PAGADO`, se guarda el evento y se genera la orden de envío en estado `PREPARANDO`.
+* **Escenario 2: Aviso repetido del mismo evento**
+  * **Dado** que llega un aviso con un checksum de evento que ya fue procesado con anterioridad.
+  * **Cuando** el webhook lo detecta.
+  * **Entonces** responde `HTTP 200 OK` inmediatamente sin alterar el inventario ni duplicar registros de envío.
 
 ---
 
-### HU-09: Seguimiento de línea de tiempo del pedido y despacho
-* **Como:** Cliente que realizó una compra de accesorios.
-* **Quiero:** Entrar a la sección "Mis Pedidos" y ver la trazabilidad de mi paquete.
-* **Para:** Saber en qué etapa de preparación o transporte se encuentra mi orden.
-* **Prioridad:** Alta (Obligatorio).
+### HU-10: Seguimiento del pedido y línea de tiempo de despacho
+* **Como:** Cliente que compró accesorios.
+* **Quiero:** Entrar a mis pedidos y ver el avance del envío en tiempo real.
+* **Para:** Conocer la fecha y estado de despacho de mis productos.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-10.
 
 **Criterios de Aceptación:**
 * **Escenario 1: Consulta de pedido propio**
-  * **Dado** que un cliente autenticado consulta `GET /mis-pedidos/{id}`.
-  * **Cuando** el pedido pertenece a su ID de usuario.
-  * **Entonces** visualiza la cronología completa de eventos del envío (`PREPARANDO` → `ENVIADO` → `EN_CAMINO` → `ENTREGADO`) con sus respectivas fechas y número de guía.
-* **Escenario 2: Intento de visualización de pedido de otro cliente**
-  * **Dado** que un cliente autenticado intenta consultar el detalle de un pedido perteneciente a un tercero.
-  * **Cuando** el backend valida el identificador de usuario frente al token.
-  * **Entonces** el sistema responde `HTTP 404 Not Found` (cumpliendo RN-10).
+  * **Dado** que un cliente consulta uno de sus pedidos en `GET /mis-pedidos/{id}`.
+  * **Cuando** se valida su pertenencia.
+  * **Entonces** observa la línea de tiempo (`PREPARANDO` → `ENVIADO` → `EN_CAMINO` → `ENTREGADO`) con sus marcas de fecha.
+* **Escenario 2: Intento de ver pedido ajeno**
+  * **Dado** que un cliente intenta consultar el ID de un pedido que pertenece a otro usuario.
+  * **Cuando** el servidor valida el token.
+  * **Entonces** responde `HTTP 404 Not Found`.
 
 ---
 
-### HU-10: Gestión administrativa del ciclo de envíos
-* **Como:** Administrador del concesionario.
-* **Quiero:** Actualizar secuencialmente el estado de los paquetes en preparación.
-* **Para:** Mantener informados a los compradores sobre el tránsito de sus accesorios.
-* **Prioridad:** Alta (Obligatorio).
+### HU-11: Gestión administrativa del ciclo de envíos
+* **Como:** Administrador del sistema.
+* **Quiero:** Consultar todos los pedidos pagados y actualizar el estado de sus envíos.
+* **Para:** Mantener el seguimiento logístico al día conforme avanzan los paquetes.
+* **Prioridad:** Obligatorio.
 * **Reglas de Negocio:** RN-08.
 
 **Criterios de Aceptación:**
-* **Escenario 1: Transición hacia adelante exitosa**
-  * **Dado** que un envío se encuentra en estado `PREPARANDO`.
-  * **Cuando** el administrador envía `PATCH /envios/{id}/estado` indicando el nuevo estado `ENVIADO`.
-  * **Entonces** el sistema registra el nuevo estado, anexa el evento a la línea de tiempo con marca de tiempo actual y responde `HTTP 200 OK`.
-* **Escenario 2: Intento de regresión de estado inválida**
-  * **Dado** que un envío ya se encuentra en estado `EN_CAMINO`.
-  * **Cuando** el administrador intenta retroceder el estado a `PREPARANDO`.
-  * **Entonces** el dominio rechaza la operación lanzando una excepción de negocio que la API transforma en `HTTP 409 Conflict`.
+* **Escenario 1: Avance secuencial de envío**
+  * **Dado** que un envío está en estado `PREPARANDO`.
+  * **Cuando** el administrador envía `PATCH /envios/{id}/estado` con valor `ENVIADO`.
+  * **Entonces** el estado cambia a `ENVIADO` y se registra el evento en la cronología.
+* **Escenario 2: Intento de transición inválida**
+  * **Dado** que un envío ya se encuentra en `ENTREGADO`.
+  * **Cuando** se intenta cambiar a `PREPARANDO`.
+  * **Entonces** la API retorna error `HTTP 409 Conflict`.
+
+---
+
+### HU-12: Mantenimiento de catálogo y parámetros de costo
+* **Como:** Administrador de Candela Motors.
+* **Quiero:** Gestionar las motos, accesorios y los valores del galón de gasolina, SOAT e impuesto vehicular.
+* **Para:** Mantener actualizados los precios y la exactitud en las fórmulas de costo real.
+* **Prioridad:** Obligatorio.
+* **Reglas de Negocio:** RN-01.
+
+**Criterios de Aceptación:**
+* **Escenario 1: Actualización de parámetros de costo**
+  * **Dado** que el administrador envía nuevos valores en `PUT /parametros-costo`.
+  * **Cuando** la petición es autenticada con rol `ADMIN`.
+  * **Entonces** los valores de combustible, SOAT e impuesto quedan actualizados para todos los cálculos subsiguientes.
+* **Escenario 2: Restricción de marcas en motos**
+  * **Dado** que el administrador intenta crear una moto con una marca distinta a Honda, Kawasaki o Yamaha.
+  * **Cuando** la petición llega al dominio.
+  * **Entonces** se rechaza la creación cumpliendo con la regla RN-01.
+
+---
+
+### HU-13: Análisis de Radar de Demanda frente a Inventario
+* **Como:** Administrador del concesionario.
+* **Quiero:** Consultar el reporte analítico de búsquedas de motos versus el inventario disponible.
+* **Para:** Conocer qué cilindrajes y marcas buscan más los clientes y ajustar compras de stock.
+* **Prioridad:** Ligero.
+* **Reglas de Negocio:** N/A (Analítica).
+
+**Criterios de Aceptación:**
+* **Escenario 1: Generación de reporte OLAP**
+  * **Dado** que el administrador solicita `GET /reportes/demanda`.
+  * **Cuando** el backend ejecuta la agregación en DuckDB sobre la tabla de búsquedas guardadas.
+  * **Entonces** retorna los modelos y marcas más cotizados frente al volumen de unidades físicas disponibles en tienda.
+
+---
+
+## 4. Matriz de Trazabilidad: Reglas de Negocio vs. Requisitos e Historias
+
+| Regla de Negocio | Descripción General | Requisitos Funcionales | Requisitos No Funcionales | Historias de Usuario |
+| :--- | :--- | :--- | :--- | :--- |
+| **RN-01** | Solo marcas Honda, Kawasaki y Yamaha | RF-01, RF-03, RF-04, RF-15 | RNF-07 | HU-01, HU-03, HU-12 |
+| **RN-02** | Clasificación A1 (≤125 cc) y A2 (>125 cc) | RF-01 | — | HU-01 |
+| **RN-03** | Amortización fija para cálculo de cuota | RF-01, RF-02 | — | HU-01, HU-02 |
+| **RN-04** | Asignación de asesor con menor carga | RF-04, RF-05, RF-07 | — | HU-03, HU-04, HU-06 |
+| **RN-05** | Código único de seguimiento `CM-XXXX` | RF-04, RF-05, RF-06 | — | HU-03, HU-04, HU-05 |
+| **RN-06** | Total calculado exclusivamente en backend | RF-10 | — | HU-08 |
+| **RN-07** | Reserva de stock por 15 minutos | RF-10, RF-12 | — | HU-08 |
+| **RN-08** | Envío se crea tras pago aprobado | RF-11, RF-13 | — | HU-09, HU-11 |
+| **RN-09** | Firma SHA-256 e idempotencia por checksum de evento | RF-11 | RNF-04 | HU-09 |
+| **RN-10** | Aislamiento de datos del cliente (BOLA) | RF-07, RF-09, RF-10, RF-14 | RNF-03 | HU-06, HU-07, HU-08, HU-10 |
+| **RN-11** | Tarifa de envío por departamento | RF-09, RF-10 | — | HU-08 |
+| **RN-12** | Contraseñas con hashing bcrypt | RF-14 | RNF-01 | HU-07 |
