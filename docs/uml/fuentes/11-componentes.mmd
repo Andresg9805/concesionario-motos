@@ -1,0 +1,54 @@
+flowchart TB
+    subgraph FRONT["Frontend Angular"]
+        UI["Páginas y componentes"]
+        GUARD["Guard e interceptor JWT"]
+        SRV["Servicios HTTP"]
+        WIDGET["Widget de pago Wompi"]
+    end
+
+    subgraph BACK["Backend FastAPI"]
+        subgraph ENTRADA["Adaptadores de entrada"]
+            API["Routers REST"]
+            AUTH["Autenticación JWT"]
+            HOOK["Webhook de pagos"]
+        end
+        subgraph APP["Capa de aplicación"]
+            CU["Casos de uso"]
+        end
+        subgraph DOM["Capa de dominio"]
+            ENT["Entidades y reglas"]
+            PUERTOS["Puertos"]
+            EST["Estructuras propias"]
+        end
+        subgraph INFRA["Adaptadores de salida"]
+            REPO["Repositorios SQLAlchemy"]
+            REP["Reportes DuckDB"]
+            TRM["Cliente TRM con circuit breaker"]
+            PAS["Pasarela Wompi"]
+        end
+    end
+
+    DB[("SQLite")]
+    GOV(["datos.gov.co"])
+    WOMPI(["Wompi sandbox"])
+
+    UI --> SRV
+    GUARD --> SRV
+    SRV -- "HTTP JSON" --> API
+    SRV -- "HTTP JSON" --> AUTH
+    API --> CU
+    AUTH --> CU
+    HOOK --> CU
+    CU --> ENT
+    CU --> PUERTOS
+    ENT --> EST
+    PUERTOS -. "implementado por" .-> REPO
+    PUERTOS -. "implementado por" .-> REP
+    PUERTOS -. "implementado por" .-> TRM
+    PUERTOS -. "implementado por" .-> PAS
+    REPO --> DB
+    REP -- "lee" --> DB
+    TRM -- "HTTPS" --> GOV
+    PAS -- "HTTPS" --> WOMPI
+    WIDGET -- "pago" --> WOMPI
+    WOMPI -- "aviso firmado" --> HOOK
