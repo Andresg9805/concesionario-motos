@@ -104,6 +104,5 @@ UC5 ..> UC6 : <<include>>
 UC5 ..> UC_GenerarCodigo : <<include>>
 UC10 ..> UC_Direcciones : <<include>>
 UC10 ..> UC11 : <<include>>
-UC11 ..> UC12 : <<include>>
 
 @enduml
