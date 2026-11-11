@@ -1,0 +1,21 @@
+footer {
+  background: var(--candela-oscuro);
+  color: #fff;
+  text-align: center;
+  padding: 24px 16px;
+  border-top: 4px solid var(--color-marca);
+}
+
+p {
+  margin: 4px 0;
+}
+
+.nombre {
+  font-family: var(--fuente-titulos);
+  font-weight: 800;
+}
+
+.nota {
+  font-size: 12px;
+  opacity: 0.7;
+}

@@ -1,0 +1,51 @@
+<mat-toolbar class="barra">
+  <a routerLink="/" class="logo" (click)="cerrarMenu()">
+    <span class="logo-nombre">Candela Motors</span>
+    <span class="logo-lema">Calidad japonesa</span>
+  </a>
+
+  <nav class="enlaces" [class.abierto]="menuAbierto()" aria-label="Menú principal">
+    @for (enlace of enlaces; track enlace.ruta) {
+      <a
+        mat-button
+        [routerLink]="enlace.ruta"
+        routerLinkActive="activo"
+        [routerLinkActiveOptions]="{ exact: enlace.exacto }"
+        (click)="cerrarMenu()"
+      >
+        {{ enlace.texto }}
+      </a>
+    }
+    @if (sesion.autenticado()) {
+      <button mat-stroked-button type="button" (click)="sesion.cerrarSesion()">Salir</button>
+    } @else {
+      <a mat-flat-button routerLink="/ingresar" (click)="cerrarMenu()">Ingresar</a>
+    }
+  </nav>
+
+  <button
+    mat-icon-button
+    type="button"
+    class="boton-menu"
+    aria-label="Abrir menú"
+    [attr.aria-expanded]="menuAbierto()"
+    (click)="alternarMenu()"
+  >
+    <mat-icon>{{ menuAbierto() ? 'close' : 'menu' }}</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="selector-marca" role="group" aria-label="Elegir marca">
+  @for (marca of marcas; track marca.clave) {
+    <button
+      type="button"
+      class="chip-marca"
+      [class.elegida]="marcaService.actual()?.clave === marca.clave"
+      [style.--color-chip]="marca.color"
+      [attr.aria-pressed]="marcaService.actual()?.clave === marca.clave"
+      (click)="marcaService.alternar(marca.clave)"
+    >
+      {{ marca.nombre }}
+    </button>
+  }
+</div>

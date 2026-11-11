@@ -1,0 +1,27 @@
+<section class="portada">
+  <p class="etiqueta">Calidad japonesa</p>
+  <h1>Tres marcas japonesas, un solo asesor para cada una.</h1>
+  <p>Busca tu moto por la cuota que puedes pagar y mira cuánto te cuesta de verdad al mes.</p>
+  <div class="acciones">
+    <a mat-flat-button routerLink="/motos">Ver motos</a>
+    <a mat-stroked-button routerLink="/seguimiento">Consultar mi código</a>
+  </div>
+</section>
+
+<section class="pagina">
+  <h2>Elige tu marca</h2>
+  <div class="marcas">
+    @for (marca of marcas; track marca.clave) {
+      <a
+        class="tarjeta-marca"
+        routerLink="/motos"
+        [queryParams]="{ marca: marca.clave }"
+        [style.--color-tarjeta]="marca.color"
+        (click)="marcaService.elegir(marca.clave)"
+      >
+        <span class="nombre-marca">{{ marca.nombre }}</span>
+        <span>Ver motos {{ marca.nombre }}</span>
+      </a>
+    }
+  </div>
+</section>
