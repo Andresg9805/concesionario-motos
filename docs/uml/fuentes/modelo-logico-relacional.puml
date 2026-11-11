@@ -17,7 +17,7 @@ entity "motos" {
   anio : smallint
   cilindraje_cc : int
   tipo : enum("naked", "deportiva", "trail", "doble_proposito")
-  categoria_licencia : varchar
+  categoria_licencia : enum("A1", "A2")
   precio_cop : int
   stock : int
   consumo_km_galon : float
@@ -48,7 +48,7 @@ entity "busquedas" {
   fecha : datetime
   cuota_maxima_cop : int
   cuota_inicial_cop : int
-  categoria_licencia : varchar
+  categoria_licencia : enum("A1", "A2")
   uso : enum("ciudad", "carretera", "trabajo")
   # marca_id : int [FK, nullable]
   cantidad_resultados : int
@@ -107,7 +107,7 @@ entity "accesorios" {
   --
   sku : varchar [UNIQUE]
   nombre : varchar
-  categoria : enum("mantenimiento", "chaqueta", "casco", "guantes", "maleta")
+  categoria : enum("casco", "chaqueta", "rodillera", "hombrera")
   descripcion : text
   precio_cop : int
   stock : int
@@ -209,8 +209,8 @@ entity "eventos_envio" {
 ' Relaciones
 
 marcas ||--o{ motos
-marcas ||--o{ busquedas
-marcas ||--o{ usuarios
+marcas |o--o{ busquedas
+marcas |o--o{ usuarios
 
 motos ||--o{ cotizaciones
 motos ||--o{ test_drives
