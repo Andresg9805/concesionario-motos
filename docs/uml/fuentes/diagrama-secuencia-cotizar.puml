@@ -67,7 +67,7 @@ end
 
 == 2. Selección y solicitud de cotización ==
 
-Visitante -> UI : Seleccionar moto e ingresar\nnombre, teléfono y correo
+Visitante -> UI : Seleccionar moto e ingresar\nnombre, teléfono, correo,\ncuota inicial y plazo
 UI -> API : Enviar datos de cotización
 API -> API : Validar solicitud
 API -> CC : Ejecutar creación de cotización
