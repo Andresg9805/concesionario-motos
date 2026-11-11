@@ -1,33 +1,51 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { ClaveMarca, InfoMarca, MARCAS } from './marcas';
+import { Title } from '@angular/platform-browser';
+import { MARCAS, esClaveMarca } from './marcas';
+import { ClaveMarca, Marca } from './modelos';
+
+const LLAVE = 'cm-brand';
+
+function leerGuardada(): ClaveMarca | null {
+  try {
+    const guardada = localStorage.getItem(LLAVE);
+    return esClaveMarca(guardada) ? guardada : null;
+  } catch {
+    return null;
+  }
+}
 
 @Injectable({ providedIn: 'root' })
 export class MarcaService {
   private readonly documento = inject(DOCUMENT);
-  private readonly claveActual = signal<ClaveMarca | null>(null);
+  private readonly titulo = inject(Title);
+  private readonly clave = signal<ClaveMarca | null>(leerGuardada());
 
-  readonly actual = computed<InfoMarca | null>(
-    () => MARCAS.find((marca) => marca.clave === this.claveActual()) ?? null,
-  );
+  readonly actual = this.clave.asReadonly();
+  readonly marca = computed<Marca | null>(() => {
+    const clave = this.clave();
+    return clave ? MARCAS[clave] : null;
+  });
 
   constructor() {
     effect(() => {
-      const clave = this.claveActual();
-      const body = this.documento.body;
+      const clave = this.clave();
+      const raiz = this.documento.documentElement;
       if (clave) {
-        body.setAttribute('data-marca', clave);
+        raiz.setAttribute('data-brand', clave);
       } else {
-        body.removeAttribute('data-marca');
+        raiz.removeAttribute('data-brand');
+      }
+      this.titulo.setTitle(clave ? `Candela Motors ${MARCAS[clave].nombre}` : 'Candela Motors');
+      try {
+        localStorage.setItem(LLAVE, clave ?? 'neutral');
+      } catch {
+        return;
       }
     });
   }
 
   elegir(clave: ClaveMarca | null): void {
-    this.claveActual.set(clave);
-  }
-
-  alternar(clave: ClaveMarca): void {
-    this.claveActual.update((actual) => (actual === clave ? null : clave));
+    this.clave.set(clave);
   }
 }

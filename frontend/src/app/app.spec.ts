@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 
 describe('App', () => {
   beforeEach(async () => {
+    localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideRouter(routes), provideHttpClient()],
@@ -17,20 +18,13 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('muestra el nombre de Candela Motors en el encabezado', async () => {
+  it('el encabezado tiene el menú del wireframe', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const html = fixture.nativeElement as HTMLElement;
-    expect(html.querySelector('.logo-nombre')?.textContent).toContain('Candela Motors');
-  });
-
-  it('muestra las tres marcas en el selector', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const html = fixture.nativeElement as HTMLElement;
-    const chips = Array.from(html.querySelectorAll('.chip-marca')).map((chip) =>
-      chip.textContent?.trim(),
+    const enlaces = Array.from(html.querySelectorAll('nav[aria-label="Principal"] a')).map((a) =>
+      a.textContent?.trim(),
     );
-    expect(chips).toEqual(['Honda', 'Kawasaki', 'Yamaha']);
+    expect(enlaces).toEqual(['Inicio', 'Marcas', 'Catálogo', 'Accesorios', 'Cotizar']);
   });
 });

@@ -1,16 +1,19 @@
-import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
-import { MarcaService } from '../../core/marca.service';
-import { MARCAS } from '../../core/marcas';
+import { Component } from '@angular/core';
+import { Accesorios } from './secciones/accesorios';
+import { Catalogo } from './secciones/catalogo';
+import { Cotizar } from './secciones/cotizar';
+import { Marcas } from './secciones/marcas';
+import { Portada } from './secciones/portada';
 
 @Component({
   selector: 'app-inicio',
-  imports: [MatButtonModule, RouterLink],
-  templateUrl: './inicio.html',
-  styleUrl: './inicio.scss',
+  imports: [Portada, Marcas, Catalogo, Accesorios, Cotizar],
+  template: `
+    <app-portada />
+    <app-marcas />
+    <app-catalogo />
+    <app-accesorios />
+    <app-cotizar />
+  `,
 })
-export class Inicio {
-  protected readonly marcaService = inject(MarcaService);
-  protected readonly marcas = MARCAS;
-}
+export class Inicio {}

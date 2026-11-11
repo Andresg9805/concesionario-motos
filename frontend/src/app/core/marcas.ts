@@ -1,18 +1,45 @@
-export type ClaveMarca = 'honda' | 'kawasaki' | 'yamaha';
+import { ClaveMarca, Marca, Silueta, TipoMoto } from './modelos';
 
-export interface InfoMarca {
-  clave: ClaveMarca;
-  nombre: string;
-  color: string;
-}
+export const MARCAS: Record<ClaveMarca, Marca> = {
+  honda: {
+    clave: 'honda',
+    nombre: 'Honda',
+    kanji: '本田',
+    origen: 'Desde 1948 · Hamamatsu',
+    color: 'var(--honda)',
+  },
+  kawasaki: {
+    clave: 'kawasaki',
+    nombre: 'Kawasaki',
+    kanji: '川崎',
+    origen: 'Desde 1896 · Kobe',
+    color: 'var(--kawasaki)',
+  },
+  yamaha: {
+    clave: 'yamaha',
+    nombre: 'Yamaha',
+    kanji: 'ヤマハ',
+    origen: 'Desde 1955 · Iwata',
+    color: 'var(--yamaha)',
+  },
+};
 
-export const MARCAS: readonly InfoMarca[] = [
-  { clave: 'honda', nombre: 'Honda', color: '#CC0000' },
-  { clave: 'kawasaki', nombre: 'Kawasaki', color: '#69BE28' },
-  { clave: 'yamaha', nombre: 'Yamaha', color: '#0055B8' },
-];
+export const LISTA_MARCAS: readonly Marca[] = Object.values(MARCAS);
 
-export function buscarMarca(nombre: string): InfoMarca | undefined {
-  const clave = nombre.trim().toLowerCase();
-  return MARCAS.find((marca) => marca.clave === clave);
+export const NOMBRE_TIPO: Record<TipoMoto, string> = {
+  NAKED: 'Naked',
+  DOBLE_PROPOSITO: 'Doble propósito',
+  TRAIL: 'Trail',
+  DEPORTIVA: 'Deportiva',
+};
+
+export const SILUETA_TIPO: Record<TipoMoto, Silueta> = {
+  NAKED: 'naked',
+  DOBLE_PROPOSITO: 'trail',
+  TRAIL: 'trail',
+  DEPORTIVA: 'sport',
+};
+
+export function esClaveMarca(valor: string | null | undefined): valor is ClaveMarca {
+  return valor === 'honda' || valor === 'kawasaki' || valor === 'yamaha';
 }
