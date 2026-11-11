@@ -19,11 +19,16 @@ interface OpcionMarca {
   selector: 'app-marcas',
   imports: [TarjetaMoto, Icono],
   template: `
-    <section id="marcas" class="band bg-band text-onband" aria-labelledby="tituloMarcas">
-      <div class="gutter mx-auto max-w-7xl pt-11 pb-5">
+    <section
+      id="marcas"
+      class="band relative overflow-hidden bg-band text-onband"
+      aria-labelledby="tituloMarcas"
+    >
+      <div class="resplandor pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="gutter relative mx-auto max-w-7xl pt-11 pb-5">
         <div class="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p class="eyebrow text-bandmuted">Paso 1</p>
+            <p class="eyebrow eyebrow-marca text-bandmuted">Paso 1</p>
             <h2 id="tituloMarcas" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
               Elige tu marca
             </h2>
@@ -53,25 +58,28 @@ interface OpcionMarca {
                 aria-hidden="true"
                 >{{ opcion.kanji }}</span
               >
-              <span class="flex items-center gap-2"
+              <span class="flex min-w-0 items-center gap-2"
                 ><span
-                  class="brand-dot h-2.5 w-2.5 rounded-full"
+                  class="brand-dot shrink-0 h-2.5 w-2.5 rounded-full"
                   [style.background]="opcion.color"
                 ></span
-                ><span class="text-xs text-bandmuted">{{ opcion.subtitulo }}</span></span
+                ><span class="truncate text-xs text-bandmuted">{{ opcion.subtitulo }}</span></span
               >
-              <span class="flex items-end justify-between gap-2"
-                ><span class="font-display text-xl font-extrabold md:text-2xl">{{
-                  opcion.nombre
-                }}</span
-                ><span class="num text-xs text-bandmuted">{{ opcion.cantidad }} modelos</span></span
+              <span
+                class="flex flex-col items-start gap-0.5 lg:flex-row lg:items-end lg:justify-between lg:gap-2"
+                ><span
+                  class="font-display text-xl leading-tight font-extrabold whitespace-nowrap md:text-2xl"
+                  >{{ opcion.nombre }}</span
+                ><span class="num shrink-0 text-xs text-bandmuted"
+                  >{{ opcion.cantidad }} modelos</span
+                ></span
               >
             </button>
           }
         </div>
       </div>
 
-      <div class="gutter mx-auto max-w-7xl pt-7 pb-[52px]">
+      <div class="gutter relative mx-auto max-w-7xl pt-7 pb-[52px]">
         <div
           class="flex flex-wrap items-baseline justify-between gap-2 border-t border-bandline pt-6"
         >

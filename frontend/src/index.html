@@ -5,11 +5,19 @@
     <title>Candela Motors</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
     <meta
       name="description"
       content="Candela Motors, concesionario de motos Honda, Kawasaki y Yamaha"
     />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script>
+      try {
+        if (localStorage.getItem('cm-tema') === 'claro') document.documentElement.setAttribute('data-theme', 'light');
+        var marca = localStorage.getItem('cm-brand');
+        if (marca === 'honda' || marca === 'kawasaki' || marca === 'yamaha') document.documentElement.setAttribute('data-brand', marca);
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

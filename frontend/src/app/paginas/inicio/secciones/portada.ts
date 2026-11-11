@@ -33,6 +33,7 @@ function sinMovimiento(): boolean {
       aria-roledescription="carrusel"
       aria-label="Modelos destacados"
     >
+      <div class="resplandor pointer-events-none absolute inset-0" aria-hidden="true"></div>
       <div
         class="seigaiha pointer-events-none absolute top-0 -right-10 h-40 w-80 opacity-60"
         aria-hidden="true"
@@ -40,7 +41,9 @@ function sinMovimiento(): boolean {
       <div class="gutter mx-auto max-w-7xl py-8 md:py-12">
         <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p class="eyebrow text-muted">Concesionario multimarca · Honda · Kawasaki · Yamaha</p>
+            <p class="eyebrow eyebrow-marca text-muted">
+              Concesionario multimarca · Honda · Kawasaki · Yamaha
+            </p>
             <h1
               class="mt-2 max-w-2xl font-display text-3xl leading-tight font-extrabold md:text-[42px]"
             >

@@ -15,13 +15,17 @@ type Filtro = 'Todos' | CategoriaAccesorio;
   template: `
     <section
       id="accesorios"
-      class="border-y border-line bg-surface"
+      class="relative overflow-hidden border-y border-line bg-surface"
       aria-labelledby="tituloAccesorios"
     >
-      <div class="gutter mx-auto max-w-7xl py-14">
+      <div
+        class="seigaiha pointer-events-none absolute top-0 -left-10 h-32 w-72 opacity-40"
+        aria-hidden="true"
+      ></div>
+      <div class="gutter relative mx-auto max-w-7xl py-14">
         <div class="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p class="eyebrow text-muted">Tienda en línea</p>
+            <p class="eyebrow eyebrow-marca text-muted">Tienda en línea</p>
             <h2 id="tituloAccesorios" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
               Accesorios y protección
             </h2>

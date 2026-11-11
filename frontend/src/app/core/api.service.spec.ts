@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { ApiService } from './api.service';
 import { authInterceptor } from './auth.interceptor';
+import { tokenDePrueba } from '../../testing/token';
 import { SesionService } from './sesion.service';
 
 describe('ApiService', () => {
@@ -54,10 +55,11 @@ describe('ApiService', () => {
   });
 
   it('con sesión manda el token JWT', () => {
-    TestBed.inject(SesionService).guardarToken('token-de-prueba');
+    const token = tokenDePrueba({ rol: 'CLIENTE' });
+    TestBed.inject(SesionService).guardarToken(token);
     api.get('/mis-pedidos').subscribe();
     const peticion = http.expectOne('http://localhost:8000/mis-pedidos');
-    expect(peticion.request.headers.get('Authorization')).toBe('Bearer token-de-prueba');
+    expect(peticion.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
     peticion.flush([]);
   });
 });

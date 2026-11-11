@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MarcaService } from './core/marca.service';
+import { TemaService } from './core/tema.service';
 import { AccesoDialogo } from './dialogos/acceso-dialogo';
 import { CotizarDialogo } from './dialogos/cotizar-dialogo';
 import { Avisos } from './layout/avisos';
@@ -10,7 +11,7 @@ import { Pie } from './layout/pie';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Encabezado, Pie, Avisos, CotizarDialogo, AccesoDialogo],
-  host: { class: 'theme-t block min-h-full' },
+  host: { class: 'theme-t flex min-h-screen flex-col' },
   template: `
     <a
       href="#catalogo"
@@ -18,7 +19,7 @@ import { Pie } from './layout/pie';
       >Saltar al catálogo</a
     >
     <app-encabezado />
-    <main>
+    <main class="flex-1">
       <router-outlet />
     </main>
     <app-pie />
@@ -30,5 +31,6 @@ import { Pie } from './layout/pie';
 export class App {
   constructor() {
     inject(MarcaService);
+    inject(TemaService);
   }
 }

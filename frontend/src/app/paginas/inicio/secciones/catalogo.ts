@@ -13,7 +13,7 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
     <section id="catalogo" class="gutter mx-auto max-w-7xl py-14" aria-labelledby="tituloCatalogo">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p class="eyebrow text-muted">Paso 2</p>
+          <p class="eyebrow eyebrow-marca text-muted">Paso 2</p>
           <h2 id="tituloCatalogo" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
             Catálogo <span class="text-accenttext">{{ marcaService.marca()?.nombre }}</span>
           </h2>

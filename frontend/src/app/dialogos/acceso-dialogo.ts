@@ -1,11 +1,12 @@
 import { Component, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LISTA_MARCAS } from '../core/marcas';
+import { Router } from '@angular/router';
+import { AuthService } from '../core/auth.service';
+import { INICIO_POR_ROL, NOMBRE_ROL } from '../core/sesion.service';
 import { UiService } from '../core/ui.service';
 import { Icono } from '../shared/icono';
 
 type Pestana = 'ingresar' | 'registro';
-type Rol = 'CLIENTE' | 'ASESOR' | 'ADMIN';
 
 const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -47,7 +48,7 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
               class="tab h-10 rounded-md text-sm font-bold"
               [class.text-muted]="pestana() !== 'ingresar'"
               [attr.aria-selected]="pestana() === 'ingresar'"
-              (click)="pestana.set('ingresar')"
+              (click)="cambiar('ingresar')"
             >
               Iniciar sesión
             </button>
@@ -57,7 +58,7 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
               class="tab h-10 rounded-md text-sm font-bold"
               [class.text-muted]="pestana() !== 'registro'"
               [attr.aria-selected]="pestana() === 'registro'"
-              (click)="pestana.set('registro')"
+              (click)="cambiar('registro')"
             >
               Crear cuenta
             </button>
@@ -66,36 +67,10 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
         @if (pestana() === 'ingresar') {
           <form class="flex flex-col gap-4 p-5" novalidate (ngSubmit)="ingresar()">
-            <fieldset>
-              <legend class="text-sm font-medium">Ingresar como</legend>
-              <div role="radiogroup" aria-label="Rol" class="mt-1.5 grid grid-cols-3 gap-2">
-                @for (opcion of roles; track opcion.rol) {
-                  <button
-                    type="button"
-                    role="radio"
-                    class="chip flex h-14 flex-col items-center justify-center gap-0.5 rounded-md border border-line text-xs font-bold"
-                    [attr.aria-checked]="rol() === opcion.rol"
-                    (click)="rol.set(opcion.rol)"
-                  >
-                    <app-icono [nombre]="opcion.icono" class="h-4 w-4" />{{ opcion.texto }}
-                  </button>
-                }
-              </div>
-            </fieldset>
-            @if (rol() === 'ASESOR') {
-              <label class="text-sm font-medium" for="marcaAsesor"
-                >Marca de especialidad
-                <select
-                  id="marcaAsesor"
-                  name="marcaAsesor"
-                  class="field mt-1 h-11 w-full rounded-md px-3"
-                  [(ngModel)]="marcaAsesor"
-                >
-                  @for (marca of marcas; track marca.clave) {
-                    <option [value]="marca.clave">{{ marca.nombre }}</option>
-                  }
-                </select>
-              </label>
+            @if (aviso()) {
+              <p class="rounded-md bg-accentsoft px-3 py-2 text-sm text-accenttext" role="status">
+                {{ aviso() }}
+              </p>
             }
             <label class="text-sm font-medium" for="correoIngreso"
               >Correo electrónico
@@ -138,22 +113,23 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
                 <span class="mt-1 block text-xs text-danger">{{ errores()['clave'] }}</span>
               }
             </label>
+            @if (errorServidor()) {
+              <p class="flex items-start gap-2 text-sm text-danger" role="alert">
+                <app-icono nombre="alert-circle" class="mt-0.5 h-4 w-4" />{{ errorServidor() }}
+              </p>
+            }
             <button
               type="submit"
               class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold"
+              [disabled]="enviando()"
             >
-              <app-icono nombre="log-in" class="h-4 w-4" />Iniciar sesión
+              <app-icono nombre="log-in" class="h-4 w-4" />{{
+                enviando() ? 'Ingresando…' : 'Iniciar sesión'
+              }}
             </button>
-            <p class="text-xs text-muted">
-              El inicio de sesión se conecta con la API cuando esté listo el login con JWT (#27).
-            </p>
           </form>
         } @else {
           <form class="flex flex-col gap-4 p-5" novalidate (ngSubmit)="registrar()">
-            <p class="rounded-md bg-surface2 px-3 py-2 text-xs text-muted">
-              Las cuentas nuevas son de cliente. Las cuentas de asesor y administrador las crea el
-              administrador.
-            </p>
             <label class="text-sm font-medium" for="nombreRegistro"
               >Nombre completo
               <input
@@ -236,11 +212,19 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
             @if (errores()['terminos']) {
               <span class="-mt-3 text-xs text-danger">{{ errores()['terminos'] }}</span>
             }
+            @if (errorServidor()) {
+              <p class="flex items-start gap-2 text-sm text-danger" role="alert">
+                <app-icono nombre="alert-circle" class="mt-0.5 h-4 w-4" />{{ errorServidor() }}
+              </p>
+            }
             <button
               type="submit"
               class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold"
+              [disabled]="enviando()"
             >
-              <app-icono nombre="user-plus" class="h-4 w-4" />Crear cuenta
+              <app-icono nombre="user-plus" class="h-4 w-4" />{{
+                enviando() ? 'Creando cuenta…' : 'Crear cuenta'
+              }}
             </button>
           </form>
         }
@@ -250,21 +234,17 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 })
 export class AccesoDialogo {
   protected readonly ui = inject(UiService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly dialogo = viewChild.required<ElementRef<HTMLDialogElement>>('dialogo');
 
-  protected readonly marcas = LISTA_MARCAS;
-  protected readonly roles: { rol: Rol; texto: string; icono: string }[] = [
-    { rol: 'CLIENTE', texto: 'Cliente', icono: 'user' },
-    { rol: 'ASESOR', texto: 'Asesor', icono: 'headset' },
-    { rol: 'ADMIN', texto: 'Administrador', icono: 'shield' },
-  ];
-
   protected readonly pestana = signal<Pestana>('ingresar');
-  protected readonly rol = signal<Rol>('CLIENTE');
   protected readonly verClave = signal(false);
   protected readonly errores = signal<Record<string, string>>({});
+  protected readonly errorServidor = signal('');
+  protected readonly aviso = signal('');
+  protected readonly enviando = signal(false);
 
-  protected marcaAsesor = 'honda';
   protected nombre = '';
   protected correo = '';
   protected celular = '';
@@ -276,7 +256,7 @@ export class AccesoDialogo {
       const abierto = this.ui.accesoAbierto();
       const dialogo = this.dialogo().nativeElement;
       if (abierto && !dialogo.open) {
-        this.errores.set({});
+        this.limpiarMensajes();
         dialogo.showModal?.();
       } else if (!abierto && dialogo.open) {
         dialogo.close();
@@ -284,18 +264,42 @@ export class AccesoDialogo {
     });
   }
 
+  protected cambiar(pestana: Pestana): void {
+    this.pestana.set(pestana);
+    this.limpiarMensajes();
+  }
+
   protected ingresar(): void {
     const errores: Record<string, string> = {};
     if (!CORREO.test(this.correo.trim())) {
       errores['correo'] = 'Escribe un correo válido.';
     }
-    if (this.clave.length < 8) {
-      errores['clave'] = 'La contraseña tiene mínimo 8 caracteres.';
+    if (!this.clave) {
+      errores['clave'] = 'Escribe tu contraseña.';
     }
     this.errores.set(errores);
-    if (Object.keys(errores).length === 0) {
-      this.ui.avisar('Datos válidos. El ingreso real se conecta con el login de la API (#27).');
+    this.errorServidor.set('');
+    if (Object.keys(errores).length > 0) {
+      return;
     }
+    this.enviando.set(true);
+    this.auth.ingresar(this.correo.trim(), this.clave).subscribe({
+      next: (usuario) => {
+        this.enviando.set(false);
+        this.clave = '';
+        this.ui.accesoAbierto.set(false);
+        const primerNombre = usuario.nombre.split(' ')[0];
+        this.ui.avisar(
+          `Hola${primerNombre ? ', ' + primerNombre : ''}. Ingresaste como ${NOMBRE_ROL[usuario.rol].toLowerCase()}.`,
+          'ok',
+        );
+        this.router.navigateByUrl(INICIO_POR_ROL[usuario.rol]);
+      },
+      error: (error: Error) => {
+        this.enviando.set(false);
+        this.errorServidor.set(error.message);
+      },
+    });
   }
 
   protected registrar(): void {
@@ -316,8 +320,36 @@ export class AccesoDialogo {
       errores['terminos'] = 'Necesitamos tu autorización para crear la cuenta.';
     }
     this.errores.set(errores);
-    if (Object.keys(errores).length === 0) {
-      this.ui.avisar('Datos válidos. El registro real se conecta con la API (#27).');
+    this.errorServidor.set('');
+    if (Object.keys(errores).length > 0) {
+      return;
     }
+    this.enviando.set(true);
+    this.auth
+      .registrar({
+        nombre: this.nombre.trim(),
+        correo: this.correo.trim(),
+        celular: this.celular.trim(),
+        contrasena: this.clave,
+      })
+      .subscribe({
+        next: () => {
+          this.enviando.set(false);
+          this.clave = '';
+          this.pestana.set('ingresar');
+          this.errores.set({});
+          this.aviso.set('Tu cuenta quedó creada. Ahora inicia sesión.');
+        },
+        error: (error: Error) => {
+          this.enviando.set(false);
+          this.errorServidor.set(error.message);
+        },
+      });
+  }
+
+  private limpiarMensajes(): void {
+    this.errores.set({});
+    this.errorServidor.set('');
+    this.aviso.set('');
   }
 }

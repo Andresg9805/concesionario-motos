@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { SesionService } from '../core/sesion.service';
+import { Router, RouterLink } from '@angular/router';
+import { INICIO_POR_ROL, NOMBRE_ROL, SesionService } from '../core/sesion.service';
+import { TemaService } from '../core/tema.service';
 import { UiService } from '../core/ui.service';
 import { Icono } from '../shared/icono';
 
@@ -56,10 +57,10 @@ import { Icono } from '../shared/icono';
             燭
           </text>
         </svg>
-        <span class="min-w-0 leading-none">
+        <span class="min-w-0 overflow-hidden leading-none">
           <span class="block font-display text-[21px] font-extrabold tracking-tight"
             >Candela<span
-              class="ml-1.5 align-middle font-sans text-[10px] font-bold tracking-[0.32em] text-muted"
+              class="ml-1.5 hidden align-middle font-sans text-[10px] font-bold tracking-[0.32em] text-muted sm:inline"
               >MOTORS</span
             ></span
           >
@@ -81,12 +82,39 @@ import { Icono } from '../shared/icono';
       </nav>
 
       <div class="ml-auto flex items-center gap-2 lg:ml-4">
-        @if (sesion.autenticado()) {
+        <button
+          type="button"
+          class="grid h-10 w-10 place-items-center rounded-md border border-line hover:bg-surface2"
+          [attr.aria-label]="
+            tema.actual() === 'oscuro' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
+          "
+          [attr.title]="tema.actual() === 'oscuro' ? 'Modo claro' : 'Modo oscuro'"
+          (click)="tema.alternar()"
+        >
+          <app-icono
+            [nombre]="tema.actual() === 'oscuro' ? 'sun' : 'moon'"
+            class="h-[18px] w-[18px]"
+          />
+        </button>
+        @if (sesion.usuario(); as usuario) {
+          @if (usuario.rol !== 'CLIENTE') {
+            <a
+              [routerLink]="inicioPorRol[usuario.rol]"
+              class="hidden h-10 items-center rounded-md border border-line px-3 text-sm font-medium hover:bg-surface2 sm:inline-flex"
+              >{{ usuario.rol === 'ASESOR' ? 'Mi panel' : 'Administración' }}</a
+            >
+          }
           <span class="flex items-center gap-2 rounded-md border border-line py-1 pr-1 pl-1">
             <span
               class="grid h-8 w-8 place-items-center rounded bg-accentsoft font-mono text-xs font-semibold text-accenttext"
-              >CM</span
+              >{{ iniciales(usuario.nombre) }}</span
             >
+            <span class="hidden min-w-0 leading-tight md:block">
+              <span class="block max-w-[140px] truncate text-sm font-medium">{{
+                usuario.nombre
+              }}</span>
+              <span class="block text-[11px] text-muted">{{ nombreRol[usuario.rol] }}</span>
+            </span>
             <button
               type="button"
               class="grid h-8 w-8 place-items-center rounded text-muted hover:bg-surface2 hover:text-fg"
@@ -138,12 +166,17 @@ import { Icono } from '../shared/icono';
         </div>
       </nav>
     }
+    <div class="linea-marca absolute inset-x-0 -bottom-px" aria-hidden="true"></div>
   `,
 })
 export class Encabezado {
   protected readonly ui = inject(UiService);
   protected readonly sesion = inject(SesionService);
+  protected readonly tema = inject(TemaService);
+  private readonly router = inject(Router);
   protected readonly menuAbierto = signal(false);
+  protected readonly nombreRol = NOMBRE_ROL;
+  protected readonly inicioPorRol = INICIO_POR_ROL;
   protected readonly iconoMenu = computed(() => (this.menuAbierto() ? 'x' : 'menu'));
 
   protected readonly enlaces = [
@@ -154,8 +187,19 @@ export class Encabezado {
     { fragmento: 'cotizar', texto: 'Cotizar' },
   ];
 
+  protected iniciales(nombre: string): string {
+    const partes = nombre.trim().split(/\s+/).filter(Boolean);
+    return (
+      partes
+        .slice(0, 2)
+        .map((p) => p[0])
+        .join('') || 'CM'
+    ).toUpperCase();
+  }
+
   protected salir(): void {
     this.sesion.cerrarSesion();
     this.ui.avisar('Cerraste sesión.');
+    this.router.navigateByUrl('/');
   }
 }

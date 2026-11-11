@@ -19,8 +19,16 @@ import { Icono } from '../../../shared/icono';
   selector: 'app-cotizar',
   imports: [FormsModule, Icono],
   template: `
-    <section id="cotizar" class="gutter mx-auto max-w-7xl py-14" aria-labelledby="tituloCotizar">
-      <p class="eyebrow text-muted">Paso 3</p>
+    <section
+      id="cotizar"
+      class="gutter relative mx-auto max-w-7xl py-14"
+      aria-labelledby="tituloCotizar"
+    >
+      <div
+        class="seigaiha pointer-events-none absolute top-6 right-0 h-32 w-72 opacity-40"
+        aria-hidden="true"
+      ></div>
+      <p class="eyebrow eyebrow-marca text-muted">Paso 3</p>
       <h2 id="tituloCotizar" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
         Cotiza sin crear cuenta
       </h2>
@@ -28,7 +36,7 @@ import { Icono } from '../../../shared/icono';
         Calcula qué moto alcanzas con tu cuota mensual, o consulta el estado de una cotización o
         test drive con tu código CM-XXXX.
       </p>
-      <div class="mt-6 grid gap-4 lg:grid-cols-5">
+      <div class="relative mt-6 grid gap-4 lg:grid-cols-5">
         <form
           class="rounded-lg border border-line bg-surface p-5 lg:col-span-3"
           novalidate

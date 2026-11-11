@@ -54,30 +54,83 @@
   --accent: #ff4d4d;
   --on-accent: #1a0000;
   --accent-text: #ff6b6b;
-  --band: #232427;
-  --on-band: #f5f5f4;
-  --band-muted: #a3a3a8;
-  --band-line: #3a3b40;
 }
 
 :root[data-brand='kawasaki'] {
   --accent: #69be28;
   --on-accent: #0a0a0a;
   --accent-text: #7fd13d;
-  --band: #050505;
-  --on-band: #f2f2f0;
-  --band-muted: #9b9b9b;
-  --band-line: #262626;
 }
 
 :root[data-brand='yamaha'] {
   --accent: #4d94e8;
   --on-accent: #00122e;
   --accent-text: #7db2f0;
-  --band: #002c6c;
-  --on-band: #f4f6fa;
-  --band-muted: #a9b8d1;
-  --band-line: #1b4380;
+}
+
+:root[data-brand] {
+  --bg: color-mix(in srgb, var(--accent) 3%, #0f0f10);
+  --surface: color-mix(in srgb, var(--accent) 4%, #18181a);
+  --surface-2: color-mix(in srgb, var(--accent) 6%, #202023);
+  --line: color-mix(in srgb, var(--accent) 16%, #2f2f33);
+  --band: color-mix(in srgb, var(--accent) 7%, #141416);
+  --on-band: #f2f2f0;
+  --band-muted: #a3a3a8;
+  --band-line: color-mix(in srgb, var(--accent) 22%, #2c2c30);
+}
+
+:root[data-theme='light'] {
+  --bg: #f7f7f6;
+  --surface: #ffffff;
+  --surface-2: #efefed;
+  --line: #dcdcd8;
+  --fg: #161617;
+  --muted: #66666a;
+  --band: #ececea;
+  --on-band: #161617;
+  --band-muted: #5f5f63;
+  --band-line: #d2d2ce;
+  --matte: #1b1b1d;
+  --on-matte: #f2f2f0;
+  --danger: #b42318;
+  --ok: #1f7a3a;
+  --seal: #b3261e;
+  --accent: #161617;
+  --on-accent: #ffffff;
+  --accent-text: #161617;
+  --honda: #cc0000;
+  --kawasaki: #69be28;
+  --yamaha: #0055b8;
+  color-scheme: light;
+}
+
+:root[data-theme='light'][data-brand='honda'] {
+  --accent: #cc0000;
+  --on-accent: #ffffff;
+  --accent-text: #b30000;
+}
+
+:root[data-theme='light'][data-brand='kawasaki'] {
+  --accent: #69be28;
+  --on-accent: #0a0a0a;
+  --accent-text: #3d7a10;
+}
+
+:root[data-theme='light'][data-brand='yamaha'] {
+  --accent: #0055b8;
+  --on-accent: #ffffff;
+  --accent-text: #0055b8;
+}
+
+:root[data-theme='light'][data-brand] {
+  --bg: color-mix(in srgb, var(--accent) 3%, #f7f7f6);
+  --surface: color-mix(in srgb, var(--accent) 2%, #ffffff);
+  --surface-2: color-mix(in srgb, var(--accent) 6%, #efefed);
+  --line: color-mix(in srgb, var(--accent) 18%, #dcdcd8);
+  --band: color-mix(in srgb, var(--accent) 4%, #ececea);
+  --on-band: #161617;
+  --band-muted: #5f5f63;
+  --band-line: color-mix(in srgb, var(--accent) 22%, #d2d2ce);
 }
 
 html {
@@ -187,15 +240,16 @@ h3 {
 }
 
 .seigaiha {
+  --ola: var(--line);
   background-image: radial-gradient(
     circle at 50% 100%,
     transparent 38%,
-    var(--line) 39%,
-    var(--line) 41%,
+    var(--ola) 39%,
+    var(--ola) 41%,
     transparent 42%,
     transparent 58%,
-    var(--line) 59%,
-    var(--line) 61%,
+    var(--ola) 59%,
+    var(--ola) 61%,
     transparent 62%
   );
   background-size: 28px 14px;
@@ -208,6 +262,47 @@ h3 {
 
 .brand-card[aria-checked='true'] .brand-dot {
   background: var(--accent) !important;
+}
+
+:root[data-brand] .seigaiha {
+  --ola: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+:root[data-theme='light'] dialog::backdrop {
+  background: rgb(20 20 24 / 0.35);
+}
+
+:root[data-brand] .eyebrow-marca {
+  color: var(--accent-text);
+}
+
+.linea-marca {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent) 20%,
+    var(--accent) 80%,
+    transparent
+  );
+  opacity: 0;
+}
+
+:root[data-brand] .linea-marca {
+  opacity: 0.9;
+}
+
+.resplandor {
+  background: radial-gradient(
+    60% 80% at 85% 0%,
+    color-mix(in srgb, var(--accent) 14%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+}
+
+:root[data-brand] .resplandor {
+  opacity: 1;
 }
 
 .vertical {
