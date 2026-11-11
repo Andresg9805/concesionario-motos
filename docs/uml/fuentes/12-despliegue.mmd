@@ -1,0 +1,35 @@
+flowchart TB
+    subgraph PC["Equipo del usuario"]
+        NAV["Navegador web"]
+    end
+
+    subgraph HOST["Servidor con Docker Compose"]
+        subgraph CF["Contenedor frontend"]
+            NGINX["nginx :80 con Angular compilado"]
+        end
+        subgraph CB["Contenedor backend"]
+            UV["uvicorn :8000 con FastAPI"]
+        end
+        ENV["Archivo .env con llaves"]
+        VOL[("Volumen con concesionario.db")]
+    end
+
+    TUN["Túnel ngrok o Cloudflare"]
+    WOMPI(["Wompi sandbox"])
+    GOV(["datos.gov.co"])
+
+    subgraph GH["GitHub"]
+        REPO["Repositorio"]
+        CI["GitHub Actions: ruff y pytest"]
+    end
+
+    NAV -- "HTTP :80" --> NGINX
+    NAV -- "API REST :8000" --> UV
+    NAV -- "widget de pago" --> WOMPI
+    ENV -.-> UV
+    UV --> VOL
+    UV -- "HTTPS" --> GOV
+    UV -- "HTTPS" --> WOMPI
+    WOMPI -- "webhook" --> TUN
+    TUN -- "reenvía a /pagos/webhook" --> UV
+    REPO -- "cada PR" --> CI
