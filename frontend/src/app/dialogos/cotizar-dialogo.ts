@@ -33,7 +33,10 @@ const CELULAR = /^3\d{9}$/;
                 {{ moto.modelo }}
               </h2>
               <p class="num mt-0.5 text-sm text-muted">
-                {{ moto.cc }} cc · Licencia {{ licencia() }} · {{ moto.precio | cop }}
+                {{ moto.cc }} cc · Licencia {{ licencia() }}
+                @if (tipo() === 'cotizacion') {
+                  · {{ moto.precio | cop }}
+                }
               </p>
             </div>
             <button
@@ -50,9 +53,7 @@ const CELULAR = /^3\d{9}$/;
             <div class="flex flex-col gap-4 p-5" aria-live="polite">
               <div class="flex items-center gap-2 text-sm text-ok">
                 <app-icono nombre="check-circle-2" class="h-5 w-5" />{{
-                  r.tipo === 'testdrive'
-                    ? 'Test drive en la cola del asesor'
-                    : 'Cotización registrada'
+                  r.tipo === 'testdrive' ? 'Test drive solicitado' : 'Cotización registrada'
                 }}
               </div>
               <div class="rounded-lg border border-line bg-surface2 p-4">
@@ -88,14 +89,25 @@ const CELULAR = /^3\d{9}$/;
                   <dt class="text-xs text-muted">Moto</dt>
                   <dd>{{ moto.modelo }} · {{ licencia() }}</dd>
                 </div>
-                <div>
-                  <dt class="text-xs text-muted">Cuota estimada</dt>
-                  <dd class="num font-mono">{{ cuota() | cop }} × {{ plazo() }}</dd>
-                </div>
+                @if (r.tipo === 'cotizacion') {
+                  <div>
+                    <dt class="text-xs text-muted">Cuota estimada</dt>
+                    <dd class="num font-mono">{{ cuota() | cop }} × {{ plazo() }}</dd>
+                  </div>
+                } @else {
+                  <div>
+                    <dt class="text-xs text-muted">Siguiente paso</dt>
+                    <dd>El asesor agenda la prueba contigo</dd>
+                  </div>
+                }
               </dl>
               <p class="text-xs text-muted">
-                El asesor te escribirá por WhatsApp. Guarda el código para consultar el estado sin
-                crear cuenta.
+                {{
+                  r.tipo === 'testdrive'
+                    ? 'El asesor te escribirá por WhatsApp para acordar el día y la hora.'
+                    : 'El asesor te escribirá por WhatsApp.'
+                }}
+                Guarda el código para consultar el estado sin crear cuenta.
               </p>
               <div class="flex flex-wrap gap-2">
                 <button
@@ -147,42 +159,44 @@ const CELULAR = /^3\d{9}$/;
                   >
                 </div>
               </fieldset>
-              <div class="grid gap-4 sm:grid-cols-2">
-                <label class="text-sm font-medium" for="qInicial"
-                  >Cuota inicial: <span class="num font-bold">{{ inicialPct() }} %</span>
-                  <input
-                    id="qInicial"
-                    name="inicial"
-                    type="range"
-                    min="0"
-                    max="50"
-                    step="5"
-                    class="mt-3 w-full"
-                    [ngModel]="inicialPct()"
-                    (ngModelChange)="inicialPct.set(+$event)"
-                  />
-                </label>
-                <label class="text-sm font-medium" for="qPlazo"
-                  >Plazo
-                  <select
-                    id="qPlazo"
-                    name="plazo"
-                    class="field mt-1 h-11 w-full rounded-md px-3"
-                    [ngModel]="plazo()"
-                    (ngModelChange)="plazo.set(+$event)"
-                  >
-                    @for (meses of plazos; track meses) {
-                      <option [ngValue]="meses">{{ meses }} meses</option>
-                    }
-                  </select>
-                </label>
-              </div>
-              <div class="flex items-baseline justify-between rounded-md bg-accentsoft px-4 py-3">
-                <span class="text-sm">Cuota mensual estimada</span>
-                <span class="num font-mono text-lg font-semibold text-accenttext">{{
-                  cuota() | cop
-                }}</span>
-              </div>
+              @if (tipo() === 'cotizacion') {
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <label class="text-sm font-medium" for="qInicial"
+                    >Cuota inicial: <span class="num font-bold">{{ inicialPct() }} %</span>
+                    <input
+                      id="qInicial"
+                      name="inicial"
+                      type="range"
+                      min="0"
+                      max="50"
+                      step="5"
+                      class="mt-3 w-full"
+                      [ngModel]="inicialPct()"
+                      (ngModelChange)="inicialPct.set(+$event)"
+                    />
+                  </label>
+                  <label class="text-sm font-medium" for="qPlazo"
+                    >Plazo
+                    <select
+                      id="qPlazo"
+                      name="plazo"
+                      class="field mt-1 h-11 w-full rounded-md px-3"
+                      [ngModel]="plazo()"
+                      (ngModelChange)="plazo.set(+$event)"
+                    >
+                      @for (meses of plazos; track meses) {
+                        <option [ngValue]="meses">{{ meses }} meses</option>
+                      }
+                    </select>
+                  </label>
+                </div>
+                <div class="flex items-baseline justify-between rounded-md bg-accentsoft px-4 py-3">
+                  <span class="text-sm">Cuota mensual estimada</span>
+                  <span class="num font-mono text-lg font-semibold text-accenttext">{{
+                    cuota() | cop
+                  }}</span>
+                </div>
+              }
               @if (tipo() === 'testdrive' && licencia() === 'A2') {
                 <div
                   class="flex items-start gap-2 rounded-md border border-line px-3 py-2 text-xs text-muted"
