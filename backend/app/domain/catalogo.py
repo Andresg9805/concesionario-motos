@@ -9,10 +9,10 @@ CILINDRAJE_MAXIMO_A1 = 125
 
 
 class TipoMoto(StrEnum):
-    CALLE = "CALLE"
-    DEPORTIVA = "DEPORTIVA"
+    NAKED = "NAKED"
     DOBLE_PROPOSITO = "DOBLE_PROPOSITO"
-    SCOOTER = "SCOOTER"
+    DEPORTIVA = "DEPORTIVA"
+    TRAIL = "TRAIL"
 
 
 class CategoriaLicencia(StrEnum):

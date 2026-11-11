@@ -43,10 +43,10 @@ classDiagram
 
     class TipoMoto {
         <<enumeration>>
-        CALLE
-        DEPORTIVA
+        NAKED
         DOBLE_PROPOSITO
-        SCOOTER
+        DEPORTIVA
+        TRAIL
     }
 
     class CategoriaLicencia {
