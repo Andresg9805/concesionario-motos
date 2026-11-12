@@ -29,9 +29,11 @@ export interface Destacada {
   frase: string;
 }
 
-export type CategoriaAccesorio = 'Cascos' | 'Chaquetas' | 'Rodilleras' | 'Hombreras';
+export type CategoriaAccesorio =
+  'Cascos' | 'Chaquetas' | 'Guantes' | 'Rodilleras' | 'Hombreras' | 'Maletas' | 'Mantenimiento';
 
-export type IlustracionAccesorio = 'casco' | 'chaqueta' | 'rodillera' | 'hombrera';
+export type IlustracionAccesorio =
+  'casco' | 'chaqueta' | 'guantes' | 'rodillera' | 'hombrera' | 'maleta' | 'mantenimiento';
 
 export interface Accesorio {
   id: string;
