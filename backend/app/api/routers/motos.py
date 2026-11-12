@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Path, Query, Response, status
@@ -37,7 +37,9 @@ from app.domain.puertos import FiltrosMoto
 
 router = APIRouter(prefix="/motos", tags=["Catálogo"])
 
-RESPUESTA_404 = {status.HTTP_404_NOT_FOUND: {"description": "La moto no existe"}}
+RESPUESTA_404: dict[int | str, dict[str, Any]] = {
+    status.HTTP_404_NOT_FOUND: {"description": "La moto no existe"}
+}
 IdMoto = Annotated[int, Path(ge=1, description="Identificador de la moto")]
 
 

@@ -113,7 +113,19 @@ class MotoResumenSalida(BaseModel):
 
     @classmethod
     def desde_dominio(cls, moto: Moto) -> "MotoResumenSalida":
-        return cls(**_campos_resumen(moto))
+        return cls(
+            id=moto.id or 0,
+            marca=MarcaResumenSalida.desde_dominio(moto.marca),
+            modelo=moto.modelo,
+            anio=moto.anio,
+            cilindraje_cc=moto.cilindraje_cc,
+            tipo=moto.tipo,
+            categoria_licencia=moto.categoria_licencia
+            or Moto.categoria_por_cilindraje(moto.cilindraje_cc),
+            precio_cop=moto.precio_cop,
+            disponible=moto.esta_disponible(),
+            imagen_url=moto.imagen_url,
+        )
 
 
 class MotoDetalleSalida(MotoResumenSalida):
@@ -123,28 +135,13 @@ class MotoDetalleSalida(MotoResumenSalida):
 
     @classmethod
     def desde_dominio(cls, moto: Moto) -> "MotoDetalleSalida":
+        resumen = MotoResumenSalida.desde_dominio(moto)
         return cls(
-            **_campos_resumen(moto),
+            **resumen.model_dump(),
             consumo_km_galon=moto.consumo_km_galon,
             costo_mantenimiento_km_cop=moto.costo_mantenimiento_km_cop,
             descripcion=moto.descripcion,
         )
-
-
-def _campos_resumen(moto: Moto) -> dict[str, object]:
-    return {
-        "id": moto.id or 0,
-        "marca": MarcaResumenSalida.desde_dominio(moto.marca),
-        "modelo": moto.modelo,
-        "anio": moto.anio,
-        "cilindraje_cc": moto.cilindraje_cc,
-        "tipo": moto.tipo,
-        "categoria_licencia": moto.categoria_licencia
-        or Moto.categoria_por_cilindraje(moto.cilindraje_cc),
-        "precio_cop": moto.precio_cop,
-        "disponible": moto.esta_disponible(),
-        "imagen_url": moto.imagen_url,
-    }
 
 
 class MotoFinanciableSalida(BaseModel):
