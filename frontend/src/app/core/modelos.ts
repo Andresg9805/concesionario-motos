@@ -2,7 +2,7 @@ export type ClaveMarca = 'honda' | 'kawasaki' | 'yamaha';
 
 export type TipoMoto = 'NAKED' | 'DOBLE_PROPOSITO' | 'TRAIL' | 'DEPORTIVA';
 
-export type Silueta = 'naked' | 'trail' | 'sport';
+export type Silueta = 'naked' | 'trail' | 'doble' | 'sport';
 
 export type CategoriaLicencia = 'A1' | 'A2';
 

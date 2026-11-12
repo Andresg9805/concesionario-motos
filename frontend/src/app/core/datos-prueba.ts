@@ -91,6 +91,14 @@ export const MOTOS: readonly Moto[] = [
     recomendada: true,
   },
   {
+    id: 'k-zx6r',
+    marca: 'kawasaki',
+    modelo: 'Ninja ZX-6R',
+    cc: 636,
+    tipo: 'DEPORTIVA',
+    precio: 69990000,
+  },
+  {
     id: 'k-z900',
     marca: 'kawasaki',
     modelo: 'Z900',
@@ -118,6 +126,14 @@ export const MOTOS: readonly Moto[] = [
     cc: 155,
     tipo: 'DEPORTIVA',
     precio: 17490000,
+  },
+  {
+    id: 'y-r3',
+    marca: 'yamaha',
+    modelo: 'YZF-R3',
+    cc: 321,
+    tipo: 'DEPORTIVA',
+    precio: 33990000,
   },
   {
     id: 'y-xtz250',

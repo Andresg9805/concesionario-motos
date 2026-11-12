@@ -28,7 +28,7 @@ import { Icono } from '../../../shared/icono';
         class="seigaiha pointer-events-none absolute top-6 right-0 h-32 w-72 opacity-40"
         aria-hidden="true"
       ></div>
-      <p class="eyebrow eyebrow-marca text-muted">Paso 3</p>
+      <p class="eyebrow eyebrow-marca text-muted">Paso 4</p>
       <h2 id="tituloCotizar" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
         Cotiza sin crear cuenta
       </h2>

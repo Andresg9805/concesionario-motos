@@ -1,7 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
 import { CatalogoService } from '../../../core/catalogo.service';
-import { FiltrosService, Orden, RANGOS, SEGMENTOS } from '../../../core/filtros.service';
+import {
+  FiltroTipo,
+  FiltrosService,
+  Orden,
+  RANGOS,
+  SEGMENTOS,
+} from '../../../core/filtros.service';
 import { MarcaService } from '../../../core/marca.service';
+import { NOMBRE_TIPO, ORDEN_TIPOS } from '../../../core/marcas';
 import { CopPipe } from '../../../shared/cop.pipe';
 import { Icono } from '../../../shared/icono';
 import { TarjetaMoto } from '../../../shared/tarjeta-moto';
@@ -13,7 +20,7 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
     <section id="catalogo" class="gutter mx-auto max-w-7xl py-14" aria-labelledby="tituloCatalogo">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p class="eyebrow eyebrow-marca text-muted">Paso 2</p>
+          <p class="eyebrow eyebrow-marca text-muted">Paso 3</p>
           <h2 id="tituloCatalogo" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
             Catálogo <span class="text-accenttext">{{ marcaService.marca()?.nombre }}</span>
           </h2>
@@ -55,6 +62,27 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
                 }}<span
                   class="num rounded bg-[color-mix(in_srgb,currentColor_12%,transparent)] px-1.5 text-xs"
                   >{{ conteo()[segmento.id] }}</span
+                >
+              </button>
+            }
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="w-24 shrink-0 text-xs font-bold tracking-wider text-muted uppercase"
+            >Estilo</span
+          >
+          <div class="flex flex-wrap gap-2" role="group" aria-label="Tipo de moto">
+            @for (opcion of tipos; track opcion.id) {
+              <button
+                type="button"
+                class="chip inline-flex h-9 items-center gap-2 rounded-full border border-line px-3 text-sm font-medium hover:border-muted"
+                [attr.aria-pressed]="filtros.tipo() === opcion.id"
+                (click)="filtros.tipo.set(opcion.id)"
+              >
+                {{ opcion.texto
+                }}<span
+                  class="num rounded bg-[color-mix(in_srgb,currentColor_12%,transparent)] px-1.5 text-xs"
+                  >{{ conteoTipos()[opcion.id] }}</span
                 >
               </button>
             }
@@ -133,15 +161,29 @@ export class Catalogo {
 
   protected readonly segmentos = SEGMENTOS;
   protected readonly rangos = RANGOS;
+  protected readonly tipos: readonly { id: FiltroTipo; texto: string }[] = [
+    { id: 'todos', texto: 'Todos' },
+    ...ORDEN_TIPOS.map((tipo) => ({ id: tipo, texto: NOMBRE_TIPO[tipo] })),
+  ];
 
   private readonly deLaMarca = computed(() => this.catalogo.porMarca(this.marcaService.actual()));
 
   protected readonly conteo = computed(() => {
-    const base = this.filtros.aplicar(this.deLaMarca(), true);
+    const base = this.filtros.aplicar(this.deLaMarca(), { segmento: true });
     return Object.fromEntries(SEGMENTOS.map((s) => [s.id, base.filter(s.cumple).length])) as Record<
       string,
       number
     >;
+  });
+
+  protected readonly conteoTipos = computed(() => {
+    const base = this.filtros.aplicar(this.deLaMarca(), { tipo: true });
+    return Object.fromEntries(
+      this.tipos.map((t) => [
+        t.id,
+        t.id === 'todos' ? base.length : base.filter((m) => m.tipo === t.id).length,
+      ]),
+    ) as Record<FiltroTipo, number>;
   });
 
   protected readonly lista = computed(() =>

@@ -17,11 +17,11 @@ describe('CatalogoService', () => {
     );
   });
 
-  it('cuenta los modelos por marca como en el wireframe', () => {
-    expect(catalogo.porMarca(null)).toHaveLength(22);
+  it('cuenta los modelos por marca', () => {
+    expect(catalogo.porMarca(null)).toHaveLength(24);
     expect(catalogo.porMarca('honda')).toHaveLength(8);
-    expect(catalogo.porMarca('kawasaki')).toHaveLength(7);
-    expect(catalogo.porMarca('yamaha')).toHaveLength(7);
+    expect(catalogo.porMarca('kawasaki')).toHaveLength(8);
+    expect(catalogo.porMarca('yamaha')).toHaveLength(8);
   });
 
   it('sin marca recomienda una de cada marca', () => {
