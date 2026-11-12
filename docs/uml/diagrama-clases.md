@@ -304,6 +304,8 @@ classDiagram
         CASCO
         CHAQUETA
         GUANTES
+        RODILLERA
+        HOMBRERA
         MALETA
         MANTENIMIENTO
     }
