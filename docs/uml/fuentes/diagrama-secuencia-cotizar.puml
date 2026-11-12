@@ -1,0 +1,109 @@
+@startuml diagrama-secuencia-cotizar
+skinparam dpi 130
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 160
+autonumber
+
+title Diagrama de Secuencia - Buscar por Cuota y Cotizar una Moto
+
+actor Visitante
+participant "Angular" as UI
+participant "API\n(FastAPI)" as API
+participant "Caso de uso\nBuscarPorCuota" as BPC
+participant "Caso de uso\nCrearCotizacion" as CC
+participant "CalculadoraCostoReal" as CALC
+participant "AsignadorAsesor" as ASIG
+participant "GeneradorCodigo" as GEN
+participant "RepositorioMotos" as RM
+participant "RepositorioParametros" as RP
+participant "RepositorioBusquedas" as RB
+participant "RepositorioClientes" as RC
+participant "RepositorioUsuarios" as RU
+participant "RepositorioCotizaciones" as RCO
+database "Base de datos" as BD
+
+== 1. Búsqueda por cuota ==
+
+Visitante -> UI : Ingresar cuota máxima, cuota inicial,\nlicencia, plazo y tipo de uso
+UI -> API : Solicitar búsqueda por cuota
+API -> API : Validar datos recibidos
+
+alt datos inválidos
+  API --> UI : 422 Error de validación
+  UI --> Visitante : Mostrar error
+else datos válidos
+  API -> BPC : Ejecutar búsqueda por cuota
+  BPC -> BPC : Calcular precio máximo\nsegún cuota, tasa y plazo
+  BPC -> RM : Consultar motos disponibles\nsegún precio y licencia
+  RM -> BD : Consultar motos y marcas
+  BD --> RM : Lista de motos
+  RM --> BPC : Motos disponibles
+  BPC -> RP : Obtener parámetros y tarifas SOAT
+  RP -> BD : Consultar parámetros de costo\ny tarifas SOAT
+  BD --> RP : Datos de costos
+  RP --> BPC : ParametrosCosto
+
+  loop por cada moto encontrada
+    BPC -> CALC : calcular(moto, plan, perfil, parametros)
+    CALC --> BPC : CostoMensual
+  end
+
+  BPC -> RB : Registrar búsqueda
+  RB -> BD : Guardar criterios y\ncantidad de resultados
+  BD --> RB : Confirmación
+  RB --> BPC : Búsqueda registrada
+
+  alt no hay motos para esa cuota
+    BPC --> API : Lista vacía
+    API --> UI : Respuesta sin resultados
+    UI --> Visitante : Mostrar "no hay motos para esa cuota"
+  else hay motos
+    BPC --> API : Lista de motos con cuota y costo real
+    API --> UI : Respuesta de búsqueda
+    UI --> Visitante : Mostrar resultados
+  end
+end
+
+== 2. Selección y solicitud de cotización ==
+
+Visitante -> UI : Seleccionar moto e ingresar\nnombre, teléfono, correo,\ncuota inicial y plazo
+UI -> API : Enviar datos de cotización
+API -> API : Validar solicitud
+API -> CC : Ejecutar creación de cotización
+CC -> RM : Consultar moto seleccionada
+RM -> BD : Buscar moto por ID
+BD --> RM : Datos de la moto
+RM --> CC : Moto
+CC -> CC : Calcular cuota mensual\nsegún precio, inicial y plazo
+
+CC -> RC : Buscar o registrar cliente
+RC -> BD : Consultar o guardar cliente
+BD --> RC : Datos del cliente
+RC --> CC : Cliente
+
+CC -> RU : Consultar asesores de la marca\ny sus atenciones abiertas
+RU -> BD : Consultar usuarios con rol ASESOR
+BD --> RU : Asesores
+RU --> CC : Asesores y atenciones abiertas
+CC -> ASIG : elegir(asesores, abiertas_por_asesor)
+
+alt no hay asesor disponible
+  ASIG --> CC : SinAsesorDisponibleError
+  CC --> API : Error
+  API --> UI : Sin asesor disponible
+  UI --> Visitante : Mostrar aviso
+else hay asesor
+  ASIG --> CC : Asesor con menos atenciones
+  CC -> GEN : nuevo_codigo()
+  GEN --> CC : Código CM-XXXX
+  CC -> RCO : Guardar cotización (estado NUEVO)
+  RCO -> BD : Insertar cotización
+  BD --> RCO : Confirmación
+  RCO --> CC : Cotización guardada
+  CC --> API : Código y asesor asignado
+  API --> UI : Cotización creada
+  UI --> Visitante : Mostrar código CM-XXXX y\nenlace de WhatsApp del asesor
+end
+
+@enduml
