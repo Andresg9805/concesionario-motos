@@ -35,6 +35,8 @@ def registrar(
         usuario = caso_de_uso.ejecutar(DatosRegistro(**entrada.model_dump()))
     except CorreoYaRegistradoError as error:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=error.mensaje) from error
+    if usuario.id is None:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return UsuarioSalida(
         id=usuario.id,
         nombre=usuario.nombre,

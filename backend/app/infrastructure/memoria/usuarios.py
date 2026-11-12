@@ -17,8 +17,9 @@ class RepositorioUsuariosEnMemoria(RepositorioUsuarios):
             existente = self._buscar(usuario.correo)
             if existente is not None and existente.id != usuario.id:
                 raise ValueError("Ya existe un usuario con ese correo")
-            guardado = usuario if usuario.id is not None else replace(usuario, id=next(self._ids))
-            self._usuarios[guardado.id] = guardado
+            identificador = usuario.id if usuario.id is not None else next(self._ids)
+            guardado = replace(usuario, id=identificador)
+            self._usuarios[identificador] = guardado
             return guardado
 
     def buscar_por_correo(self, correo: str) -> Usuario | None:
@@ -48,8 +49,9 @@ class RepositorioClientesEnMemoria(RepositorioClientes):
 
     def guardar(self, cliente: Cliente) -> Cliente:
         with self._candado:
-            guardado = cliente if cliente.id is not None else replace(cliente, id=next(self._ids))
-            self._clientes[guardado.id] = guardado
+            identificador = cliente.id if cliente.id is not None else next(self._ids)
+            guardado = replace(cliente, id=identificador)
+            self._clientes[identificador] = guardado
             return guardado
 
     def buscar_por_correo(self, correo: str) -> Cliente | None:
