@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from app.domain.catalogo import CILINDRAJE_MAXIMO_A1, UsoMoto
 from app.domain.excepciones import EntidadNoEncontradaError
 
-TASA_MENSUAL_REFERENCIA = 0.0189
+TASA_MENSUAL_REFERENCIA = 0.0179
 
 
 @dataclass(frozen=True)

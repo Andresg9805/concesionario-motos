@@ -94,5 +94,5 @@ def parametros_iniciales() -> ParametrosCosto:
         ],
         valor_matricula_cop=520_000,
         valor_tramites_cop=380_000,
-        tasa_mensual=0.0189,
+        tasa_mensual=0.0179,
     )
