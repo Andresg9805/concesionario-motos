@@ -15,8 +15,8 @@ def clases_de_puertos():
     ]
 
 
-def test_hay_16_puertos():
-    assert len(clases_de_puertos()) == 16
+def test_hay_17_puertos():
+    assert len(clases_de_puertos()) == 17
 
 
 @pytest.mark.parametrize("puerto", clases_de_puertos(), ids=lambda clase: clase.__name__)

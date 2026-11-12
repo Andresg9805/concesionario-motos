@@ -3,7 +3,7 @@ import secrets
 
 from app.domain.atencion import Usuario
 from app.domain.catalogo import Moto, PlanCredito, UsoMoto
-from app.domain.costo_real import CostoMensual, ParametrosCosto, PerfilUso
+from app.domain.costo_real import CostoAdquisicion, CostoMensual, ParametrosCosto, PerfilUso
 from app.domain.excepciones import CreditoInvalidoError, SinAsesorDisponibleError
 
 FACTORES_CONSUMO: dict[UsoMoto, float] = {
@@ -33,6 +33,15 @@ class CalculadoraCostoReal:
             soat_cop=parametros.soat_mensual(moto.cilindraje_cc),
             mantenimiento_cop=perfil.km_mes * moto.costo_mantenimiento_km_cop,
             impuesto_cop=parametros.impuesto_mensual(moto.precio_cop, moto.cilindraje_cc),
+        )
+
+    def costo_adquisicion(self, moto: Moto, parametros: ParametrosCosto) -> CostoAdquisicion:
+        return CostoAdquisicion(
+            precio_lista_cop=moto.precio_cop,
+            matricula_cop=parametros.valor_matricula_cop,
+            soat_cop=parametros.soat_anual(moto.cilindraje_cc),
+            impuesto_cop=parametros.impuesto_anual(moto.precio_cop, moto.cilindraje_cc),
+            tramites_cop=parametros.valor_tramites_cop,
         )
 
     def meses_para_pagarse(self, costo: CostoMensual, perfil: PerfilUso, plan: PlanCredito) -> int:

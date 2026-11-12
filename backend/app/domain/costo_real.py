@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 from app.domain.catalogo import CILINDRAJE_MAXIMO_A1, UsoMoto
 from app.domain.excepciones import EntidadNoEncontradaError
 
+TASA_MENSUAL_REFERENCIA = 0.0189
+
 
 @dataclass(frozen=True)
 class PerfilUso:
@@ -42,6 +44,24 @@ class CostoMensual:
 
 
 @dataclass(frozen=True)
+class CostoAdquisicion:
+    precio_lista_cop: int
+    matricula_cop: int
+    soat_cop: int
+    impuesto_cop: int
+    tramites_cop: int
+
+    def total(self) -> int:
+        return (
+            self.precio_lista_cop
+            + self.matricula_cop
+            + self.soat_cop
+            + self.impuesto_cop
+            + self.tramites_cop
+        )
+
+
+@dataclass(frozen=True)
 class TarifaSoat:
     cilindraje_min: int
     cilindraje_max: int
@@ -61,18 +81,33 @@ class ParametrosCosto:
     precio_galon_cop: int
     porcentaje_impuesto: float
     tarifas_soat: list[TarifaSoat] = field(default_factory=list)
+    valor_matricula_cop: int = 0
+    valor_tramites_cop: int = 0
+    tasa_mensual: float = TASA_MENSUAL_REFERENCIA
 
     def __post_init__(self) -> None:
         if self.precio_galon_cop <= 0:
             raise ValueError("El precio del galón debe ser mayor que cero")
         if not 0 <= self.porcentaje_impuesto <= 100:
             raise ValueError("El porcentaje de impuesto debe estar entre 0 y 100")
+        if self.valor_matricula_cop < 0 or self.valor_tramites_cop < 0:
+            raise ValueError("La matrícula y los trámites no pueden ser negativos")
+        if not 0 <= self.tasa_mensual < 1:
+            raise ValueError("La tasa mensual debe estar entre 0 y 1")
 
-    def soat_mensual(self, cilindraje_cc: int) -> int:
+    def soat_anual(self, cilindraje_cc: int) -> int:
         for tarifa in self.tarifas_soat:
             if tarifa.aplica(cilindraje_cc):
-                return round(tarifa.valor_anual_cop / 12)
+                return tarifa.valor_anual_cop
         raise EntidadNoEncontradaError(f"No hay tarifa de SOAT para {cilindraje_cc} cc")
+
+    def soat_mensual(self, cilindraje_cc: int) -> int:
+        return round(self.soat_anual(cilindraje_cc) / 12)
+
+    def impuesto_anual(self, precio_cop: int, cilindraje_cc: int) -> int:
+        if cilindraje_cc <= CILINDRAJE_MAXIMO_A1:
+            return 0
+        return round(precio_cop * self.porcentaje_impuesto / 100)
 
     def impuesto_mensual(self, precio_cop: int, cilindraje_cc: int) -> int:
         if cilindraje_cc <= CILINDRAJE_MAXIMO_A1:
