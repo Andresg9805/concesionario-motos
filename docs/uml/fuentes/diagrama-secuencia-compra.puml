@@ -1,0 +1,111 @@
+@startuml
+autonumber
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam roundcorner 5
+skinparam maxmessagesize 250
+skinparam defaultFontSize 12
+
+skinparam backgroundColor #FFFFFF
+skinparam sequenceBottomParticipant false
+
+skinparam ArrowColor #0F172A
+skinparam ArrowFontColor #0F172A
+skinparam ArrowThickness 1.2
+
+skinparam participant {
+    BackgroundColor #F8FAFC
+    BorderColor #334155
+    FontColor #0F172A
+}
+skinparam database {
+    BackgroundColor #F8FAFC
+    BorderColor #334155
+    FontColor #0F172A
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #0F172A
+    FontColor #0F172A
+}
+
+skinparam separator {
+    BackgroundColor #1E293B
+    BorderColor #1E293B
+    FontColor #FFFFFF
+}
+
+skinparam note {
+    BackgroundColor #FEF9C3
+    BorderColor #CA8A04
+    FontColor #713F12
+}
+
+actor "Cliente\n(Angular)" as C
+participant "API\n(FastAPI)" as A
+database "Base de Datos\n(SQLite)" as DB
+participant "Wompi\n(Sandbox)" as W
+
+== 1. Creación de Pedido y Reserva ==
+
+C -> A: POST /pedidos (items, direccion_id)
+A -> DB: Consultar precios y stock
+DB --> A: Datos confirmados
+
+note over A
+  RN-06: Precios calculados por backend
+  RN-07: Reserva de stock por 15 min
+end note
+
+A -> DB: Transacción (Pedido PENDIENTE_PAGO,\nreserva stock, Pago PENDIENTE)
+DB --> A: Pedido creado
+
+A --> C: 201 Created (referencia, monto_centavos, llaves)
+
+== 2. Pago en Wompi ==
+
+C -> W: Abrir widget con referencia y pagar
+W --> C: Transacción procesada / cierre widget
+
+== 3. Webhook de Wompi ==
+
+W -> A: POST /pagos/webhook (evento transaction.updated)
+
+note over A
+  RN-09: Validar firma SHA-256
+end note
+
+A -> DB: Consultar si existe evento por checksum
+
+alt #F1F5F9 Evento REPETIDO (Ya procesado)
+    DB --> A: Evento ya existe
+    A --> W: 200 OK (Ignorado para evitar duplicación)
+else #FFFFFF Evento NUEVO
+    DB --> A: No registrado
+
+    alt #DCFCE7 Pago APROBADO
+        A -> DB: Guardar evento (checksum)
+        A -> DB: Actualizar Pedido a PAGADO
+
+        note over A
+          RN-08: Envío solo con pago aprobado
+        end note
+
+        A -> DB: Crear Envío (guía, evento PREPARANDO)
+        DB --> A: Envío registrado
+        A --> W: 200 OK
+    else #FFE4E6 Pago RECHAZADO
+        A -> DB: Guardar evento (checksum)
+        A -> DB: Actualizar Pago a RECHAZADO\n(Pedido sigue PENDIENTE_PAGO)
+        A --> W: 200 OK
+        C -> A: Reintentar pago (dentro de los 15 min)
+    end
+end
+
+== 4. Timeout de Reserva (15 min) ==
+
+note over A, DB: Tarea periódica en segundo plano (cada 1 min)
+A -> DB: Buscar pedidos PENDIENTE_PAGO vencidos
+A -> DB: Cambiar a EXPIRADO y devolver stock
+
+@enduml
