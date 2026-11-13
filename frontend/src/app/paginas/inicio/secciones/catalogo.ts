@@ -1,14 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { CatalogoService } from '../../../core/catalogo.service';
-import {
-  FiltroTipo,
-  FiltrosService,
-  Orden,
-  RANGOS,
-  SEGMENTOS,
-} from '../../../core/filtros.service';
+import { FiltrosService, Orden } from '../../../core/filtros.service';
 import { MarcaService } from '../../../core/marca.service';
-import { NOMBRE_TIPO, ORDEN_TIPOS } from '../../../core/marcas';
+import { NOMBRE_TIPO } from '../../../core/marcas';
 import { CopPipe } from '../../../shared/cop.pipe';
 import { Icono } from '../../../shared/icono';
 import { TarjetaMoto } from '../../../shared/tarjeta-moto';
@@ -44,73 +38,26 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
         </label>
       </div>
 
-      <div class="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-surface p-4">
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="w-24 shrink-0 text-xs font-bold tracking-wider text-muted uppercase"
-            >Licencia</span
-          >
-          <div role="tablist" aria-label="Segmento por cilindraje" class="flex flex-wrap gap-2">
-            @for (segmento of segmentos; track segmento.id) {
+      @if (filtros.precioMaximo() !== null || filtros.tipo() !== 'todos') {
+        <div class="mt-6 flex flex-wrap items-center gap-2 text-sm">
+          <span class="text-muted">Mostrando:</span>
+          @if (filtros.tipo() !== 'todos') {
+            <span
+              class="inline-flex items-center gap-2 rounded-full bg-accentsoft px-3 py-1 font-medium text-accenttext"
+              >{{ nombreTipo() }}
               <button
                 type="button"
-                role="tab"
-                class="tab inline-flex h-9 items-center gap-2 rounded-md border border-line px-3 text-sm font-medium hover:border-muted"
-                [attr.aria-selected]="filtros.segmento() === segmento.id"
-                (click)="filtros.segmento.set(segmento.id)"
+                class="grid h-5 w-5 place-items-center rounded-full hover:bg-[color-mix(in_srgb,currentColor_15%,transparent)]"
+                aria-label="Quitar filtro por estilo"
+                (click)="filtros.tipo.set('todos')"
               >
-                {{ segmento.texto
-                }}<span
-                  class="num rounded bg-[color-mix(in_srgb,currentColor_12%,transparent)] px-1.5 text-xs"
-                  >{{ conteo()[segmento.id] }}</span
-                >
-              </button>
-            }
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="w-24 shrink-0 text-xs font-bold tracking-wider text-muted uppercase"
-            >Estilo</span
-          >
-          <div class="flex flex-wrap gap-2" role="group" aria-label="Tipo de moto">
-            @for (opcion of tipos; track opcion.id) {
-              <button
-                type="button"
-                class="chip inline-flex h-9 items-center gap-2 rounded-full border border-line px-3 text-sm font-medium hover:border-muted"
-                [attr.aria-pressed]="filtros.tipo() === opcion.id"
-                (click)="filtros.tipo.set(opcion.id)"
-              >
-                {{ opcion.texto
-                }}<span
-                  class="num rounded bg-[color-mix(in_srgb,currentColor_12%,transparent)] px-1.5 text-xs"
-                  >{{ conteoTipos()[opcion.id] }}</span
-                >
-              </button>
-            }
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="w-24 shrink-0 text-xs font-bold tracking-wider text-muted uppercase"
-            >Precio COP</span
-          >
-          <div class="flex flex-wrap gap-2" role="group" aria-label="Rango de precio">
-            @for (rango of rangos; track rango.id) {
-              <button
-                type="button"
-                class="chip h-9 rounded-full border border-line px-3 text-sm font-medium hover:border-muted"
-                [attr.aria-pressed]="filtros.rango() === rango.id"
-                (click)="filtros.rango.set(rango.id)"
-              >
-                {{ rango.texto }}
-              </button>
-            }
-          </div>
-        </div>
-        @if (filtros.precioMaximo() !== null) {
-          <div class="flex flex-wrap items-center gap-2 border-t border-line pt-3 text-sm">
-            <span class="text-muted">Según tu cuota:</span>
+                <app-icono nombre="x" class="h-3 w-3" /></button
+            ></span>
+          }
+          @if (filtros.precioMaximo() !== null) {
             <span
               class="num inline-flex items-center gap-2 rounded-full bg-accentsoft px-3 py-1 font-medium text-accenttext"
-              >Hasta {{ filtros.precioMaximo() | cop }}
+              >Hasta {{ filtros.precioMaximo() | cop }} según tu cuota
               <button
                 type="button"
                 class="grid h-5 w-5 place-items-center rounded-full hover:bg-[color-mix(in_srgb,currentColor_15%,transparent)]"
@@ -119,9 +66,9 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
               >
                 <app-icono nombre="x" class="h-3 w-3" /></button
             ></span>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
 
       <p class="num mt-5 text-sm text-muted" aria-live="polite">{{ resumen() }}</p>
       <div class="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -135,7 +82,7 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
               Ninguna moto coincide con estos filtros.
             </p>
             <p class="text-sm text-muted">
-              Amplía el rango de precio, cambia de licencia o mira las tres marcas.
+              Quita el filtro por cuota o por estilo, o mira las tres marcas.
             </p>
             <button
               type="button"
@@ -159,31 +106,11 @@ export class Catalogo {
   protected readonly filtros = inject(FiltrosService);
   private readonly catalogo = inject(CatalogoService);
 
-  protected readonly segmentos = SEGMENTOS;
-  protected readonly rangos = RANGOS;
-  protected readonly tipos: readonly { id: FiltroTipo; texto: string }[] = [
-    { id: 'todos', texto: 'Todos' },
-    ...ORDEN_TIPOS.map((tipo) => ({ id: tipo, texto: NOMBRE_TIPO[tipo] })),
-  ];
-
   private readonly deLaMarca = computed(() => this.catalogo.porMarca(this.marcaService.actual()));
 
-  protected readonly conteo = computed(() => {
-    const base = this.filtros.aplicar(this.deLaMarca(), { segmento: true });
-    return Object.fromEntries(SEGMENTOS.map((s) => [s.id, base.filter(s.cumple).length])) as Record<
-      string,
-      number
-    >;
-  });
-
-  protected readonly conteoTipos = computed(() => {
-    const base = this.filtros.aplicar(this.deLaMarca(), { tipo: true });
-    return Object.fromEntries(
-      this.tipos.map((t) => [
-        t.id,
-        t.id === 'todos' ? base.length : base.filter((m) => m.tipo === t.id).length,
-      ]),
-    ) as Record<FiltroTipo, number>;
+  protected readonly nombreTipo = computed(() => {
+    const tipo = this.filtros.tipo();
+    return tipo === 'todos' ? '' : NOMBRE_TIPO[tipo];
   });
 
   protected readonly lista = computed(() =>
