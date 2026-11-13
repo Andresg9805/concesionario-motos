@@ -187,6 +187,15 @@ export const ACCESORIOS: readonly Accesorio[] = [
     ilustracion: 'chaqueta',
   },
   {
+    id: 'a-guantes',
+    categoria: 'Guantes',
+    nombre: 'Guantes con protección en nudillos',
+    descripcion: 'Cuero y textil con protección rígida en nudillos y palma reforzada.',
+    precio: 179000,
+    stock: 10,
+    ilustracion: 'guantes',
+  },
+  {
     id: 'a-rodilleras',
     categoria: 'Rodilleras',
     nombre: 'Rodilleras articuladas',
@@ -203,6 +212,24 @@ export const ACCESORIOS: readonly Accesorio[] = [
     precio: 189000,
     stock: 3,
     ilustracion: 'hombrera',
+  },
+  {
+    id: 'a-baul',
+    categoria: 'Maletas',
+    nombre: 'Baúl trasero de 45 litros',
+    descripcion: 'Cabe un casco integral. Incluye base universal, llave y reflectivos.',
+    precio: 329000,
+    stock: 7,
+    ilustracion: 'maleta',
+  },
+  {
+    id: 'a-kit-mant',
+    categoria: 'Mantenimiento',
+    nombre: 'Kit de mantenimiento de cadena',
+    descripcion: 'Limpiador, lubricante de cadena y cepillo de tres caras.',
+    precio: 89000,
+    stock: 20,
+    ilustracion: 'mantenimiento',
   },
 ];
 
