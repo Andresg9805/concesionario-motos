@@ -2,7 +2,6 @@ import { Component, computed, inject } from '@angular/core';
 import { CatalogoService } from '../../../core/catalogo.service';
 import { FiltrosService, Orden } from '../../../core/filtros.service';
 import { MarcaService } from '../../../core/marca.service';
-import { NOMBRE_TIPO } from '../../../core/marcas';
 import { CopPipe } from '../../../shared/cop.pipe';
 import { Icono } from '../../../shared/icono';
 import { TarjetaMoto } from '../../../shared/tarjeta-moto';
@@ -14,7 +13,7 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
     <section id="catalogo" class="gutter mx-auto max-w-7xl py-14" aria-labelledby="tituloCatalogo">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p class="eyebrow eyebrow-marca text-muted">Paso 3</p>
+          <p class="eyebrow eyebrow-marca text-muted">Paso 2</p>
           <h2 id="tituloCatalogo" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">
             Catálogo <span class="text-accenttext">{{ marcaService.marca()?.nombre }}</span>
           </h2>
@@ -38,22 +37,9 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
         </label>
       </div>
 
-      @if (filtros.precioMaximo() !== null || filtros.tipo() !== 'todos') {
+      @if (filtros.precioMaximo() !== null) {
         <div class="mt-6 flex flex-wrap items-center gap-2 text-sm">
           <span class="text-muted">Mostrando:</span>
-          @if (filtros.tipo() !== 'todos') {
-            <span
-              class="inline-flex items-center gap-2 rounded-full bg-accentsoft px-3 py-1 font-medium text-accenttext"
-              >{{ nombreTipo() }}
-              <button
-                type="button"
-                class="grid h-5 w-5 place-items-center rounded-full hover:bg-[color-mix(in_srgb,currentColor_15%,transparent)]"
-                aria-label="Quitar filtro por estilo"
-                (click)="filtros.tipo.set('todos')"
-              >
-                <app-icono nombre="x" class="h-3 w-3" /></button
-            ></span>
-          }
           @if (filtros.precioMaximo() !== null) {
             <span
               class="num inline-flex items-center gap-2 rounded-full bg-accentsoft px-3 py-1 font-medium text-accenttext"
@@ -81,9 +67,7 @@ import { TarjetaMoto } from '../../../shared/tarjeta-moto';
             <p class="font-display text-lg font-extrabold">
               Ninguna moto coincide con estos filtros.
             </p>
-            <p class="text-sm text-muted">
-              Quita el filtro por cuota o por estilo, o mira las tres marcas.
-            </p>
+            <p class="text-sm text-muted">Quita el filtro por cuota o mira las tres marcas.</p>
             <button
               type="button"
               class="cta h-10 rounded-md px-4 text-sm font-bold"
@@ -107,11 +91,6 @@ export class Catalogo {
   private readonly catalogo = inject(CatalogoService);
 
   private readonly deLaMarca = computed(() => this.catalogo.porMarca(this.marcaService.actual()));
-
-  protected readonly nombreTipo = computed(() => {
-    const tipo = this.filtros.tipo();
-    return tipo === 'todos' ? '' : NOMBRE_TIPO[tipo];
-  });
 
   protected readonly lista = computed(() =>
     this.filtros.ordenar(this.filtros.aplicar(this.deLaMarca())),
