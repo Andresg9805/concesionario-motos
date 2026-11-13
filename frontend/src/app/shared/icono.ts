@@ -1,6 +1,9 @@
 import { Component, computed, input } from '@angular/core';
 import {
   ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  Briefcase,
   Check,
   CheckCircle2,
   ChevronLeft,
@@ -20,6 +23,7 @@ import {
   Menu,
   Moon,
   Pause,
+  RefreshCw,
   Play,
   ScanSearch,
   Search,
@@ -35,6 +39,9 @@ import {
 
 const ICONOS: Record<string, IconNode> = {
   'arrow-down': ArrowDown,
+  'arrow-left': ArrowLeft,
+  'arrow-right': ArrowRight,
+  briefcase: Briefcase,
   check: Check,
   'check-circle-2': CheckCircle2,
   'chevron-left': ChevronLeft,
@@ -54,6 +61,7 @@ const ICONOS: Record<string, IconNode> = {
   moon: Moon,
   pause: Pause,
   play: Play,
+  'refresh-cw': RefreshCw,
   'scan-search': ScanSearch,
   search: Search,
   send: Send,

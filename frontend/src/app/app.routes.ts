@@ -5,6 +5,24 @@ import { Inicio } from './paginas/inicio/inicio';
 export const routes: Routes = [
   { path: '', component: Inicio },
   {
+    path: 'carrito',
+    loadComponent: () => import('./paginas/tienda/carrito').then((m) => m.Carrito),
+    title: 'Carrito | Candela Motors',
+  },
+  {
+    path: 'checkout',
+    canActivate: [soloRol('CLIENTE')],
+    loadComponent: () => import('./paginas/tienda/checkout').then((m) => m.Checkout),
+    title: 'Envío y pago | Candela Motors',
+  },
+  {
+    path: 'pago/resultado',
+    canActivate: [soloRol('CLIENTE')],
+    loadComponent: () =>
+      import('./paginas/tienda/resultado-pago').then((m) => m.ResultadoPagoPagina),
+    title: 'Resultado del pago | Candela Motors',
+  },
+  {
     path: 'asesor',
     canActivate: [soloRol('ASESOR')],
     loadComponent: () =>

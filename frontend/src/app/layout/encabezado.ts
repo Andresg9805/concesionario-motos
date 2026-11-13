@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { CarritoService } from '../core/carrito.service';
 import { INICIO_POR_ROL, NOMBRE_ROL, SesionService } from '../core/sesion.service';
 import { TemaService } from '../core/tema.service';
 import { UiService } from '../core/ui.service';
@@ -57,7 +58,7 @@ import { Icono } from '../shared/icono';
             燭
           </text>
         </svg>
-        <span class="min-w-0 overflow-hidden leading-none">
+        <span class="hidden min-w-0 overflow-hidden leading-none min-[440px]:block">
           <span class="block font-display text-[21px] font-extrabold tracking-tight"
             >Candela<span
               class="ml-1.5 hidden align-middle font-sans text-[10px] font-bold tracking-[0.32em] text-muted sm:inline"
@@ -96,6 +97,22 @@ import { Icono } from '../shared/icono';
             class="h-[18px] w-[18px]"
           />
         </button>
+        @if (sesion.rol() !== 'ASESOR' && sesion.rol() !== 'ADMIN') {
+          <a
+            routerLink="/carrito"
+            class="relative grid h-10 w-10 place-items-center rounded-md border border-line hover:bg-surface2"
+            [attr.aria-label]="'Carrito, ' + carrito.unidades() + ' productos'"
+            title="Carrito"
+          >
+            <app-icono nombre="shopping-bag" class="h-[18px] w-[18px]" />
+            @if (carrito.unidades() > 0) {
+              <span
+                class="num absolute -top-1.5 -right-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-accent px-1 text-[11px] font-bold text-onaccent"
+                >{{ carrito.unidades() }}</span
+              >
+            }
+          </a>
+        }
         @if (sesion.usuario(); as usuario) {
           @if (usuario.rol !== 'CLIENTE') {
             <a
@@ -172,6 +189,7 @@ import { Icono } from '../shared/icono';
 export class Encabezado {
   protected readonly ui = inject(UiService);
   protected readonly sesion = inject(SesionService);
+  protected readonly carrito = inject(CarritoService);
   protected readonly tema = inject(TemaService);
   private readonly router = inject(Router);
   protected readonly menuAbierto = signal(false);
