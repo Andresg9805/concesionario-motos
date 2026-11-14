@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -16,20 +15,10 @@ if TYPE_CHECKING:
 class Compatibilidad(Base):
     __tablename__ = "compatibilidades"
 
-    accesorio_id: Mapped[int] = mapped_column(
-        ForeignKey("accesorios.id"),
-        primary_key=True
-    )
+    accesorio_id: Mapped[int] = mapped_column(ForeignKey("accesorios.id"), primary_key=True)
 
-    moto_id: Mapped[int] = mapped_column(
-        ForeignKey("motos.id"),
-        primary_key=True
-    )
+    moto_id: Mapped[int] = mapped_column(ForeignKey("motos.id"), primary_key=True)
 
-    accesorio: Mapped[Accesorio] = relationship(
-        back_populates="compatibilidades"
-    )
+    accesorio: Mapped[Accesorio] = relationship(back_populates="compatibilidades")
 
-    moto: Mapped[Moto] = relationship(
-        back_populates="compatibilidades"
-    )
+    moto: Mapped[Moto] = relationship(back_populates="compatibilidades")

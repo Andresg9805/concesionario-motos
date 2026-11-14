@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -19,16 +18,8 @@ class Departamento(Base):
 
     nombre: Mapped[str] = mapped_column(String, nullable=False)
 
-    costo_envio_cop: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
+    costo_envio_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    dias_envio: Mapped[int] = mapped_column(
-        SmallInteger,
-        nullable=False
-    )
+    dias_envio: Mapped[int] = mapped_column(SmallInteger, nullable=False)
 
-    municipios: Mapped[list[Municipio]] = relationship(
-        back_populates="departamento"
-    )
+    municipios: Mapped[list[Municipio]] = relationship(back_populates="departamento")

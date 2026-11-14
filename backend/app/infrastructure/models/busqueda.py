@@ -23,7 +23,7 @@ class Busqueda(Base):
     cuota_inicial_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
     uso: Mapped[str] = mapped_column(
-        Enum("ciudad", "carretera", "trabajo", name="uso_busqueda"),
+        Enum("CIUDAD", "CARRETERA", "TRABAJO", name="uso_busqueda"),
         nullable=False,
     )
 

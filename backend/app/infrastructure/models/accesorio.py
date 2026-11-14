@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -18,26 +17,22 @@ class Accesorio(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    sku: Mapped[str] = mapped_column(
-        String,
-        unique=True,
-        nullable=False
-    )
+    sku: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
     nombre: Mapped[str] = mapped_column(String, nullable=False)
 
     categoria: Mapped[str] = mapped_column(
         Enum(
-            "mantenimiento",
-            "chaqueta",
-            "casco",
-            "guantes",
-            "maleta",
-            "rodillera",
-            "hombrera",
-            name="categoria_accesorio"
+            "MANTENIMIENTO",
+            "CHAQUETA",
+            "CASCO",
+            "GUANTES",
+            "MALETA",
+            "RODILLERA",
+            "HOMBRERA",
+            name="categoria_accesorio",
         ),
-        nullable=False
+        nullable=False,
     )
 
     descripcion: Mapped[str] = mapped_column(Text, nullable=False)
@@ -48,10 +43,6 @@ class Accesorio(Base):
 
     imagen_url: Mapped[str] = mapped_column(String, nullable=False)
 
-    items_pedido: Mapped[list[ItemPedido]] = relationship(
-        back_populates="accesorio"
-    )
+    items_pedido: Mapped[list[ItemPedido]] = relationship(back_populates="accesorio")
 
-    compatibilidades: Mapped[list[Compatibilidad]] = relationship(
-        back_populates="accesorio"
-    )
+    compatibilidades: Mapped[list[Compatibilidad]] = relationship(back_populates="accesorio")

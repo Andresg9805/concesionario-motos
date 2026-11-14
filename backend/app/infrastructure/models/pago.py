@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from datetime import datetime
@@ -19,62 +18,26 @@ class Pago(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    pedido_id: Mapped[int] = mapped_column(
-        ForeignKey("pedidos.id"),
-        nullable=False
-    )
+    pedido_id: Mapped[int] = mapped_column(ForeignKey("pedidos.id"), nullable=False)
 
-    referencia: Mapped[str] = mapped_column(
-        String,
-        unique=True,
-        nullable=False
-    )
+    referencia: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
-    transaccion_id: Mapped[str] = mapped_column(
-        String,
-        nullable=False
-    )
+    transaccion_id: Mapped[str] = mapped_column(String, nullable=False)
 
     metodo: Mapped[str] = mapped_column(
-        Enum(
-            "tarjeta",
-            "nequi",
-            "pse",
-            name="metodo_pago"
-        ),
-        nullable=False
+        Enum("TARJETA", "NEQUI", "PSE", name="metodo_pago"), nullable=False
     )
 
     estado: Mapped[str] = mapped_column(
-        Enum(
-            "pendiente",
-            "aprobado",
-            "rechazado",
-            "error",
-            name="estado_pago"
-        ),
-        nullable=False
+        Enum("PENDIENTE", "APROBADO", "RECHAZADO", "ERROR", name="estado_pago"), nullable=False
     )
 
-    monto_cop: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
+    monto_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    creado_en: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    creado_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    actualizado_en: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    actualizado_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    pedido: Mapped[Pedido] = relationship(
-        back_populates="pagos"
-    )
+    pedido: Mapped[Pedido] = relationship(back_populates="pagos")
 
-    eventos: Mapped[list[EventoPago]] = relationship(
-        back_populates="pago"
-    )
+    eventos: Mapped[list[EventoPago]] = relationship(back_populates="pago")

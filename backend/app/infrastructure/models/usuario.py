@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -17,15 +16,10 @@ if TYPE_CHECKING:
     from app.infrastructure.models.test_drive import TestDrive
 
 
-
-
 class Usuario(Base):
     __tablename__ = "usuarios"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        autoincrement=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
     nombre: Mapped[str] = mapped_column(String, nullable=False)
     correo: Mapped[str] = mapped_column(String, unique=True, nullable=False)
@@ -33,35 +27,21 @@ class Usuario(Base):
     hash_contrasena: Mapped[str] = mapped_column(String, nullable=False)
 
     rol: Mapped[str] = mapped_column(
-        Enum("cliente", "asesor", "admin", name="rol_usuario"),
-        nullable=False
+        Enum("CLIENTE", "ASESOR", "ADMIN", name="rol_usuario"), nullable=False
     )
 
     marca_especialidad_id: Mapped[int | None] = mapped_column(
-        ForeignKey("marcas.id"),
-        nullable=True
+        ForeignKey("marcas.id"), nullable=True
     )
 
-    marca_especialidad: Mapped[Marca | None] = relationship(
-        back_populates="usuarios_especialidad"
-    )
+    marca_especialidad: Mapped[Marca | None] = relationship(back_populates="usuarios_especialidad")
 
-    cotizaciones: Mapped[list[Cotizacion]] = relationship(
-        back_populates="asesor"
-    )
+    cotizaciones: Mapped[list[Cotizacion]] = relationship(back_populates="asesor")
 
-    test_drives: Mapped[list[TestDrive]] = relationship(
-        back_populates="asesor"
-    )
+    test_drives: Mapped[list[TestDrive]] = relationship(back_populates="asesor")
 
-    cliente: Mapped[Cliente | None] = relationship(
-        back_populates="usuario"
-    )
+    cliente: Mapped[Cliente | None] = relationship(back_populates="usuario")
 
-    direcciones: Mapped[list[Direccion]] = relationship(
-        back_populates="usuario"
-    )
+    direcciones: Mapped[list[Direccion]] = relationship(back_populates="usuario")
 
-    pedidos: Mapped[list[Pedido]] = relationship(
-        back_populates="usuario"
-    )
+    pedidos: Mapped[list[Pedido]] = relationship(back_populates="usuario")

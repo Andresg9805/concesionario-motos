@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from app.infrastructure.models.moto import Moto
     from app.infrastructure.models.usuario import Usuario
 
+
 class Marca(Base):
     __tablename__ = "marcas"
 
@@ -22,6 +23,4 @@ class Marca(Base):
 
     motos: Mapped[list[Moto]] = relationship(back_populates="marca")
     usuarios_especialidad: Mapped[list[Usuario]] = relationship(back_populates="marca_especialidad")
-    busquedas: Mapped[list[Busqueda]] = relationship(
-    back_populates="marca"
-)
+    busquedas: Mapped[list[Busqueda]] = relationship(back_populates="marca")

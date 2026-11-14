@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from datetime import datetime
@@ -16,37 +15,17 @@ if TYPE_CHECKING:
 class EventoEnvio(Base):
     __tablename__ = "eventos_envio"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        autoincrement=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    envio_id: Mapped[int] = mapped_column(
-        ForeignKey("envios.id"),
-        nullable=False
-    )
+    envio_id: Mapped[int] = mapped_column(ForeignKey("envios.id"), nullable=False)
 
     estado: Mapped[str] = mapped_column(
-        Enum(
-            "preparando",
-            "enviado",
-            "en_camino",
-            "entregado",
-            name="estado_evento_envio"
-        ),
-        nullable=False
+        Enum("PREPARANDO", "ENVIADO", "EN_CAMINO", "ENTREGADO", name="estado_evento_envio"),
+        nullable=False,
     )
 
-    fecha: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    fecha: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    nota: Mapped[str] = mapped_column(
-        Text,
-        nullable=False
-    )
+    nota: Mapped[str] = mapped_column(Text, nullable=False)
 
-    envio: Mapped[Envio] = relationship(
-        back_populates="eventos"
-    )
+    envio: Mapped[Envio] = relationship(back_populates="eventos")

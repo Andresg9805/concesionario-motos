@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from datetime import datetime
@@ -17,30 +16,17 @@ if TYPE_CHECKING:
     from app.infrastructure.models.usuario import Usuario
 
 
-
 class Pedido(Base):
     __tablename__ = "pedidos"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    usuario_id: Mapped[int] = mapped_column(
-        ForeignKey("usuarios.id"),
-        nullable=False
-    )
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
 
-    direccion_id: Mapped[int] = mapped_column(
-        ForeignKey("direcciones.id"),
-        nullable=False
-    )
+    direccion_id: Mapped[int] = mapped_column(ForeignKey("direcciones.id"), nullable=False)
 
     estado: Mapped[str] = mapped_column(
-        Enum(
-            "pendiente_pago",
-            "pagado",
-            "expirado",
-            name="estado_pedido"
-        ),
-        nullable=False
+        Enum("PENDIENTE_PAGO", "PAGADO", "EXPIRADO", name="estado_pedido"), nullable=False
     )
 
     subtotal_cop: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -49,33 +35,16 @@ class Pedido(Base):
 
     total_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    creado_en: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    creado_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    reservado_hasta: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    reservado_hasta: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    usuario: Mapped[Usuario] = relationship(
-        back_populates="pedidos"
-    )
+    usuario: Mapped[Usuario] = relationship(back_populates="pedidos")
 
-    direccion: Mapped[Direccion] = relationship(
-        back_populates="pedidos"
-    )
+    direccion: Mapped[Direccion] = relationship(back_populates="pedidos")
 
-    items: Mapped[list[ItemPedido]] = relationship(
-        back_populates="pedido"
-    )
+    items: Mapped[list[ItemPedido]] = relationship(back_populates="pedido")
 
-    pagos: Mapped[list[Pago]] = relationship(
-        back_populates="pedido"
-    )
+    pagos: Mapped[list[Pago]] = relationship(back_populates="pedido")
 
-    envio: Mapped[Envio | None] = relationship(
-    back_populates="pedido",
-        uselist=False
-    )
+    envio: Mapped[Envio | None] = relationship(back_populates="pedido", uselist=False)

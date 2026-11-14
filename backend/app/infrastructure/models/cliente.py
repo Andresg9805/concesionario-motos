@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -17,41 +16,20 @@ if TYPE_CHECKING:
 class Cliente(Base):
     __tablename__ = "clientes"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        autoincrement=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    nombre: Mapped[str] = mapped_column(
-        String,
-        nullable=False
-    )
+    nombre: Mapped[str] = mapped_column(String, nullable=False)
 
-    correo: Mapped[str] = mapped_column(
-        String,
-        unique=True,
-        nullable=False
-    )
+    correo: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
-    telefono: Mapped[str] = mapped_column(
-        String,
-        nullable=False
-    )
+    telefono: Mapped[str] = mapped_column(String, nullable=False)
 
     usuario_id: Mapped[int | None] = mapped_column(
-        ForeignKey("usuarios.id"),
-        unique=True,
-        nullable=True
+        ForeignKey("usuarios.id"), unique=True, nullable=True
     )
 
-    cotizaciones: Mapped[list[Cotizacion]] = relationship(
-        back_populates="cliente"
-    )
+    cotizaciones: Mapped[list[Cotizacion]] = relationship(back_populates="cliente")
 
-    test_drives: Mapped[list[TestDrive]] = relationship(
-        back_populates="cliente"
-    )
+    test_drives: Mapped[list[TestDrive]] = relationship(back_populates="cliente")
 
-    usuario: Mapped[Usuario | None] = relationship(
-    back_populates="cliente"
-    )
+    usuario: Mapped[Usuario | None] = relationship(back_populates="cliente")

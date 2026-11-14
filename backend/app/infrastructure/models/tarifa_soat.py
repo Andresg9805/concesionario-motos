@@ -1,4 +1,3 @@
-
 from sqlalchemy import Integer, SmallInteger
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -10,17 +9,8 @@ class TarifaSoat(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    cilindraje_min: Mapped[int] = mapped_column(
-        SmallInteger,
-        nullable=False
-    )
+    cilindraje_min: Mapped[int] = mapped_column(SmallInteger, nullable=False)
 
-    cilindraje_max: Mapped[int] = mapped_column(
-        SmallInteger,
-        nullable=False
-    )
+    cilindraje_max: Mapped[int] = mapped_column(SmallInteger, nullable=False)
 
-    valor_anual_cop: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
+    valor_anual_cop: Mapped[int] = mapped_column(Integer, nullable=False)

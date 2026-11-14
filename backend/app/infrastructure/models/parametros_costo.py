@@ -12,17 +12,8 @@ class ParametrosCosto(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    precio_galon_cop: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
+    precio_galon_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    porcentaje_impuesto: Mapped[Decimal] = mapped_column(
-        Numeric(5, 2),
-        nullable=False
-    )
+    porcentaje_impuesto: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)
 
-    actualizado_en: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    actualizado_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)

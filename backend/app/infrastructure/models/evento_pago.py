@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from datetime import datetime
@@ -18,27 +17,12 @@ class EventoPago(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    pago_id: Mapped[int] = mapped_column(
-        ForeignKey("pagos.id"),
-        nullable=False
-    )
+    pago_id: Mapped[int] = mapped_column(ForeignKey("pagos.id"), nullable=False)
 
-    checksum: Mapped[str] = mapped_column(
-        String,
-        unique=True,
-        nullable=False
-    )
+    checksum: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
-    estado_recibido: Mapped[str] = mapped_column(
-        String,
-        nullable=False
-    )
+    estado_recibido: Mapped[str] = mapped_column(String, nullable=False)
 
-    recibido_en: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
+    recibido_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    pago: Mapped[Pago] = relationship(
-        back_populates="eventos"
-    )
+    pago: Mapped[Pago] = relationship(back_populates="eventos")

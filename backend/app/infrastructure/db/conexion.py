@@ -3,16 +3,11 @@ import os
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "sqlite:///./concesionario.db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./concesionario.db")
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False}
-    if DATABASE_URL.startswith("sqlite")
-    else {}
+    connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {},
 )
 
 if DATABASE_URL.startswith("sqlite"):
@@ -23,8 +18,5 @@ if DATABASE_URL.startswith("sqlite"):
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 
-SessionLocal = sessionmaker(
-    bind=engine,
-    autoflush=False,
-    autocommit=False
-)
+
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
