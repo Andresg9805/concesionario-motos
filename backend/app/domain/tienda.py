@@ -17,6 +17,8 @@ class CategoriaAccesorio(StrEnum):
     CASCO = "CASCO"
     CHAQUETA = "CHAQUETA"
     GUANTES = "GUANTES"
+    RODILLERA = "RODILLERA"
+    HOMBRERA = "HOMBRERA"
     MALETA = "MALETA"
     MANTENIMIENTO = "MANTENIMIENTO"
 

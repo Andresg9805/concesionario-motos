@@ -107,7 +107,7 @@ entity "accesorios" {
   --
   sku : varchar [UNIQUE]
   nombre : varchar
-  categoria : enum("casco", "chaqueta", "rodillera", "hombrera")
+  categoria : enum("casco", "chaqueta", "guantes", "rodillera", "hombrera", "maleta", "mantenimiento")
   descripcion : text
   precio_cop : int
   stock : int

@@ -1,11 +1,9 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { map, of, startWith, switchMap } from 'rxjs';
+import { AtencionApiService } from '../../../core/atencion-api';
 import { FormsModule } from '@angular/forms';
-import {
-  AtencionService,
-  FORMATO_CODIGO,
-  PASOS_COTIZACION,
-  PASOS_TEST_DRIVE,
-} from '../../../core/atencion.service';
+import { FORMATO_CODIGO, PASOS_COTIZACION, PASOS_TEST_DRIVE } from '../../../core/atencion.service';
 import { CatalogoService } from '../../../core/catalogo.service';
 import { FiltrosService } from '../../../core/filtros.service';
 import { formatoCop, leerPesos, precioMaximoPorCuota } from '../../../core/finanzas';
@@ -159,7 +157,9 @@ import { Icono } from '../../../shared/icono';
               class="mt-4 rounded-md border border-line bg-surface2 p-4 text-sm"
               aria-live="polite"
             >
-              @if (encontrada(); as atencion) {
+              @if (buscando()) {
+                <p class="text-muted">Buscando el código…</p>
+              } @else if (encontrada(); as atencion) {
                 <div class="flex flex-wrap items-baseline justify-between gap-2">
                   <p class="font-mono text-base font-semibold">{{ atencion.codigo }}</p>
                   <span
@@ -201,7 +201,7 @@ export class Cotizar {
   private readonly filtros = inject(FiltrosService);
   private readonly catalogo = inject(CatalogoService);
   private readonly marcaService = inject(MarcaService);
-  private readonly atencion = inject(AtencionService);
+  private readonly atencionApi = inject(AtencionApiService);
   private readonly ui = inject(UiService);
 
   protected readonly plazos = [12, 24, 36, 48, 60];
@@ -216,10 +216,22 @@ export class Cotizar {
   protected readonly errorCodigo = signal('');
   protected readonly consultado = signal<string | null>(null);
 
-  protected readonly encontrada = computed(() => {
-    const codigo = this.consultado();
-    return codigo ? this.atencion.consultar(codigo) : undefined;
-  });
+  private readonly intento = signal(0);
+  private readonly busqueda = toSignal(
+    toObservable(computed(() => ({ codigo: this.consultado(), intento: this.intento() }))).pipe(
+      switchMap(({ codigo }) =>
+        codigo
+          ? this.atencionApi.buscar(codigo).pipe(
+              map((atencion) => ({ buscando: false, atencion })),
+              startWith({ buscando: true, atencion: undefined as Atencion | undefined }),
+            )
+          : of({ buscando: false, atencion: undefined as Atencion | undefined }),
+      ),
+    ),
+    { initialValue: { buscando: false, atencion: undefined as Atencion | undefined } },
+  );
+  protected readonly buscando = computed(() => this.busqueda().buscando);
+  protected readonly encontrada = computed(() => this.busqueda().atencion);
 
   protected readonly pasos = computed(() =>
     this.encontrada()?.tipo === 'testdrive' ? PASOS_TEST_DRIVE : PASOS_COTIZACION,
@@ -283,6 +295,7 @@ export class Cotizar {
     }
     this.errorCodigo.set('');
     this.consultado.set(codigo);
+    this.intento.update((n) => n + 1);
   }
 
   protected nombreMarca(atencion: Atencion): string {

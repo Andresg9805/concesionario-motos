@@ -1,6 +1,6 @@
 import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AtencionService } from '../core/atencion.service';
+import { AtencionApiService } from '../core/atencion-api';
 import { cuotaMensual, licenciaPara } from '../core/finanzas';
 import { MARCAS } from '../core/marcas';
 import { Atencion, TipoAtencion } from '../core/modelos';
@@ -270,12 +270,22 @@ const CELULAR = /^3\d{9}$/;
               @if (errores()['terminos']) {
                 <span class="-mt-3 text-xs text-danger">{{ errores()['terminos'] }}</span>
               }
+              @if (errorEnvio()) {
+                <p class="rounded-md bg-danger/10 p-3 text-sm text-danger" role="alert">
+                  {{ errorEnvio() }}
+                </p>
+              }
               <button
                 type="submit"
-                class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold"
+                class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold disabled:opacity-60"
+                [disabled]="enviando()"
               >
                 <app-icono nombre="send" class="h-4 w-4" /><span>{{
-                  tipo() === 'testdrive' ? 'Pedir test drive' : 'Solicitar cotización'
+                  enviando()
+                    ? 'Enviando…'
+                    : tipo() === 'testdrive'
+                      ? 'Pedir test drive'
+                      : 'Solicitar cotización'
                 }}</span>
               </button>
             </form>
@@ -287,7 +297,7 @@ const CELULAR = /^3\d{9}$/;
 })
 export class CotizarDialogo {
   protected readonly ui = inject(UiService);
-  private readonly atencion = inject(AtencionService);
+  private readonly atencion = inject(AtencionApiService);
   private readonly dialogo = viewChild.required<ElementRef<HTMLDialogElement>>('dialogo');
 
   protected readonly plazos = [12, 24, 36, 48, 60];
@@ -306,6 +316,8 @@ export class CotizarDialogo {
   protected readonly errores = signal<Record<string, string>>({});
   protected readonly resultado = signal<Atencion | null>(null);
   protected readonly copiado = signal(false);
+  protected readonly enviando = signal(false);
+  protected readonly errorEnvio = signal('');
 
   protected nombre = '';
   protected correo = '';
@@ -321,6 +333,7 @@ export class CotizarDialogo {
         this.resultado.set(null);
         this.errores.set({});
         this.copiado.set(false);
+        this.errorEnvio.set('');
         if (!dialogo.open) {
           dialogo.showModal?.();
         }
@@ -349,10 +362,46 @@ export class CotizarDialogo {
       errores['terminos'] = 'Necesitamos tu autorización para que el asesor te contacte.';
     }
     this.errores.set(errores);
-    if (Object.keys(errores).length > 0) {
+    this.errorEnvio.set('');
+    if (Object.keys(errores).length > 0 || this.enviando()) {
       return;
     }
-    this.resultado.set(this.atencion.registrar(moto, this.tipo()));
+    const tipo = this.tipo();
+    const credito =
+      tipo === 'cotizacion'
+        ? {
+            cuota_inicial_cop: Math.round((moto.precio * this.inicialPct()) / 100),
+            plazo_meses: this.plazo(),
+          }
+        : null;
+    this.enviando.set(true);
+    this.atencion
+      .solicitar(
+        moto,
+        tipo,
+        {
+          nombre: this.nombre.trim(),
+          correo: this.correo.trim().toLowerCase(),
+          celular: this.celular.trim(),
+        },
+        credito,
+      )
+      .subscribe({
+        next: (atencion) => {
+          this.enviando.set(false);
+          this.resultado.set(atencion);
+        },
+        error: (error: { status?: number }) => {
+          this.enviando.set(false);
+          this.errorEnvio.set(
+            error.status === 409
+              ? 'Ahora no hay asesores disponibles para esta marca. Inténtalo más tarde.'
+              : error.status === 422
+                ? 'Revisa los datos: algo no quedó bien escrito.'
+                : 'No pudimos registrar la solicitud. Inténtalo de nuevo en un momento.',
+          );
+        },
+      });
   }
 
   protected copiar(codigo: string): void {

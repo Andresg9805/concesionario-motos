@@ -20,14 +20,19 @@ def marca(nombre: str = "Kawasaki") -> Marca:
     return Marca(id=1, nombre=nombre, color_hex=colores[nombre])
 
 
-def moto(cilindraje_cc: int = 399, precio_cop: int = 30_000_000, stock: int = 3) -> Moto:
+def moto(
+    cilindraje_cc: int = 399,
+    precio_cop: int = 30_000_000,
+    stock: int = 3,
+    tipo: TipoMoto = TipoMoto.DEPORTIVA,
+) -> Moto:
     return Moto(
         id=1,
         marca=marca(),
         modelo="Ninja 400",
         anio=2026,
         cilindraje_cc=cilindraje_cc,
-        tipo=TipoMoto.DEPORTIVA,
+        tipo=tipo,
         precio_cop=precio_cop,
         stock=stock,
         consumo_km_galon=90.0,

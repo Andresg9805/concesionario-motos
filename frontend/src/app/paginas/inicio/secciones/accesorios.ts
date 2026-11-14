@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { CarritoService } from '../../../core/carrito.service';
 import { CatalogoService } from '../../../core/catalogo.service';
 import { Accesorio, CategoriaAccesorio } from '../../../core/modelos';
 import { SesionService } from '../../../core/sesion.service';
@@ -82,7 +83,7 @@ type Filtro = 'Todos' | CategoriaAccesorio;
                   (click)="comprar(accesorio)"
                 >
                   <app-icono nombre="shopping-bag" class="h-4 w-4" />{{
-                    accesorio.stock === 0 ? 'Sin stock' : 'Comprar accesorio'
+                    accesorio.stock === 0 ? 'Sin stock' : 'Agregar al carrito'
                   }}
                 </button>
               </div>
@@ -97,13 +98,17 @@ export class Accesorios {
   private readonly catalogo = inject(CatalogoService);
   private readonly sesion = inject(SesionService);
   private readonly ui = inject(UiService);
+  private readonly carrito = inject(CarritoService);
 
   protected readonly categorias: readonly Filtro[] = [
     'Todos',
     'Cascos',
     'Chaquetas',
+    'Guantes',
     'Rodilleras',
     'Hombreras',
+    'Maletas',
+    'Mantenimiento',
   ];
   protected readonly filtro = signal<Filtro>('Todos');
 
@@ -121,11 +126,14 @@ export class Accesorios {
   }
 
   protected comprar(accesorio: Accesorio): void {
-    if (!this.sesion.autenticado()) {
-      this.ui.accesoAbierto.set(true);
-      this.ui.avisar('Para comprar accesorios necesitas una cuenta de cliente.');
+    if (this.sesion.rol() === 'ASESOR' || this.sesion.rol() === 'ADMIN') {
+      this.ui.avisar('Solo las cuentas de cliente pueden comprar accesorios.', 'error');
       return;
     }
-    this.ui.avisar(`${accesorio.nombre}: el carrito y el pago con Wompi llegan en el Sprint 2.`);
+    if (this.carrito.agregar(accesorio)) {
+      this.ui.avisar(`${accesorio.nombre} quedó en el carrito.`, 'ok');
+    } else {
+      this.ui.avisar(`No hay más unidades de ${accesorio.nombre}.`, 'error');
+    }
   }
 }
