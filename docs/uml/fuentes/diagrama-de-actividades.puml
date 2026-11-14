@@ -1,0 +1,83 @@
+@startuml diagrama-de-actividades
+title Diagrama de actividades: compra de accesorios en Candela Motors
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #444444
+skinparam SwimlaneTitleFontStyle bold
+skinparam defaultFontSize 13
+
+|#E8F4F0|Cliente|
+start
+:Explorar la tienda de accesorios;
+:Agregar accesorios al carrito;
+:Ir a pagar;
+if (¿Tiene sesión iniciada?) then (no)
+  if (¿Tiene cuenta?) then (no)
+    :Crear cuenta de cliente\n(nombre, correo, celular, contraseña);
+  else (sí)
+  endif
+  :Iniciar sesión;
+else (sí)
+endif
+:Elegir dirección de envío\n(departamento y municipio, DIVIPOLA);
+
+|#EAF1FA|Sistema|
+:Verificar stock de cada accesorio;
+if (¿Hay stock suficiente?) then (no)
+  |Cliente|
+  :Ver aviso de stock insuficiente\ny ajustar el carrito;
+  stop
+else (sí)
+endif
+|Sistema|
+:Calcular subtotal, costo de envío\npor departamento y total;
+:Crear pedido PENDIENTE_PAGO;
+:Reservar el stock por 15 minutos\n(reservado_hasta);
+:Crear pago PENDIENTE\ncon referencia única;
+
+repeat
+  |Cliente|
+  :Elegir método de pago\n(tarjeta, Nequi o PSE)\nen el widget de Wompi;
+  |#F3EEF8|Wompi|
+  :Procesar la transacción;
+  :Enviar evento al webhook;
+  |Sistema|
+  :Validar la firma SHA256 del evento;
+  if (¿Firma válida?) then (no)
+    :Rechazar el evento (401);
+    stop
+  else (sí)
+  endif
+  if (¿Evento repetido?\n(checksum ya registrado)) then (sí)
+    :Ignorar el evento\n(responder 200 sin cambios);
+    stop
+  else (no)
+    :Registrar el evento de pago;
+  endif
+  backward:Reintentar el pago;
+repeat while (¿Pago APROBADO?) is (no, y la reserva sigue vigente) not (sí)
+
+|Sistema|
+:Marcar pago APROBADO\ny pedido PAGADO;
+:Descontar el stock de forma definitiva;
+:Crear envío PREPARANDO\ncon número de guía;
+|Cliente|
+:Ver confirmación del pedido\ny número de guía;
+
+|#FBF3E6|Administrador|
+repeat
+  :Avanzar el envío al siguiente estado\n(PREPARANDO → ENVIADO → EN_CAMINO → ENTREGADO);
+  |Sistema|
+  :Registrar evento de envío;
+  |Cliente|
+  :Consultar la línea de tiempo del envío;
+  |Administrador|
+repeat while (¿Envío ENTREGADO?) is (no) not (sí)
+|Cliente|
+stop
+
+floating note right
+  Si pasan los 15 minutos sin pago aprobado,
+  una tarea periódica del sistema marca el
+  pedido como EXPIRADO y libera el stock.
+end note
+@enduml
