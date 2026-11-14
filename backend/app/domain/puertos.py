@@ -206,6 +206,9 @@ class RepositorioPagos(ABC):
     def buscar_por_referencia(self, referencia: str) -> Pago | None: ...
 
     @abstractmethod
+    def buscar_por_pedido(self, pedido_id: int) -> Pago | None: ...
+
+    @abstractmethod
     def registrar_evento(self, pago_id: int, checksum: str) -> bool: ...
 
 
