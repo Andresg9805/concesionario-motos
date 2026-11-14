@@ -1,0 +1,1317 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Candela Motors Inicio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        bg: 'var(--bg)', surface: 'var(--surface)', surface2: 'var(--surface-2)', line: 'var(--line)',
+        fg: 'var(--fg)', muted: 'var(--muted)', band: 'var(--band)', onband: 'var(--on-band)',
+        bandmuted: 'var(--band-muted)', bandline: 'var(--band-line)', accent: 'var(--accent)',
+        onaccent: 'var(--on-accent)', accenttext: 'var(--accent-text)', accentsoft: 'var(--accent-soft)',
+        matte: 'var(--matte)', onmatte: 'var(--on-matte)', danger: 'var(--danger)', ok: 'var(--ok)'
+      },
+      fontFamily: {
+        display: ['"Shippori Mincho B1"', '"Noto Serif JP"', 'Georgia', 'serif'],
+        sans: ['"Zen Kaku Gothic New"', '"Hiragino Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+      }
+    }
+  }
+};
+</script>
+<style>
+/* Layout: encabezado fijo, hero carrusel neutro, banda de marca que cambia de paleta, catálogo en rejilla, accesorios en malla mate */
+:root {
+  --bg: #f7f7f6; --surface: #ffffff; --surface-2: #efefed; --line: #dcdcd8; --fg: #161617; --muted: #66666a;
+  --band: #ececea; --on-band: #161617; --band-muted: #5f5f63; --band-line: #d2d2ce;
+  --matte: #1b1b1d; --on-matte: #f2f2f0; --danger: #b42318; --ok: #1f7a3a; --seal: #b3261e;
+  --accent-l: #161617; --accent-d: #f2f2f0; --on-accent-l: #ffffff; --on-accent-d: #161617;
+  --accent-text-l: #161617; --accent-text-d: #f2f2f0;
+  --accent: var(--accent-l); --on-accent: var(--on-accent-l); --accent-text: var(--accent-text-l);
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+  --honda: #CC0000; --kawasaki: #69BE28; --yamaha: #0055B8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f0f10; --surface: #18181a; --surface-2: #202023; --line: #2f2f33; --fg: #ededeb; --muted: #a0a0a6;
+    --band: #141416; --on-band: #ededeb; --band-muted: #9a9aa0; --band-line: #2c2c30;
+    --matte: #0a0a0b; --on-matte: #ededeb; --danger: #f97066; --ok: #4ade80; --seal: #e5484d;
+    --accent: var(--accent-d); --on-accent: var(--on-accent-d); --accent-text: var(--accent-text-d);
+    --honda: #ff4d4d; --yamaha: #4d94e8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f0f10; --surface: #18181a; --surface-2: #202023; --line: #2f2f33; --fg: #ededeb; --muted: #a0a0a6;
+  --band: #141416; --on-band: #ededeb; --band-muted: #9a9aa0; --band-line: #2c2c30;
+  --matte: #0a0a0b; --on-matte: #ededeb; --danger: #f97066; --ok: #4ade80; --seal: #e5484d;
+  --accent: var(--accent-d); --on-accent: var(--on-accent-d); --accent-text: var(--accent-text-d);
+  --honda: #ff4d4d; --yamaha: #4d94e8;
+  color-scheme: dark;
+}
+:root[data-brand="honda"] {
+  --accent-l: #CC0000; --accent-d: #ff4d4d; --on-accent-l: #ffffff; --on-accent-d: #1a0000;
+  --accent-text-l: #b30000; --accent-text-d: #ff6b6b;
+  --band: #232427; --on-band: #f5f5f4; --band-muted: #a3a3a8; --band-line: #3a3b40;
+}
+:root[data-brand="kawasaki"] {
+  --accent-l: #69BE28; --accent-d: #69BE28; --on-accent-l: #0a0a0a; --on-accent-d: #0a0a0a;
+  --accent-text-l: #3d7a10; --accent-text-d: #7fd13d;
+  --band: #050505; --on-band: #f2f2f0; --band-muted: #9b9b9b; --band-line: #262626;
+}
+:root[data-brand="yamaha"] {
+  --accent-l: #0055B8; --accent-d: #4d94e8; --on-accent-l: #ffffff; --on-accent-d: #00122e;
+  --accent-text-l: #0055B8; --accent-text-d: #7db2f0;
+  --band: #002C6C; --on-band: #f4f6fa; --band-muted: #a9b8d1; --band-line: #1b4380;
+}
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body { background: var(--bg); color: var(--fg); font-family: "Zen Kaku Gothic New", "Hiragino Sans", system-ui, sans-serif; font-size: 15px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--surface); }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.theme-t, .theme-t * { transition: background-color .55s ease, border-color .55s ease, color .55s ease, fill .55s ease, stroke .55s ease, box-shadow .55s ease; }
+h1, h2, h3 { text-wrap: balance; }
+.eyebrow { letter-spacing: .14em; text-transform: uppercase; font-size: 11px; font-weight: 700; }
+.num { font-variant-numeric: tabular-nums; }
+.acc { fill: var(--mark, var(--accent)); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.band :focus-visible { outline-color: var(--on-band); }
+.cta { background: var(--accent); color: var(--on-accent); }
+.cta:hover { filter: brightness(1.08); }
+.cta:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.matte-btn { background: var(--matte); color: var(--on-matte); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--on-matte) 10%, transparent); }
+.matte-btn:hover { background: color-mix(in srgb, var(--matte) 86%, var(--on-matte)); }
+.chip[aria-pressed="true"], .chip[aria-checked="true"], .tab[aria-selected="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.carousel { scroll-snap-type: x mandatory; scrollbar-width: none; }
+.carousel::-webkit-scrollbar { display: none; }
+.carousel > * { scroll-snap-align: start; }
+.seigaiha { background-image: radial-gradient(circle at 50% 100%, transparent 38%, var(--line) 39%, var(--line) 41%, transparent 42%, transparent 58%, var(--line) 59%, var(--line) 61%, transparent 62%); background-size: 28px 14px; }
+.brand-card[aria-checked="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.brand-card[aria-checked="true"] .brand-dot { background: var(--accent); }
+.vertical { writing-mode: vertical-rl; }
+dialog { padding: 0; border: 0; background: transparent; color: var(--fg); max-width: 100vw; max-height: 100dvh; }
+dialog::backdrop { background: rgb(10 10 12 / .55); backdrop-filter: blur(2px); }
+dialog[open] .sheet { animation: rise .22s ease-out; }
+@keyframes rise { from { transform: translateY(10px); opacity: .6; } to { transform: none; opacity: 1; } }
+.field { background: var(--surface); border: 1px solid var(--line); color: var(--fg); }
+.field:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.field[aria-invalid="true"] { border-color: var(--danger); }
+input[type="range"] { accent-color: var(--accent); }
+input[type="checkbox"] { accent-color: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .theme-t, .theme-t * { transition: none !important; }
+  dialog[open] .sheet { animation: none; }
+}
+</style>
+
+<div class="theme-t min-h-full">
+  <a href="#catalogo" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded focus:bg-surface focus:px-3 focus:py-2">Saltar al catálogo</a>
+
+  <header class="sticky z-50 border-b border-line bg-surface/95 backdrop-blur" style="top: env(safe-area-inset-top, 0px)">
+    <div class="gutter mx-auto flex h-[68px] max-w-7xl items-center gap-4">
+      <a href="#inicio" class="flex min-w-0 items-center gap-3" aria-label="Candela Motors, ir al inicio">
+        <svg viewBox="0 0 48 48" class="h-11 w-11 shrink-0 text-fg" aria-hidden="true">
+          <defs>
+            <filter id="brush" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+            </filter>
+          </defs>
+          <path d="M36.5 11.5 A17 17 0 1 0 41.5 28" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" filter="url(#brush)"/>
+          <path d="M41.5 28 L42.6 31" stroke="currentColor" stroke-width="2" stroke-linecap="round" filter="url(#brush)"/>
+          <text x="24" y="30.5" text-anchor="middle" font-family="Shippori Mincho B1, serif" font-weight="800" font-size="17" fill="currentColor">燭</text>
+        </svg>
+        <span class="min-w-0 leading-none">
+          <span class="block font-display text-[21px] font-extrabold tracking-tight">Candela<span class="ml-1.5 align-middle text-[10px] font-sans font-bold tracking-[0.32em] text-muted">MOTORS</span></span>
+          <span class="mt-1 block truncate text-[11px] text-muted">Calidad japonesa <span class="font-display">· 日本品質</span></span>
+        </span>
+      </a>
+
+      <nav class="ml-auto hidden items-center gap-1 lg:flex" aria-label="Principal">
+        <a href="#inicio" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface2 hover:text-fg">Inicio</a>
+        <a href="#marcas" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface2 hover:text-fg">Marcas</a>
+        <a href="#catalogo" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface2 hover:text-fg">Catálogo</a>
+        <a href="#accesorios" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface2 hover:text-fg">Accesorios</a>
+        <a href="#cotizar" class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface2 hover:text-fg">Cotizar</a>
+      </nav>
+
+      <div class="ml-auto flex items-center gap-2 lg:ml-4">
+        <button id="cartBtn" type="button" class="relative hidden h-10 items-center gap-2 rounded-md border border-line px-3 text-sm font-medium hover:bg-surface2" aria-label="Abrir carrito">
+          <i data-lucide="shopping-bag" class="h-4 w-4"></i>
+          <span id="cartCount" class="num">0</span>
+          <span id="cartTimer" class="num hidden rounded bg-accentsoft px-1.5 py-0.5 font-mono text-[11px] text-accenttext"></span>
+        </button>
+        <div id="authArea" class="flex items-center gap-2"></div>
+        <button id="menuBtn" type="button" class="grid h-10 w-10 place-items-center rounded-md border border-line lg:hidden" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menú">
+          <i data-lucide="menu" class="h-5 w-5"></i>
+        </button>
+      </div>
+    </div>
+    <nav id="mobileNav" class="gutter hidden border-t border-line bg-surface pb-3 pt-2 lg:hidden" aria-label="Principal móvil">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 gap-1 sm:grid-cols-5">
+        <a href="#inicio" class="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-surface2">Inicio</a>
+        <a href="#marcas" class="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-surface2">Marcas</a>
+        <a href="#catalogo" class="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-surface2">Catálogo</a>
+        <a href="#accesorios" class="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-surface2">Accesorios</a>
+        <a href="#cotizar" class="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-surface2">Cotizar</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inicio" class="relative overflow-hidden border-b border-line bg-surface2" aria-roledescription="carrusel" aria-label="Modelos destacados">
+      <div class="seigaiha pointer-events-none absolute -right-10 top-0 h-40 w-80 opacity-60" aria-hidden="true"></div>
+      <div class="gutter mx-auto max-w-7xl py-8 md:py-12">
+        <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow text-muted">Concesionario multimarca · Honda · Kawasaki · Yamaha</p>
+            <h1 class="mt-2 max-w-2xl font-display text-3xl font-extrabold leading-tight md:text-[42px]">Tres marcas japonesas, un solo asesor para cada una.</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="heroPrev" type="button" class="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface hover:bg-bg" aria-label="Modelo anterior"><i data-lucide="chevron-left" class="h-5 w-5"></i></button>
+            <button id="heroPause" type="button" class="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface hover:bg-bg" aria-label="Pausar carrusel"><i data-lucide="pause" class="h-4 w-4"></i></button>
+            <button id="heroNext" type="button" class="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface hover:bg-bg" aria-label="Modelo siguiente"><i data-lucide="chevron-right" class="h-5 w-5"></i></button>
+          </div>
+        </div>
+        <div id="heroTrack" class="carousel flex gap-4 overflow-x-auto" tabindex="0" aria-live="polite"></div>
+        <div id="heroDots" class="mt-4 flex items-center gap-2" role="tablist" aria-label="Elegir modelo destacado"></div>
+      </div>
+    </section>
+
+    <section id="marcas" class="band bg-band text-onband" aria-labelledby="marcasTitle">
+      <div class="gutter mx-auto max-w-7xl" style="padding-block: 44px 20px">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p class="eyebrow text-bandmuted">Paso 1</p>
+            <h2 id="marcasTitle" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">Elige tu marca</h2>
+            <p class="mt-1 max-w-xl text-sm text-bandmuted">La página adopta los colores de la marca elegida para que identifiques sus modelos de un vistazo.</p>
+          </div>
+          <p id="brandStatus" class="text-sm text-bandmuted" aria-live="polite"></p>
+        </div>
+        <div id="brandSelector" role="radiogroup" aria-labelledby="marcasTitle" class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4"></div>
+      </div>
+
+      <div class="gutter mx-auto max-w-7xl" style="padding-block: 28px 52px">
+        <div class="flex flex-wrap items-baseline justify-between gap-2 border-t border-bandline pt-6">
+          <h3 class="font-display text-xl font-extrabold">Motos recomendadas del mercado <span id="recBrand" class="text-bandmuted"></span></h3>
+          <a href="#catalogo" class="inline-flex items-center gap-1 text-sm font-medium text-bandmuted hover:text-onband">Ver catálogo completo <i data-lucide="arrow-down" class="h-4 w-4"></i></a>
+        </div>
+        <div id="recGrid" class="mt-5 grid gap-4 md:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="gutter mx-auto max-w-7xl" style="padding-block: 56px" aria-labelledby="catTitle">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow text-muted">Paso 2</p>
+          <h2 id="catTitle" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">Catálogo <span id="catBrand" class="text-accenttext"></span></h2>
+          <p class="mt-1 text-sm text-muted">Licencia A1 para motos de hasta 125 cc. Licencia A2 para motos de más de 125 cc.</p>
+        </div>
+        <label class="flex items-center gap-2 text-sm text-muted" for="sortSel">Ordenar
+          <select id="sortSel" class="field h-10 rounded-md px-3 text-sm">
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="cc-asc">Cilindraje: menor a mayor</option>
+            <option value="cc-desc">Cilindraje: mayor a menor</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-surface p-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="w-24 shrink-0 text-xs font-bold uppercase tracking-wider text-muted">Licencia</span>
+          <div id="segTabs" role="tablist" aria-label="Segmento por cilindraje" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="w-24 shrink-0 text-xs font-bold uppercase tracking-wider text-muted">Precio COP</span>
+          <div id="rangeChips" class="flex flex-wrap gap-2" role="group" aria-label="Rango de precio"></div>
+        </div>
+        <div id="activeFilters" class="hidden flex-wrap items-center gap-2 border-t border-line pt-3 text-sm"></div>
+      </div>
+
+      <p id="catCount" class="mt-5 text-sm text-muted num" aria-live="polite"></p>
+      <div id="catGrid" class="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+      <p class="mt-4 text-xs text-muted">Precios de referencia de ejemplo para el wireframe. Cuota estimada con cuota fija: 36 meses, 10 % de cuota inicial y tasa del 1,79 % mensual vencida. El valor final lo confirma el asesor.</p>
+    </section>
+
+    <section id="accesorios" class="border-y border-line bg-surface" aria-labelledby="accTitle">
+      <div class="gutter mx-auto max-w-7xl" style="padding-block: 56px">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow text-muted">Tienda en línea</p>
+            <h2 id="accTitle" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">Accesorios y protección</h2>
+            <p class="mt-1 max-w-xl text-sm text-muted">Pago 100 % virtual y envío con seguimiento. Al pagar, separamos tu stock durante 15 minutos.</p>
+          </div>
+          <div id="accChips" class="flex flex-wrap gap-2" role="group" aria-label="Categoría de accesorio"></div>
+        </div>
+        <div id="accGrid" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <section id="cotizar" class="gutter mx-auto max-w-7xl" style="padding-block: 56px" aria-labelledby="cotTitle">
+      <p class="eyebrow text-muted">Paso 3</p>
+      <h2 id="cotTitle" class="mt-1 font-display text-2xl font-extrabold md:text-3xl">Cotiza sin crear cuenta</h2>
+      <p class="mt-1 max-w-2xl text-sm text-muted">Calcula qué moto alcanzas con tu cuota mensual, o consulta el estado de una cotización o test drive con tu código CM-XXXX.</p>
+      <div class="mt-6 grid gap-4 lg:grid-cols-5">
+        <form id="cuotaForm" class="rounded-lg border border-line bg-surface p-5 lg:col-span-3" novalidate>
+          <h3 class="flex items-center gap-2 font-display text-lg font-extrabold"><i data-lucide="wallet" class="h-5 w-5"></i>Buscar por cuota</h3>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            <label class="text-sm font-medium" for="bcCuota">Cuota mensual máxima (COP)
+              <input id="bcCuota" inputmode="numeric" class="field num mt-1 h-11 w-full rounded-md px-3" value="450.000" aria-describedby="bcCuotaErr">
+              <span id="bcCuotaErr" class="mt-1 hidden text-xs text-danger"></span>
+            </label>
+            <label class="text-sm font-medium" for="bcInicial">Cuota inicial (COP)
+              <input id="bcInicial" inputmode="numeric" class="field num mt-1 h-11 w-full rounded-md px-3" value="1.500.000">
+            </label>
+            <label class="text-sm font-medium" for="bcPlazo">Plazo
+              <select id="bcPlazo" class="field mt-1 h-11 w-full rounded-md px-3">
+                <option value="12">12 meses</option><option value="24">24 meses</option><option value="36" selected>36 meses</option><option value="48">48 meses</option><option value="60">60 meses</option>
+              </select>
+            </label>
+            <fieldset class="text-sm font-medium">
+              <legend>Tu licencia</legend>
+              <div class="mt-1 grid grid-cols-2 gap-2">
+                <label class="flex h-11 cursor-pointer items-center gap-2 rounded-md border border-line px-3 has-[:checked]:border-accent has-[:checked]:bg-accentsoft"><input type="radio" name="bcLic" id="bcLicA1" value="a1" checked> A1 · hasta 125 cc</label>
+                <label class="flex h-11 cursor-pointer items-center gap-2 rounded-md border border-line px-3 has-[:checked]:border-accent has-[:checked]:bg-accentsoft"><input type="radio" name="bcLic" id="bcLicA2" value="a2"> A2 · más de 125 cc</label>
+              </div>
+            </fieldset>
+          </div>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <button type="submit" class="cta inline-flex h-11 items-center gap-2 rounded-md px-5 text-sm font-bold"><i data-lucide="search" class="h-4 w-4"></i>Ver motos que alcanzo</button>
+            <p id="bcResult" class="text-sm text-muted num" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <form id="trackForm" class="rounded-lg border border-line bg-surface p-5 lg:col-span-2" novalidate>
+          <h3 class="flex items-center gap-2 font-display text-lg font-extrabold"><i data-lucide="scan-search" class="h-5 w-5"></i>Seguimiento con código</h3>
+          <label class="mt-4 block text-sm font-medium" for="trackCode">Código de atención
+            <input id="trackCode" autocomplete="off" maxlength="7" class="field mt-1 h-11 w-full rounded-md px-3 font-mono uppercase tracking-widest" placeholder="CM-XXXX" aria-describedby="trackHelp trackErr">
+          </label>
+          <p id="trackHelp" class="mt-1 text-xs text-muted">Código de ejemplo: <button type="button" id="trackSample" class="font-mono underline underline-offset-2">CM-7K2Q</button></p>
+          <p id="trackErr" class="mt-1 hidden text-xs text-danger"></p>
+          <button type="submit" class="matte-btn mt-4 inline-flex h-11 items-center gap-2 rounded-md px-5 text-sm font-bold">Consultar estado</button>
+          <div id="trackResult" class="mt-4 hidden rounded-md border border-line bg-surface2 p-4 text-sm" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line bg-surface">
+    <div class="gutter mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 text-xs text-muted" style="padding-block: 24px">
+      <span>Candela Motors · Calidad japonesa · Bogotá, Colombia</span>
+      <span>Las motos se cotizan con un asesor. Los accesorios se compran en línea.</span>
+    </div>
+  </footer>
+</div>
+
+<dialog id="authDialog" aria-labelledby="authTitle" class="theme-t">
+  <div class="sheet w-[min(460px,calc(100vw-32px))] overflow-hidden rounded-xl border border-line bg-surface shadow-2xl">
+    <div class="flex items-start justify-between gap-4 border-b border-line p-5">
+      <div>
+        <h2 id="authTitle" class="font-display text-xl font-extrabold">Accede a Candela Motors</h2>
+        <p id="authReason" class="mt-1 hidden text-sm text-muted"></p>
+      </div>
+      <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-md hover:bg-surface2" aria-label="Cerrar"><i data-lucide="x" class="h-5 w-5"></i></button>
+    </div>
+    <div class="px-5 pt-4">
+      <div role="tablist" aria-label="Tipo de acceso" class="grid grid-cols-2 gap-1 rounded-lg bg-surface2 p-1">
+        <button type="button" role="tab" id="tabLogin" aria-controls="panelLogin" aria-selected="true" class="tab h-10 rounded-md text-sm font-bold">Iniciar sesión</button>
+        <button type="button" role="tab" id="tabRegister" aria-controls="panelRegister" aria-selected="false" tabindex="-1" class="tab h-10 rounded-md text-sm font-bold text-muted">Crear cuenta</button>
+      </div>
+    </div>
+
+    <form id="panelLogin" role="tabpanel" aria-labelledby="tabLogin" class="flex flex-col gap-4 p-5" novalidate>
+      <fieldset>
+        <legend class="text-sm font-medium">Ingresar como</legend>
+        <div id="roleGroup" role="radiogroup" aria-label="Rol" class="mt-1.5 grid grid-cols-3 gap-2">
+          <button type="button" role="radio" aria-checked="true" data-role="CLIENTE" class="chip flex h-14 flex-col items-center justify-center gap-0.5 rounded-md border border-line text-xs font-bold"><i data-lucide="user" class="h-4 w-4"></i>Cliente</button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" data-role="ASESOR" class="chip flex h-14 flex-col items-center justify-center gap-0.5 rounded-md border border-line text-xs font-bold"><i data-lucide="headset" class="h-4 w-4"></i>Asesor</button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" data-role="ADMIN" class="chip flex h-14 flex-col items-center justify-center gap-0.5 rounded-md border border-line text-xs font-bold"><i data-lucide="shield" class="h-4 w-4"></i>Administrador</button>
+        </div>
+      </fieldset>
+      <label id="advisorBrandWrap" class="hidden text-sm font-medium" for="advisorBrand">Marca de especialidad
+        <select id="advisorBrand" class="field mt-1 h-11 w-full rounded-md px-3">
+          <option value="honda">Honda</option><option value="kawasaki">Kawasaki</option><option value="yamaha">Yamaha</option>
+        </select>
+      </label>
+      <label class="text-sm font-medium" for="loginEmail">Correo electrónico
+        <input id="loginEmail" type="email" autocomplete="email" class="field mt-1 h-11 w-full rounded-md px-3" placeholder="nombre@correo.com" aria-describedby="loginEmailErr">
+        <span id="loginEmailErr" class="mt-1 hidden text-xs text-danger"></span>
+      </label>
+      <label class="text-sm font-medium" for="loginPass">Contraseña
+        <span class="relative mt-1 block">
+          <input id="loginPass" type="password" autocomplete="current-password" class="field h-11 w-full rounded-md pl-3 pr-11" aria-describedby="loginPassErr">
+          <button type="button" data-toggle-pass="loginPass" class="absolute right-1 top-1 grid h-9 w-9 place-items-center rounded text-muted hover:text-fg" aria-label="Mostrar contraseña"><i data-lucide="eye" class="h-4 w-4"></i></button>
+        </span>
+        <span id="loginPassErr" class="mt-1 hidden text-xs text-danger"></span>
+      </label>
+      <button type="submit" class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold"><i data-lucide="log-in" class="h-4 w-4"></i>Iniciar sesión</button>
+      <button type="button" id="guestBtn" class="hidden h-11 rounded-md border border-line text-sm font-bold hover:bg-surface2">Continuar sin cuenta</button>
+      <p class="text-xs text-muted">Simulación de acceso: cualquier correo válido y una contraseña de 8 caracteres o más inician sesión con el rol elegido.</p>
+    </form>
+
+    <form id="panelRegister" role="tabpanel" aria-labelledby="tabRegister" class="hidden flex-col gap-4 p-5" novalidate>
+      <p class="rounded-md bg-surface2 px-3 py-2 text-xs text-muted">Las cuentas nuevas son de cliente. Las cuentas de asesor y administrador las crea el administrador.</p>
+      <label class="text-sm font-medium" for="regName">Nombre completo
+        <input id="regName" autocomplete="name" class="field mt-1 h-11 w-full rounded-md px-3" aria-describedby="regNameErr">
+        <span id="regNameErr" class="mt-1 hidden text-xs text-danger"></span>
+      </label>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="text-sm font-medium" for="regEmail">Correo
+          <input id="regEmail" type="email" autocomplete="email" class="field mt-1 h-11 w-full rounded-md px-3" aria-describedby="regEmailErr">
+          <span id="regEmailErr" class="mt-1 hidden text-xs text-danger"></span>
+        </label>
+        <label class="text-sm font-medium" for="regPhone">Celular
+          <input id="regPhone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" class="field num mt-1 h-11 w-full rounded-md px-3" placeholder="3001234567" aria-describedby="regPhoneErr">
+          <span id="regPhoneErr" class="mt-1 hidden text-xs text-danger"></span>
+        </label>
+      </div>
+      <label class="text-sm font-medium" for="regPass">Contraseña
+        <span class="relative mt-1 block">
+          <input id="regPass" type="password" autocomplete="new-password" class="field h-11 w-full rounded-md pl-3 pr-11" aria-describedby="regPassHelp regPassErr">
+          <button type="button" data-toggle-pass="regPass" class="absolute right-1 top-1 grid h-9 w-9 place-items-center rounded text-muted hover:text-fg" aria-label="Mostrar contraseña"><i data-lucide="eye" class="h-4 w-4"></i></button>
+        </span>
+        <span id="regPassHelp" class="mt-1 block text-xs text-muted">Mínimo 8 caracteres, con al menos un número.</span>
+        <span id="regPassErr" class="mt-1 hidden text-xs text-danger"></span>
+      </label>
+      <label class="flex items-start gap-2 text-xs text-muted" for="regTerms">
+        <input id="regTerms" type="checkbox" class="mt-0.5 h-4 w-4" aria-describedby="regTermsErr">
+        <span>Autorizo el tratamiento de mis datos personales según la Ley 1581 de 2012.</span>
+      </label>
+      <span id="regTermsErr" class="-mt-3 hidden text-xs text-danger"></span>
+      <button type="submit" class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold"><i data-lucide="user-plus" class="h-4 w-4"></i>Crear cuenta</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="quoteDialog" aria-labelledby="quoteTitle" class="theme-t">
+  <div class="sheet w-[min(560px,calc(100vw-32px))] overflow-hidden rounded-xl border border-line bg-surface shadow-2xl">
+    <div class="flex items-start justify-between gap-4 border-b border-line p-5">
+      <div class="min-w-0">
+        <p id="quoteBrand" class="eyebrow text-accenttext"></p>
+        <h2 id="quoteTitle" class="mt-1 font-display text-xl font-extrabold"></h2>
+        <p id="quoteSpec" class="mt-0.5 text-sm text-muted num"></p>
+      </div>
+      <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-md hover:bg-surface2" aria-label="Cerrar"><i data-lucide="x" class="h-5 w-5"></i></button>
+    </div>
+    <form id="quoteForm" class="flex max-h-[70dvh] flex-col gap-4 overflow-y-auto p-5" novalidate>
+      <fieldset>
+        <legend class="text-sm font-medium">Quiero</legend>
+        <div class="mt-1.5 grid grid-cols-2 gap-2">
+          <label class="flex h-11 cursor-pointer items-center gap-2 rounded-md border border-line px-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accentsoft"><input type="radio" name="qTipo" id="qTipoCot" value="cotizacion" checked> Cotización</label>
+          <label class="flex h-11 cursor-pointer items-center gap-2 rounded-md border border-line px-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accentsoft"><input type="radio" name="qTipo" id="qTipoTd" value="testdrive"> Test drive</label>
+        </div>
+      </fieldset>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="text-sm font-medium" for="qInicial">Cuota inicial: <span id="qInicialOut" class="num font-bold"></span>
+          <input id="qInicial" type="range" min="0" max="50" step="5" value="10" class="mt-3 w-full">
+        </label>
+        <label class="text-sm font-medium" for="qPlazo">Plazo
+          <select id="qPlazo" class="field mt-1 h-11 w-full rounded-md px-3">
+            <option value="12">12 meses</option><option value="24">24 meses</option><option value="36" selected>36 meses</option><option value="48">48 meses</option><option value="60">60 meses</option>
+          </select>
+        </label>
+      </div>
+      <div class="flex items-baseline justify-between rounded-md bg-accentsoft px-4 py-3">
+        <span class="text-sm">Cuota mensual estimada</span>
+        <span id="qCuota" class="num font-mono text-lg font-semibold text-accenttext"></span>
+      </div>
+      <div id="qLicWarn" class="hidden items-start gap-2 rounded-md border border-line px-3 py-2 text-xs text-muted"><i data-lucide="id-card" class="mt-0.5 h-4 w-4 shrink-0"></i><span></span></div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="text-sm font-medium sm:col-span-2" for="qName">Nombre completo
+          <input id="qName" autocomplete="name" class="field mt-1 h-11 w-full rounded-md px-3" aria-describedby="qNameErr">
+          <span id="qNameErr" class="mt-1 hidden text-xs text-danger"></span>
+        </label>
+        <label class="text-sm font-medium" for="qEmail">Correo
+          <input id="qEmail" type="email" autocomplete="email" class="field mt-1 h-11 w-full rounded-md px-3" aria-describedby="qEmailErr">
+          <span id="qEmailErr" class="mt-1 hidden text-xs text-danger"></span>
+        </label>
+        <label class="text-sm font-medium" for="qPhone">Celular
+          <input id="qPhone" type="tel" inputmode="numeric" maxlength="10" class="field num mt-1 h-11 w-full rounded-md px-3" placeholder="3001234567" aria-describedby="qPhoneErr">
+          <span id="qPhoneErr" class="mt-1 hidden text-xs text-danger"></span>
+        </label>
+      </div>
+      <label class="flex items-start gap-2 text-xs text-muted" for="qTerms">
+        <input id="qTerms" type="checkbox" class="mt-0.5 h-4 w-4">
+        <span>Autorizo que un asesor me contacte por WhatsApp y el tratamiento de mis datos según la Ley 1581 de 2012.</span>
+      </label>
+      <span id="qTermsErr" class="-mt-3 hidden text-xs text-danger"></span>
+      <button type="submit" id="qSubmit" class="cta inline-flex h-11 items-center justify-center gap-2 rounded-md text-sm font-bold"><i data-lucide="send" class="h-4 w-4"></i><span>Solicitar cotización</span></button>
+    </form>
+    <div id="quoteResult" class="hidden flex-col gap-4 p-5" aria-live="polite"></div>
+  </div>
+</dialog>
+
+<dialog id="cartDialog" aria-labelledby="cartTitle" class="theme-t m-0 ml-auto h-full">
+  <div class="sheet flex h-[100dvh] w-[min(420px,100vw)] flex-col border-l border-line bg-surface" style="padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px)">
+    <div class="flex items-center justify-between border-b border-line p-5">
+      <h2 id="cartTitle" class="font-display text-xl font-extrabold">Tu carrito</h2>
+      <button type="button" data-close class="grid h-9 w-9 place-items-center rounded-md hover:bg-surface2" aria-label="Cerrar carrito"><i data-lucide="x" class="h-5 w-5"></i></button>
+    </div>
+    <div id="cartReserve" class="hidden items-center gap-2 border-b border-line bg-accentsoft px-5 py-3 text-sm"></div>
+    <ul id="cartList" class="flex-1 divide-y divide-line overflow-y-auto px-5"></ul>
+    <div class="border-t border-line p-5">
+      <div class="flex items-baseline justify-between text-sm"><span class="text-muted">Subtotal estimado</span><span id="cartSubtotal" class="num font-mono font-semibold"></span></div>
+      <p class="mt-1 text-xs text-muted">El total final y el envío por departamento los calcula el servidor con los precios oficiales.</p>
+      <button type="button" id="payBtn" class="matte-btn mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md text-sm font-bold"><i data-lucide="credit-card" class="h-4 w-4"></i><span>Pagar con Wompi (sandbox)</span></button>
+    </div>
+  </div>
+</dialog>
+
+<div id="toasts" class="pointer-events-none fixed z-[80] flex w-[min(380px,calc(100vw-32px))] flex-col gap-2" style="right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px))" aria-live="polite" role="status"></div>
+
+<script>
+(() => {
+  const TASA = 0.0179;
+  const BRANDS = {
+    honda: { nombre: 'Honda', kanji: '本田', origen: 'Desde 1948 · Hamamatsu', color: 'var(--honda)' },
+    kawasaki: { nombre: 'Kawasaki', kanji: '川崎', origen: 'Desde 1896 · Kobe', color: 'var(--kawasaki)' },
+    yamaha: { nombre: 'Yamaha', kanji: 'ヤマハ', origen: 'Desde 1955 · Iwata', color: 'var(--yamaha)' }
+  };
+  const MOTOS = [
+    { id: 'h-wave', marca: 'honda', modelo: 'Wave 110S', cc: 109, tipo: 'Urbana', precio: 5990000, sil: 'cub' },
+    { id: 'h-navi', marca: 'honda', modelo: 'Navi 110', cc: 109, tipo: 'Scooter', precio: 6890000, sil: 'scooter' },
+    { id: 'h-cb125f', marca: 'honda', modelo: 'CB125F', cc: 124, tipo: 'Urbana', precio: 7990000, sil: 'naked', rec: true },
+    { id: 'h-xr150l', marca: 'honda', modelo: 'XR150L', cc: 149, tipo: 'Trail', precio: 10490000, sil: 'trail' },
+    { id: 'h-cb190r', marca: 'honda', modelo: 'CB190R', cc: 184, tipo: 'Naked', precio: 12890000, sil: 'naked', rec: true },
+    { id: 'h-pcx160', marca: 'honda', modelo: 'PCX 160', cc: 156, tipo: 'Scooter', precio: 15990000, sil: 'scooter' },
+    { id: 'h-xre300', marca: 'honda', modelo: 'XRE 300 Rally', cc: 286, tipo: 'Trail', precio: 24490000, sil: 'trail', rec: true },
+    { id: 'h-africa', marca: 'honda', modelo: 'CRF1100L Africa Twin', cc: 1084, tipo: 'Adventure', precio: 89990000, sil: 'trail' },
+    { id: 'k-klx110', marca: 'kawasaki', modelo: 'KLX 110R', cc: 112, tipo: 'Off-road', precio: 13490000, sil: 'trail' },
+    { id: 'k-w175', marca: 'kawasaki', modelo: 'W175', cc: 177, tipo: 'Clásica', precio: 11990000, sil: 'naked' },
+    { id: 'k-klx150', marca: 'kawasaki', modelo: 'KLX 150', cc: 144, tipo: 'Trail', precio: 14290000, sil: 'trail' },
+    { id: 'k-versys300', marca: 'kawasaki', modelo: 'Versys-X 300', cc: 296, tipo: 'Adventure', precio: 28990000, sil: 'trail', rec: true },
+    { id: 'k-z400', marca: 'kawasaki', modelo: 'Z400', cc: 399, tipo: 'Naked', precio: 32490000, sil: 'naked' },
+    { id: 'k-ninja400', marca: 'kawasaki', modelo: 'Ninja 400', cc: 399, tipo: 'Deportiva', precio: 35990000, sil: 'sport', rec: true },
+    { id: 'k-z900', marca: 'kawasaki', modelo: 'Z900', cc: 948, tipo: 'Naked', precio: 64990000, sil: 'naked', rec: true },
+    { id: 'y-crypton', marca: 'yamaha', modelo: 'Crypton FI', cc: 115, tipo: 'Urbana', precio: 6490000, sil: 'cub' },
+    { id: 'y-bws125', marca: 'yamaha', modelo: 'BWS 125', cc: 125, tipo: 'Scooter', precio: 9190000, sil: 'scooter' },
+    { id: 'y-xtz125', marca: 'yamaha', modelo: 'XTZ 125', cc: 124, tipo: 'Trail', precio: 9590000, sil: 'trail', rec: true },
+    { id: 'y-fz25', marca: 'yamaha', modelo: 'FZ 25', cc: 249, tipo: 'Naked', precio: 15490000, sil: 'naked' },
+    { id: 'y-nmax', marca: 'yamaha', modelo: 'NMAX 155', cc: 155, tipo: 'Scooter', precio: 15890000, sil: 'scooter', rec: true },
+    { id: 'y-r15', marca: 'yamaha', modelo: 'YZF-R15 V4', cc: 155, tipo: 'Deportiva', precio: 17490000, sil: 'sport' },
+    { id: 'y-mt03', marca: 'yamaha', modelo: 'MT-03', cc: 321, tipo: 'Naked', precio: 29990000, sil: 'naked', rec: true }
+  ];
+  const HERO = [
+    { id: 'h-cb190r', frase: 'La naked de 184 cc que más se ve en Bogotá y Medellín.' },
+    { id: 'k-ninja400', frase: 'Deportiva bicilíndrica de 399 cc para licencia A2.' },
+    { id: 'y-mt03', frase: 'Torque lineal y postura erguida para ciudad y carretera.' },
+    { id: 'y-xtz125', frase: 'Trail de 124 cc: entra en licencia A1 y sube cualquier loma.' }
+  ];
+  const ACCESORIOS = [
+    { id: 'a-casco-int', cat: 'Cascos', nombre: 'Casco integral ECE 22.06', desc: 'Certificado ECE 22.06 y DOT. Calota en policarbonato y visor antiempañante.', precio: 489000, stock: 12, ilus: 'casco' },
+    { id: 'a-casco-abat', cat: 'Cascos', nombre: 'Casco abatible DOT', desc: 'Certificado DOT y NTC 4533. Mentonera abatible y gafa solar interna.', precio: 629000, stock: 6, ilus: 'casco' },
+    { id: 'a-chaq-textil', cat: 'Chaquetas', nombre: 'Chaqueta textil con protecciones', desc: 'Protecciones CE nivel 2 en hombros y codos, bolsillo para espaldar y reflectivos.', precio: 559000, stock: 9, ilus: 'chaqueta' },
+    { id: 'a-chaq-malla', cat: 'Chaquetas', nombre: 'Chaqueta en malla para clima cálido', desc: 'Malla de alta ventilación con protecciones CE nivel 1 removibles.', precio: 399000, stock: 4, ilus: 'chaqueta' },
+    { id: 'a-rodilleras', cat: 'Rodilleras', nombre: 'Rodilleras articuladas', desc: 'Concha rígida con certificación EN 1621-1 y ajuste en velcro de doble banda.', precio: 149000, stock: 15, ilus: 'rodillera' },
+    { id: 'a-hombreras', cat: 'Hombreras', nombre: 'Hombreras con espaldar', desc: 'Protección de hombros EN 1621-1 y espaldar nivel 1 con correas ajustables.', precio: 189000, stock: 3, ilus: 'hombrera' }
+  ];
+  const ASESORES = {
+    honda: [{ nombre: 'Juliana Restrepo', wa: '+57 310 555 0192', abiertas: 3 }, { nombre: 'Camilo Ortiz', wa: '+57 315 555 0148', abiertas: 2 }],
+    kawasaki: [{ nombre: 'Santiago Mejía', wa: '+57 301 555 0177', abiertas: 1 }, { nombre: 'Valentina Cruz', wa: '+57 318 555 0103', abiertas: 2 }],
+    yamaha: [{ nombre: 'Daniela Pardo', wa: '+57 320 555 0165', abiertas: 2 }, { nombre: 'Andrés Gil', wa: '+57 312 555 0121', abiertas: 4 }]
+  };
+  const RANGOS = [
+    { id: 'todos', label: 'Todos', min: 0, max: Infinity },
+    { id: 'r1', label: 'Hasta $10 M', min: 0, max: 10000000 },
+    { id: 'r2', label: '$10 M – $20 M', min: 10000000, max: 20000000 },
+    { id: 'r3', label: '$20 M – $40 M', min: 20000000, max: 40000000 },
+    { id: 'r4', label: 'Más de $40 M', min: 40000000, max: Infinity }
+  ];
+  const SEGMENTOS = [
+    { id: 'todas', label: 'Todas', test: () => true },
+    { id: 'a1', label: 'A1 · hasta 125 cc', test: m => m.cc <= 125 },
+    { id: 'a2', label: 'A2 · más de 125 cc', test: m => m.cc > 125 }
+  ];
+  const ROLES = { CLIENTE: 'Cliente', ASESOR: 'Asesor', ADMIN: 'Administrador' };
+  const RESERVA_MS = 15 * 60 * 1000;
+
+  const state = {
+    brand: 'neutral', segmento: 'todas', rango: 'todos', orden: 'precio-asc', maxPrecio: null,
+    accCat: 'Todos', user: null, pending: null, cart: [], reservaHasta: null, slide: 0, autoplay: true,
+    loginRole: 'CLIENTE', quoteMoto: null,
+    codigos: new Map([['CM-7K2Q', { tipo: 'cotizacion', estado: 'CONTACTADO', asesor: 'Camilo Ortiz', marca: 'honda', moto: 'CB190R', ejemplo: true }]])
+  };
+
+  const $ = s => document.querySelector(s);
+  const cop = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+  const fmt = n => cop.format(n).replace(/\s/g, ' ');
+  const licencia = m => (m.cc <= 125 ? 'A1' : 'A2');
+  const byId = id => MOTOS.find(m => m.id === id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const icons = () => window.lucide && window.lucide.createIcons();
+  const parseCop = v => parseInt(String(v).replace(/\D/g, ''), 10) || 0;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function cuota(precio, inicialPct = 10, n = 36) {
+    const p = precio * (1 - inicialPct / 100);
+    const c = p * TASA / (1 - Math.pow(1 + TASA, -n));
+    return Math.round(c / 100) * 100;
+  }
+  function precioMaxPorCuota(c, inicial, n) {
+    return Math.floor(c * (1 - Math.pow(1 + TASA, -n)) / TASA + inicial);
+  }
+
+  function silueta(tipo) {
+    const w = (r, y, a, b) => `<circle cx="${a}" cy="${y}" r="${r}" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="${a}" cy="${y}" r="5" fill="currentColor"/><circle cx="${b}" cy="${y}" r="${r}" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="${b}" cy="${y}" r="5" fill="currentColor"/>`;
+    const s = 'stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none"';
+    const parts = {
+      sport: w(26, 106, 52, 188) + `<path d="M52 106 L118 92 M188 106 L176 62" ${s}/><path d="M62 96 L88 72 L122 66 L150 50 L178 44 L206 62 L202 82 L168 86 L140 96 Z" fill="currentColor"/><path d="M38 64 L98 60 L94 70 L50 74 Z" fill="currentColor"/><path d="M152 58 L184 50 L196 62 L162 68 Z" class="acc"/>`,
+      naked: w(26, 106, 52, 188) + `<path d="M52 106 L104 86 M188 106 L170 50 M160 42 L180 44" ${s}/><path d="M98 62 Q118 44 150 50 L158 66 L104 74 Z" fill="currentColor"/><path d="M56 62 L100 60 L102 70 L60 72 Z" fill="currentColor"/><rect x="104" y="74" width="48" height="24" rx="4" fill="currentColor"/><circle cx="176" cy="58" r="8" fill="currentColor"/><path d="M110 58 Q128 48 146 52 L150 58 L114 64 Z" class="acc"/>`,
+      trail: w(29, 102, 50, 192) + `<path d="M50 102 L106 82 M192 102 L168 38 M158 34 L180 36" ${s}/><path d="M46 54 L108 52 L106 60 L54 64 Z" fill="currentColor"/><path d="M104 52 Q124 40 148 46 L152 60 L106 66 Z" fill="currentColor"/><rect x="108" y="66" width="40" height="24" rx="4" fill="currentColor"/><path d="M168 64 L206 58 L208 65 L172 71 Z" fill="currentColor"/><path d="M60 64 L98 62 L94 76 L66 78 Z" class="acc"/>`,
+      scooter: w(20, 112, 62, 182) + `<path d="M176 36 L198 34" ${s}/><path d="M40 100 Q40 72 74 70 L118 70 L128 92 L160 92 L172 52 L184 40 L192 44 L186 100 Z" fill="currentColor"/><path d="M56 62 L112 60 L110 68 L62 70 Z" fill="currentColor"/><path d="M60 82 L112 80 L116 92 L58 94 Z" class="acc"/>`,
+      cub: w(24, 108, 58, 184) + `<path d="M184 108 L176 50 M166 44 L188 46 M58 108 L96 90" ${s}/><path d="M70 94 L96 76 L150 74 L174 48 L186 50 L176 96 Z" fill="currentColor"/><path d="M58 70 L112 68 L110 76 L62 78 Z" fill="currentColor"/><path d="M150 74 L172 50 L178 52 L162 88 Z" class="acc"/>`
+    };
+    return `<svg viewBox="0 0 240 140" class="h-full w-full" aria-hidden="true">${parts[tipo]}</svg>`;
+  }
+
+  function ilustracion(tipo) {
+    const parts = {
+      casco: `<path d="M28 84 Q26 30 80 26 Q132 26 134 74 L134 94 L62 94 Q36 94 28 84 Z" fill="currentColor"/><path d="M80 50 Q112 44 132 58 L132 76 L88 76 Q76 66 80 50 Z" fill="var(--surface-2)" opacity=".85"/><path d="M40 70 L70 68" stroke="var(--surface-2)" stroke-width="3" opacity=".5"/>`,
+      chaqueta: `<path d="M56 22 L80 30 L104 22 L132 36 L142 96 L124 98 L118 58 L116 104 L44 104 L42 58 L36 98 L18 96 L28 36 Z" fill="currentColor"/><path d="M80 30 L80 104" stroke="var(--surface-2)" stroke-width="2.5" opacity=".6"/><rect x="30" y="40" width="14" height="22" rx="5" fill="var(--surface-2)" opacity=".45"/><rect x="116" y="40" width="14" height="22" rx="5" fill="var(--surface-2)" opacity=".45"/>`,
+      rodillera: `<path d="M60 18 Q80 10 100 18 L104 100 Q80 110 56 100 Z" fill="currentColor"/><ellipse cx="80" cy="50" rx="18" ry="22" fill="var(--surface-2)" opacity=".5"/><path d="M50 36 L110 36 M48 82 L112 82" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>`,
+      hombrera: `<path d="M26 64 Q30 30 60 28 Q72 30 74 46 L70 74 Q46 82 26 64 Z" fill="currentColor"/><path d="M134 64 Q130 30 100 28 Q88 30 86 46 L90 74 Q114 82 134 64 Z" fill="currentColor"/><rect x="66" y="38" width="28" height="70" rx="10" fill="currentColor" opacity=".75"/><path d="M70 56 L90 56 M70 72 L90 72 M70 88 L90 88" stroke="var(--surface-2)" stroke-width="2.5" opacity=".6"/>`
+    };
+    return `<svg viewBox="0 0 160 120" class="h-full w-full" aria-hidden="true">${parts[tipo]}</svg>`;
+  }
+
+  function toast(msg, tipo = 'info') {
+    const t = document.createElement('div');
+    const icon = tipo === 'ok' ? 'check-circle-2' : tipo === 'error' ? 'alert-circle' : 'info';
+    t.className = 'pointer-events-auto flex items-start gap-3 rounded-lg border border-line bg-surface px-4 py-3 text-sm shadow-lg';
+    t.innerHTML = `<i data-lucide="${icon}" class="mt-0.5 h-4 w-4 shrink-0 ${tipo === 'error' ? 'text-danger' : tipo === 'ok' ? 'text-ok' : 'text-muted'}"></i><span>${esc(msg)}</span>`;
+    $('#toasts').appendChild(t);
+    icons();
+    setTimeout(() => t.remove(), 5200);
+  }
+
+  function setBrand(b, announce = true) {
+    state.brand = b;
+    document.documentElement.dataset.brand = b;
+    try { localStorage.setItem('cm-brand', b); } catch (e) {}
+    const nombre = b === 'neutral' ? 'todas las marcas' : BRANDS[b].nombre;
+    $('#brandStatus').textContent = announce ? `Paleta activa: ${b === 'neutral' ? 'neutra' : BRANDS[b].nombre}` : '';
+    $('#recBrand').textContent = b === 'neutral' ? '· selección multimarca' : `· ${BRANDS[b].nombre}`;
+    $('#catBrand').textContent = b === 'neutral' ? '' : BRANDS[b].nombre;
+    renderBrandSelector();
+    renderRecomendadas();
+    renderCatalogo();
+    document.title = b === 'neutral' ? 'Candela Motors Inicio' : `Candela Motors ${BRANDS[b].nombre}`;
+    return nombre;
+  }
+
+  function renderBrandSelector() {
+    const opts = [['neutral', 'Ver todas', '全', 'Paleta neutra']].concat(Object.entries(BRANDS).map(([k, v]) => [k, v.nombre, v.kanji, v.origen]));
+    $('#brandSelector').innerHTML = opts.map(([k, nombre, kanji, sub]) => {
+      const n = k === 'neutral' ? MOTOS.length : MOTOS.filter(m => m.marca === k).length;
+      const on = state.brand === k;
+      const dot = k === 'neutral' ? 'var(--band-muted)' : BRANDS[k].color;
+      return `<button type="button" role="radio" aria-checked="${on}" tabindex="${on ? 0 : -1}" data-brand="${k}" class="brand-card group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-lg border border-bandline p-4 text-left hover:border-bandmuted">
+        <span class="pointer-events-none absolute -right-1 -top-2 font-display text-5xl font-extrabold opacity-[.09]" aria-hidden="true">${kanji}</span>
+        <span class="flex items-center gap-2"><span class="brand-dot h-2.5 w-2.5 rounded-full" style="background:${dot}"></span><span class="text-xs text-bandmuted">${sub}</span></span>
+        <span class="flex items-end justify-between gap-2"><span class="font-display text-xl font-extrabold md:text-2xl">${nombre}</span><span class="num text-xs text-bandmuted">${n} modelos</span></span>
+      </button>`;
+    }).join('');
+  }
+
+  function motoCard(m, opts = {}) {
+    const b = BRANDS[m.marca];
+    const lic = licencia(m);
+    const band = opts.band;
+    const frame = band ? 'bg-[color-mix(in_srgb,var(--on-band)_7%,transparent)] text-onband' : 'bg-surface2 text-fg';
+    const shell = band ? 'border-bandline bg-[color-mix(in_srgb,var(--on-band)_4%,transparent)]' : 'border-line bg-surface';
+    const mut = band ? 'text-bandmuted' : 'text-muted';
+    const featured = opts.featured ? 'border-accent ring-1 ring-[var(--accent)]' : '';
+    return `<article class="flex flex-col overflow-hidden rounded-lg border ${shell} ${featured}" style="--mark:${b.color}">
+      <div class="relative aspect-[12/7] max-w-full ${frame} px-6 pt-4">
+        ${silueta(m.sil)}
+        <span class="absolute left-3 top-3 rounded px-2 py-0.5 text-[11px] font-bold ${opts.featured ? 'cta' : (band ? 'bg-bandline text-onband' : 'bg-accentsoft text-accenttext')}">${esc(m.tipo)}</span>
+        ${opts.featured ? `<span class="absolute right-3 top-3 font-display text-[11px] font-extrabold ${mut}">推奨 · Recomendada</span>` : ''}
+      </div>
+      <div class="flex flex-1 flex-col gap-3 p-4">
+        <div>
+          <p class="flex items-center gap-1.5 text-xs ${mut}"><span class="h-2 w-2 rounded-full" style="background:${b.color}"></span>${b.nombre}</p>
+          <h4 class="mt-0.5 font-display text-lg font-extrabold leading-snug">${esc(m.modelo)}</h4>
+        </div>
+        <dl class="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+          <div><dt class="text-xs ${mut}">Cilindraje</dt><dd class="num font-medium">${m.cc} cc</dd></div>
+          <div><dt class="text-xs ${mut}">Licencia</dt><dd><span class="inline-flex items-center gap-1 rounded border ${band ? 'border-bandline' : 'border-line'} px-1.5 font-mono text-xs font-semibold" title="${lic === 'A1' ? 'Hasta 125 cc' : 'Más de 125 cc'}"><i data-lucide="id-card" class="h-3 w-3"></i>${lic}</span></dd></div>
+          <div><dt class="text-xs ${mut}">Precio de referencia</dt><dd class="num font-mono text-[13px] font-semibold">${fmt(m.precio)}</dd></div>
+          <div><dt class="text-xs ${mut}">Cuota estimada</dt><dd class="num font-mono text-[13px] font-semibold">${fmt(cuota(m.precio))}<span class="font-sans text-xs font-normal ${mut}">/mes</span></dd></div>
+        </dl>
+        <button type="button" data-cotizar="${m.id}" class="cta mt-auto inline-flex h-10 items-center justify-center gap-2 rounded-md text-sm font-bold"><i data-lucide="file-text" class="h-4 w-4"></i>Cotizar / Reservar</button>
+      </div>
+    </article>`;
+  }
+
+  function renderRecomendadas() {
+    let list;
+    if (state.brand === 'neutral') {
+      list = ['h-cb190r', 'k-ninja400', 'y-nmax'].map(byId);
+    } else {
+      list = MOTOS.filter(m => m.marca === state.brand && m.rec).slice(0, 3);
+    }
+    $('#recGrid').innerHTML = list.map((m, i) => motoCard(m, { band: true, featured: i === 0 })).join('');
+    icons();
+  }
+
+  function filtrar(ignore = {}) {
+    const rango = RANGOS.find(r => r.id === state.rango);
+    const seg = SEGMENTOS.find(s => s.id === state.segmento);
+    return MOTOS.filter(m => state.brand === 'neutral' || m.marca === state.brand)
+      .filter(m => ignore.seg || seg.test(m))
+      .filter(m => ignore.rango || (m.precio >= rango.min && m.precio < rango.max))
+      .filter(m => state.maxPrecio == null || m.precio <= state.maxPrecio);
+  }
+
+  function renderCatalogo() {
+    const baseSeg = filtrar({ seg: true });
+    $('#segTabs').innerHTML = SEGMENTOS.map(s => {
+      const on = state.segmento === s.id;
+      return `<button type="button" role="tab" aria-selected="${on}" tabindex="${on ? 0 : -1}" data-seg="${s.id}" class="tab inline-flex h-9 items-center gap-2 rounded-md border border-line px-3 text-sm font-medium hover:border-muted">${s.label}<span class="num rounded bg-[color-mix(in_srgb,currentColor_12%,transparent)] px-1.5 text-xs">${baseSeg.filter(s.test).length}</span></button>`;
+    }).join('');
+    $('#rangeChips').innerHTML = RANGOS.map(r => `<button type="button" aria-pressed="${state.rango === r.id}" data-rango="${r.id}" class="chip h-9 rounded-full border border-line px-3 text-sm font-medium hover:border-muted">${r.label}</button>`).join('');
+
+    const af = $('#activeFilters');
+    if (state.maxPrecio != null) {
+      af.classList.remove('hidden'); af.classList.add('flex');
+      af.innerHTML = `<span class="text-muted">Según tu cuota:</span><span class="inline-flex items-center gap-2 rounded-full bg-accentsoft px-3 py-1 font-medium text-accenttext num">Hasta ${fmt(state.maxPrecio)}<button type="button" id="clearMax" class="grid h-5 w-5 place-items-center rounded-full hover:bg-[color-mix(in_srgb,currentColor_15%,transparent)]" aria-label="Quitar filtro por cuota"><i data-lucide="x" class="h-3 w-3"></i></button></span>`;
+    } else {
+      af.classList.add('hidden'); af.classList.remove('flex'); af.innerHTML = '';
+    }
+
+    const [campo, dir] = state.orden.split('-');
+    const list = filtrar().sort((a, b) => (dir === 'asc' ? 1 : -1) * (a[campo === 'cc' ? 'cc' : 'precio'] - b[campo === 'cc' ? 'cc' : 'precio']));
+    $('#catCount').textContent = `${list.length} ${list.length === 1 ? 'moto' : 'motos'}${state.brand === 'neutral' ? ' de las tres marcas' : ' ' + BRANDS[state.brand].nombre}`;
+    $('#catGrid').innerHTML = list.length ? list.map(m => motoCard(m)).join('') :
+      `<div class="col-span-full flex flex-col items-start gap-3 rounded-lg border border-dashed border-line p-8">
+        <p class="font-display text-lg font-extrabold">Ninguna moto coincide con estos filtros.</p>
+        <p class="text-sm text-muted">Amplía el rango de precio, cambia de licencia o mira las tres marcas.</p>
+        <button type="button" id="resetFilters" class="cta h-10 rounded-md px-4 text-sm font-bold">Quitar filtros</button>
+      </div>`;
+    icons();
+  }
+
+  function renderAccesorios() {
+    const cats = ['Todos', 'Cascos', 'Chaquetas', 'Rodilleras', 'Hombreras'];
+    $('#accChips').innerHTML = cats.map(c => `<button type="button" aria-pressed="${state.accCat === c}" data-acccat="${c}" class="chip h-9 rounded-full border border-line px-3 text-sm font-medium hover:border-muted">${c}</button>`).join('');
+    const list = ACCESORIOS.filter(a => state.accCat === 'Todos' || a.cat === state.accCat);
+    $('#accGrid').innerHTML = list.map(a => {
+      const enCarrito = state.cart.find(c => c.id === a.id);
+      const agotado = a.stock === 0;
+      return `<article class="flex flex-col overflow-hidden rounded-lg border border-line bg-bg">
+        <div class="relative aspect-[4/3] max-w-full bg-surface2 p-8 text-matte" style="color: color-mix(in srgb, var(--fg) 88%, var(--bg))">
+          ${ilustracion(a.ilus)}
+          <span class="absolute left-3 top-3 rounded bg-surface px-2 py-0.5 text-[11px] font-bold text-muted">${a.cat}</span>
+          <span class="absolute right-3 top-3 rounded px-2 py-0.5 text-[11px] font-bold ${a.stock <= 3 ? 'bg-surface text-danger' : 'bg-surface text-muted'} num">${agotado ? 'Agotado' : a.stock <= 3 ? `Quedan ${a.stock}` : `${a.stock} disponibles`}</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-2 p-4">
+          <h3 class="font-display text-base font-extrabold leading-snug">${esc(a.nombre)}</h3>
+          <p class="text-sm text-muted">${esc(a.desc)}</p>
+          <div class="mt-auto flex items-center justify-between gap-3 pt-2">
+            <span class="num font-mono text-[15px] font-semibold">${fmt(a.precio)}</span>
+            ${enCarrito ? `<span class="text-xs font-medium text-muted num">${enCarrito.qty} en carrito</span>` : ''}
+          </div>
+          <button type="button" data-comprar="${a.id}" ${agotado ? 'disabled' : ''} class="matte-btn inline-flex h-10 items-center justify-center gap-2 rounded-md text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"><i data-lucide="shopping-bag" class="h-4 w-4"></i>${agotado ? 'Sin stock' : 'Comprar accesorio'}</button>
+        </div>
+      </article>`;
+    }).join('');
+    icons();
+  }
+
+  function renderHero() {
+    $('#heroTrack').innerHTML = HERO.map((h, i) => {
+      const m = byId(h.id);
+      const b = BRANDS[m.marca];
+      return `<article class="relative flex w-full shrink-0 flex-col overflow-hidden rounded-xl border border-line bg-surface md:flex-row" style="--mark:${b.color}" aria-roledescription="diapositiva" aria-label="${i + 1} de ${HERO.length}: ${b.nombre} ${esc(m.modelo)}">
+        <span class="absolute inset-y-0 left-0 w-1" style="background:${b.color}" aria-hidden="true"></span>
+        <div class="flex flex-col justify-between gap-6 p-6 md:w-5/12 md:p-8">
+          <div>
+            <p class="eyebrow" style="color:${b.color}">${b.nombre}</p>
+            <h2 class="mt-2 font-display text-3xl font-extrabold leading-tight md:text-4xl">${esc(m.modelo)}</h2>
+            <p class="mt-2 max-w-sm text-sm text-muted">${esc(h.frase)}</p>
+          </div>
+          <dl class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <div><dt class="text-xs text-muted">Cilindraje</dt><dd class="num font-mono font-semibold">${m.cc} cc</dd></div>
+            <div><dt class="text-xs text-muted">Licencia</dt><dd class="font-mono font-semibold">${licencia(m)}</dd></div>
+            <div><dt class="text-xs text-muted">Desde</dt><dd class="num font-mono font-semibold">${fmt(cuota(m.precio))}/mes</dd></div>
+          </dl>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" data-cotizar="${m.id}" class="cta inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-bold">Cotizar / Reservar</button>
+            <button type="button" data-hero-brand="${m.marca}" class="inline-flex h-10 items-center gap-2 rounded-md border border-line px-4 text-sm font-medium hover:bg-surface2">Ver ${b.nombre}</button>
+          </div>
+        </div>
+        <div class="relative flex-1 bg-surface2/60">
+          <span class="vertical pointer-events-none absolute right-4 top-4 font-display text-4xl font-extrabold text-line md:text-6xl" aria-hidden="true">${b.kanji}</span>
+          <span class="absolute bottom-4 right-4 grid h-9 w-9 place-items-center rounded-sm font-display text-[11px] font-extrabold leading-none text-white" style="background: var(--seal)" aria-hidden="true">品<br>質</span>
+          <div class="mx-auto aspect-[12/7] max-w-[520px] px-6 py-6 text-fg">${silueta(m.sil)}</div>
+        </div>
+      </article>`;
+    }).join('');
+    $('#heroDots').innerHTML = HERO.map((h, i) => `<button type="button" role="tab" data-dot="${i}" aria-label="${BRANDS[byId(h.id).marca].nombre} ${byId(h.id).modelo}" class="h-1.5 rounded-full bg-line transition-all"></button>`).join('');
+    updateDots();
+  }
+
+  function updateDots() {
+    document.querySelectorAll('[data-dot]').forEach((d, i) => {
+      const on = i === state.slide;
+      d.setAttribute('aria-selected', on);
+      d.style.width = on ? '32px' : '14px';
+      d.style.background = on ? 'var(--fg)' : 'var(--line)';
+    });
+  }
+
+  function goSlide(i) {
+    state.slide = (i + HERO.length) % HERO.length;
+    const track = $('#heroTrack');
+    const slide = track.children[state.slide];
+    if (slide) track.scrollTo({ left: slide.offsetLeft - track.offsetLeft, behavior: reduceMotion ? 'auto' : 'smooth' });
+    updateDots();
+  }
+
+  let heroTimer = null;
+  function startAuto() {
+    stopAuto();
+    if (!state.autoplay || reduceMotion) return;
+    heroTimer = setInterval(() => goSlide(state.slide + 1), 6500);
+  }
+  function stopAuto() { if (heroTimer) clearInterval(heroTimer); heroTimer = null; }
+  function setPauseUI() {
+    const btn = $('#heroPause');
+    btn.setAttribute('aria-label', state.autoplay ? 'Pausar carrusel' : 'Reanudar carrusel');
+    btn.innerHTML = `<i data-lucide="${state.autoplay ? 'pause' : 'play'}" class="h-4 w-4"></i>`;
+    icons();
+  }
+
+  function renderAuth() {
+    const area = $('#authArea');
+    const u = state.user;
+    if (!u) {
+      area.innerHTML = `<button type="button" id="openAuth" class="cta inline-flex h-10 items-center gap-2 rounded-md px-3 text-sm font-bold sm:px-4"><i data-lucide="user" class="h-4 w-4"></i><span class="hidden sm:inline">Iniciar sesión / Registro</span><span class="sm:hidden">Ingresar</span></button>`;
+    } else {
+      const ini = u.nombre.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+      const extra = u.rol === 'ASESOR' ? ` · ${BRANDS[u.marca].nombre}` : '';
+      area.innerHTML = `<span class="flex items-center gap-2 rounded-md border border-line py-1 pl-1 pr-3">
+          <span class="grid h-8 w-8 place-items-center rounded bg-accent text-xs font-bold text-onaccent">${esc(ini)}</span>
+          <span class="hidden leading-tight sm:block"><span class="block max-w-[140px] truncate text-sm font-bold">${esc(u.nombre)}</span><span class="block text-[11px] text-muted">${ROLES[u.rol]}${extra}</span></span>
+        </span>
+        <button type="button" id="logoutBtn" class="grid h-10 w-10 place-items-center rounded-md border border-line hover:bg-surface2" aria-label="Cerrar sesión"><i data-lucide="log-out" class="h-4 w-4"></i></button>`;
+    }
+    $('#cartBtn').classList.toggle('hidden', !(u && u.rol === 'CLIENTE'));
+    $('#cartBtn').classList.toggle('inline-flex', !!(u && u.rol === 'CLIENTE'));
+    icons();
+  }
+
+  function setFieldError(id, msg) {
+    const input = document.getElementById(id);
+    const err = document.getElementById(id + 'Err');
+    if (input) input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    if (err) { err.textContent = msg || ''; err.classList.toggle('hidden', !msg); }
+    return !msg;
+  }
+  const validEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+  const validPhone = v => /^3\d{9}$/.test(v.trim());
+
+  function setAuthTab(tab) {
+    const login = tab === 'login';
+    $('#tabLogin').setAttribute('aria-selected', login);
+    $('#tabRegister').setAttribute('aria-selected', !login);
+    $('#tabLogin').tabIndex = login ? 0 : -1;
+    $('#tabRegister').tabIndex = login ? -1 : 0;
+    $('#tabLogin').classList.toggle('text-muted', !login);
+    $('#tabRegister').classList.toggle('text-muted', login);
+    $('#panelLogin').classList.toggle('hidden', !login);
+    $('#panelLogin').classList.toggle('flex', login);
+    $('#panelRegister').classList.toggle('hidden', login);
+    $('#panelRegister').classList.toggle('flex', !login);
+  }
+
+  function setLoginRole(rol) {
+    state.loginRole = rol;
+    document.querySelectorAll('#roleGroup [data-role]').forEach(b => {
+      const on = b.dataset.role === rol;
+      b.setAttribute('aria-checked', on);
+      b.tabIndex = on ? 0 : -1;
+    });
+    $('#advisorBrandWrap').classList.toggle('hidden', rol !== 'ASESOR');
+    $('#advisorBrandWrap').classList.toggle('block', rol === 'ASESOR');
+  }
+
+  function openAuth(pending = null, reason = '') {
+    state.pending = pending;
+    const r = $('#authReason');
+    r.textContent = reason;
+    r.classList.toggle('hidden', !reason);
+    const guest = pending && pending.type === 'cotizar';
+    $('#guestBtn').classList.toggle('hidden', !guest);
+    if (pending && pending.type === 'comprar') setLoginRole('CLIENTE');
+    setAuthTab('login');
+    ['loginEmail', 'loginPass', 'regName', 'regEmail', 'regPhone', 'regPass', 'regTerms'].forEach(id => setFieldError(id, ''));
+    $('#authDialog').showModal();
+    setTimeout(() => $('#loginEmail').focus(), 30);
+  }
+
+  function nombreDesdeCorreo(correo) {
+    return correo.split('@')[0].replace(/[._\-\d]+/g, ' ').trim().split(' ').filter(Boolean).map(p => p[0].toUpperCase() + p.slice(1)).join(' ') || 'Usuario';
+  }
+
+  function finishAuth(user) {
+    state.user = user;
+    $('#authDialog').close();
+    renderAuth();
+    toast(`Sesión iniciada como ${ROLES[user.rol]}${user.rol === 'ASESOR' ? ' de ' + BRANDS[user.marca].nombre : ''}.`, 'ok');
+    const p = state.pending;
+    state.pending = null;
+    if (!p) return;
+    if (p.type === 'cotizar') openQuote(p.id);
+    if (p.type === 'comprar') comprar(p.id);
+  }
+
+  function generarCodigo() {
+    const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let c;
+    do { c = 'CM-' + Array.from({ length: 4 }, () => abc[Math.floor(Math.random() * abc.length)]).join(''); } while (state.codigos.has(c));
+    return c;
+  }
+
+  function asignarAsesor(marca) {
+    const lista = ASESORES[marca];
+    const a = lista.reduce((min, x) => (x.abiertas < min.abiertas ? x : min), lista[0]);
+    a.abiertas += 1;
+    return a;
+  }
+
+  function updateQuoteCalc() {
+    const m = state.quoteMoto;
+    if (!m) return;
+    const pct = +$('#qInicial').value;
+    const n = +$('#qPlazo').value;
+    $('#qInicialOut').textContent = `${pct} % · ${fmt(Math.round(m.precio * pct / 100))}`;
+    $('#qCuota').textContent = `${fmt(cuota(m.precio, pct, n))}/mes`;
+  }
+
+  function openQuote(id) {
+    const m = byId(id);
+    state.quoteMoto = m;
+    const b = BRANDS[m.marca];
+    $('#quoteBrand').textContent = b.nombre;
+    $('#quoteTitle').textContent = m.modelo;
+    $('#quoteSpec').textContent = `${m.cc} cc · Licencia ${licencia(m)} · ${fmt(m.precio)}`;
+    $('#quoteForm').classList.remove('hidden');
+    $('#quoteForm').classList.add('flex');
+    $('#quoteResult').classList.add('hidden');
+    $('#quoteResult').classList.remove('flex');
+    $('#qInicial').value = 10;
+    $('#qPlazo').value = 36;
+    $('#qTipoCot').checked = true;
+    syncQuoteTipo();
+    const warn = $('#qLicWarn');
+    const lic = licencia(m);
+    warn.querySelector('span').textContent = lic === 'A2'
+      ? 'Esta moto tiene más de 125 cc y requiere licencia A2. Si tienes A1, el asesor te mostrará opciones de hasta 125 cc.'
+      : 'Esta moto tiene hasta 125 cc: puedes conducirla con licencia A1 o A2.';
+    warn.classList.remove('hidden'); warn.classList.add('flex');
+    const u = state.user;
+    $('#qName').value = u ? u.nombre : '';
+    $('#qEmail').value = u ? u.correo : '';
+    $('#qPhone').value = u && u.telefono ? u.telefono : '';
+    $('#qTerms').checked = false;
+    ['qName', 'qEmail', 'qPhone', 'qTerms'].forEach(i => setFieldError(i, ''));
+    updateQuoteCalc();
+    $('#quoteDialog').showModal();
+    icons();
+    setTimeout(() => (u ? $('#qPhone') : $('#qName')).focus(), 30);
+  }
+
+  function syncQuoteTipo() {
+    const td = $('#qTipoTd').checked;
+    $('#qSubmit span').textContent = td ? 'Pedir test drive' : 'Solicitar cotización';
+  }
+
+  function cotizar(id) {
+    if (!state.user) {
+      openAuth({ type: 'cotizar', id }, 'Inicia sesión para guardar tu cotización en tu cuenta, o continúa sin cuenta y recibe un código de seguimiento.');
+      return;
+    }
+    openQuote(id);
+  }
+
+  function comprar(id) {
+    if (!state.user) {
+      openAuth({ type: 'comprar', id }, 'Para comprar accesorios necesitas una cuenta de cliente.');
+      return;
+    }
+    if (state.user.rol !== 'CLIENTE') {
+      toast(`Las compras se hacen con una cuenta de cliente. Estás como ${ROLES[state.user.rol]}.`, 'error');
+      return;
+    }
+    const a = ACCESORIOS.find(x => x.id === id);
+    if (a.stock <= 0) { toast('Este accesorio está agotado.', 'error'); return; }
+    a.stock -= 1;
+    const item = state.cart.find(c => c.id === id);
+    if (item) item.qty += 1; else state.cart.push({ id, qty: 1 });
+    if (!state.reservaHasta) state.reservaHasta = Date.now() + RESERVA_MS;
+    renderAccesorios();
+    renderCart();
+    toast(`${a.nombre} reservado durante 15 minutos.`, 'ok');
+  }
+
+  function liberarCarrito() {
+    state.cart.forEach(c => { ACCESORIOS.find(a => a.id === c.id).stock += c.qty; });
+    state.cart = [];
+    state.reservaHasta = null;
+  }
+
+  function renderCart() {
+    const count = state.cart.reduce((s, c) => s + c.qty, 0);
+    $('#cartCount').textContent = count;
+    const list = $('#cartList');
+    if (!state.cart.length) {
+      list.innerHTML = `<li class="flex flex-col items-start gap-2 py-10 text-sm text-muted"><i data-lucide="shopping-bag" class="h-6 w-6"></i>Tu carrito está vacío. Agrega un accesorio desde la tienda.</li>`;
+    } else {
+      list.innerHTML = state.cart.map(c => {
+        const a = ACCESORIOS.find(x => x.id === c.id);
+        return `<li class="flex gap-3 py-4">
+          <div class="h-16 w-20 shrink-0 rounded bg-surface2 p-2" style="color: color-mix(in srgb, var(--fg) 88%, var(--bg))">${ilustracion(a.ilus)}</div>
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-bold leading-snug">${esc(a.nombre)}</p>
+            <p class="num font-mono text-xs text-muted">${fmt(a.precio)} c/u</p>
+            <div class="mt-2 flex items-center gap-2">
+              <button type="button" data-qty="${a.id}" data-d="-1" class="grid h-8 w-8 place-items-center rounded border border-line hover:bg-surface2" aria-label="Quitar una unidad de ${esc(a.nombre)}"><i data-lucide="minus" class="h-3.5 w-3.5"></i></button>
+              <span class="num w-6 text-center text-sm font-bold">${c.qty}</span>
+              <button type="button" data-qty="${a.id}" data-d="1" ${a.stock <= 0 ? 'disabled' : ''} class="grid h-8 w-8 place-items-center rounded border border-line hover:bg-surface2 disabled:opacity-40" aria-label="Agregar una unidad de ${esc(a.nombre)}"><i data-lucide="plus" class="h-3.5 w-3.5"></i></button>
+            </div>
+          </div>
+          <span class="num shrink-0 font-mono text-sm font-semibold">${fmt(a.precio * c.qty)}</span>
+        </li>`;
+      }).join('');
+    }
+    const subtotal = state.cart.reduce((s, c) => s + ACCESORIOS.find(a => a.id === c.id).precio * c.qty, 0);
+    $('#cartSubtotal').textContent = fmt(subtotal);
+    $('#payBtn').disabled = !state.cart.length;
+    $('#payBtn').classList.toggle('opacity-50', !state.cart.length);
+    tickReserva();
+    icons();
+  }
+
+  function tickReserva() {
+    const timer = $('#cartTimer');
+    const box = $('#cartReserve');
+    if (!state.reservaHasta) {
+      timer.classList.add('hidden');
+      box.classList.add('hidden'); box.classList.remove('flex');
+      return;
+    }
+    const rest = state.reservaHasta - Date.now();
+    if (rest <= 0) {
+      liberarCarrito();
+      renderCart();
+      renderAccesorios();
+      toast('Tu reserva venció a los 15 minutos sin pago. El pedido quedó EXPIRADO y liberamos el stock.', 'error');
+      return;
+    }
+    const mm = String(Math.floor(rest / 60000)).padStart(2, '0');
+    const ss = String(Math.floor((rest % 60000) / 1000)).padStart(2, '0');
+    timer.textContent = `${mm}:${ss}`;
+    timer.classList.remove('hidden');
+    box.classList.remove('hidden'); box.classList.add('flex');
+    box.innerHTML = `<i data-lucide="timer" class="h-4 w-4 shrink-0 text-accenttext"></i><span>Stock reservado por <strong class="num font-mono">${mm}:${ss}</strong>. Paga antes de que termine o el pedido expira.</span>`;
+    icons();
+  }
+
+  function trackLookup(code) {
+    const out = $('#trackResult');
+    const c = code.trim().toUpperCase();
+    if (!/^CM-[A-Z0-9]{4}$/.test(c)) {
+      $('#trackErr').textContent = 'Escribe el código con el formato CM-XXXX, por ejemplo CM-7K2Q.';
+      $('#trackErr').classList.remove('hidden');
+      $('#trackCode').setAttribute('aria-invalid', 'true');
+      out.classList.add('hidden');
+      return;
+    }
+    $('#trackErr').classList.add('hidden');
+    $('#trackCode').setAttribute('aria-invalid', 'false');
+    const r = state.codigos.get(c);
+    out.classList.remove('hidden');
+    if (!r) {
+      out.innerHTML = `<p class="font-bold">No encontramos el código ${esc(c)}.</p><p class="mt-1 text-muted">Revisa que esté igual al que recibiste al cotizar o pedir el test drive.</p>`;
+      return;
+    }
+    const pasos = r.tipo === 'testdrive' ? ['PENDIENTE', 'PROGRAMADO', 'REALIZADO'] : ['NUEVO', 'CONTACTADO', 'TEST_DRIVE', 'NEGOCIANDO', 'VENDIDO'];
+    const idx = pasos.indexOf(r.estado);
+    out.innerHTML = `<div class="flex flex-wrap items-baseline justify-between gap-2"><p class="font-mono text-base font-semibold">${c}</p><span class="rounded bg-accentsoft px-2 py-0.5 font-mono text-xs font-semibold text-accenttext">${r.estado}</span></div>
+      <p class="mt-1 text-muted">${r.tipo === 'testdrive' ? 'Test drive' : 'Cotización'} · ${BRANDS[r.marca].nombre} ${esc(r.moto)} · Asesor: ${esc(r.asesor)}${r.ejemplo ? ' · código de ejemplo' : ''}</p>
+      <ol class="mt-3 flex flex-wrap gap-1.5">${pasos.map((p, i) => `<li class="rounded px-2 py-0.5 font-mono text-[11px] ${i <= idx ? 'bg-fg text-bg' : 'border border-line text-muted'}">${p}</li>`).join('')}</ol>`;
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button, a');
+    if (!t) return;
+    if (t.dataset.brand !== undefined && t.closest('#brandSelector')) { setBrand(t.dataset.brand); return; }
+    if (t.dataset.heroBrand) { setBrand(t.dataset.heroBrand); document.getElementById('marcas').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); return; }
+    if (t.dataset.cotizar) { cotizar(t.dataset.cotizar); return; }
+    if (t.dataset.comprar) { comprar(t.dataset.comprar); return; }
+    if (t.dataset.seg) { state.segmento = t.dataset.seg; renderCatalogo(); document.querySelector(`[data-seg="${state.segmento}"]`).focus(); return; }
+    if (t.dataset.rango) { state.rango = t.dataset.rango; renderCatalogo(); return; }
+    if (t.dataset.acccat) { state.accCat = t.dataset.acccat; renderAccesorios(); return; }
+    if (t.dataset.dot !== undefined) { goSlide(+t.dataset.dot); startAuto(); return; }
+    if (t.dataset.role) { setLoginRole(t.dataset.role); return; }
+    if (t.dataset.togglePass) {
+      const inp = document.getElementById(t.dataset.togglePass);
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      t.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      t.innerHTML = `<i data-lucide="${show ? 'eye-off' : 'eye'}" class="h-4 w-4"></i>`;
+      icons();
+      return;
+    }
+    if (t.dataset.qty) {
+      const a = ACCESORIOS.find(x => x.id === t.dataset.qty);
+      const item = state.cart.find(c => c.id === a.id);
+      const d = +t.dataset.d;
+      if (d > 0 && a.stock > 0) { a.stock -= 1; item.qty += 1; }
+      if (d < 0) { a.stock += 1; item.qty -= 1; if (!item.qty) state.cart = state.cart.filter(c => c !== item); }
+      if (!state.cart.length) state.reservaHasta = null;
+      renderCart(); renderAccesorios();
+      return;
+    }
+    if (t.hasAttribute('data-close')) { t.closest('dialog').close(); return; }
+    switch (t.id) {
+      case 'openAuth': openAuth(); break;
+      case 'logoutBtn':
+        if (state.cart.length) liberarCarrito();
+        state.user = null; renderAuth(); renderCart(); renderAccesorios();
+        toast('Cerraste sesión.');
+        break;
+      case 'tabLogin': setAuthTab('login'); break;
+      case 'tabRegister': setAuthTab('register'); setTimeout(() => $('#regName').focus(), 20); break;
+      case 'guestBtn': {
+        const p = state.pending; state.pending = null;
+        $('#authDialog').close();
+        if (p) openQuote(p.id);
+        break;
+      }
+      case 'heroPrev': goSlide(state.slide - 1); startAuto(); break;
+      case 'heroNext': goSlide(state.slide + 1); startAuto(); break;
+      case 'heroPause': state.autoplay = !state.autoplay; setPauseUI(); state.autoplay ? startAuto() : stopAuto(); break;
+      case 'clearMax': state.maxPrecio = null; $('#bcResult').textContent = ''; renderCatalogo(); break;
+      case 'resetFilters': state.segmento = 'todas'; state.rango = 'todos'; state.maxPrecio = null; $('#bcResult').textContent = ''; setBrand('neutral'); break;
+      case 'cartBtn': renderCart(); $('#cartDialog').showModal(); break;
+      case 'trackSample': $('#trackCode').value = 'CM-7K2Q'; trackLookup('CM-7K2Q'); break;
+      case 'menuBtn': {
+        const nav = $('#mobileNav');
+        const open = nav.classList.toggle('hidden') === false;
+        t.setAttribute('aria-expanded', open);
+        t.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+        t.innerHTML = `<i data-lucide="${open ? 'x' : 'menu'}" class="h-5 w-5"></i>`;
+        icons();
+        break;
+      }
+      case 'payBtn': {
+        if (!state.cart.length) break;
+        t.disabled = true;
+        t.querySelector('span').textContent = 'Procesando pago…';
+        setTimeout(() => {
+          const ref = 'P-' + Math.floor(100000 + Math.random() * 900000);
+          state.cart = []; state.reservaHasta = null;
+          t.disabled = false;
+          t.querySelector('span').textContent = 'Pagar con Wompi (sandbox)';
+          renderCart(); renderAccesorios();
+          $('#cartDialog').close();
+          toast(`Pago aprobado en sandbox. Pedido ${ref} PAGADO, envío en PREPARANDO.`, 'ok');
+        }, 1400);
+        break;
+      }
+    }
+    if (t.closest('#mobileNav') && t.tagName === 'A') $('#menuBtn').click();
+  });
+
+  document.querySelectorAll('dialog').forEach(d => {
+    d.addEventListener('click', e => { if (e.target === d) d.close(); });
+  });
+  $('#authDialog').addEventListener('close', () => { if (state.pending && !state.user) state.pending = null; });
+
+  document.addEventListener('keydown', e => {
+    const grp = e.target.closest('[role="radiogroup"], [role="tablist"]');
+    if (!grp || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+    const items = [...grp.querySelectorAll('[role="radio"], [role="tab"]')];
+    const i = items.indexOf(e.target);
+    if (i < 0) return;
+    e.preventDefault();
+    let n = i;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (i + 1) % items.length;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (i - 1 + items.length) % items.length;
+    if (e.key === 'Home') n = 0;
+    if (e.key === 'End') n = items.length - 1;
+    items[n].click();
+    const again = [...grp.querySelectorAll('[role="radio"], [role="tab"]')][n];
+    if (again) again.focus();
+  });
+
+  $('#heroTrack').addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); goSlide(state.slide + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goSlide(state.slide - 1); }
+  });
+  let scrollT;
+  $('#heroTrack').addEventListener('scroll', () => {
+    clearTimeout(scrollT);
+    scrollT = setTimeout(() => {
+      const tr = $('#heroTrack');
+      const i = Math.round(tr.scrollLeft / tr.clientWidth);
+      if (i !== state.slide) { state.slide = i; updateDots(); }
+    }, 120);
+  }, { passive: true });
+  ['mouseenter', 'focusin'].forEach(ev => $('#inicio').addEventListener(ev, stopAuto));
+  ['mouseleave', 'focusout'].forEach(ev => $('#inicio').addEventListener(ev, startAuto));
+  window.addEventListener('resize', () => goSlide(state.slide));
+
+  $('#sortSel').addEventListener('change', e => { state.orden = e.target.value; renderCatalogo(); });
+
+  $('#panelLogin').addEventListener('submit', e => {
+    e.preventDefault();
+    const correo = $('#loginEmail').value.trim();
+    const pass = $('#loginPass').value;
+    const ok1 = setFieldError('loginEmail', validEmail(correo) ? '' : 'Escribe un correo válido, por ejemplo nombre@correo.com.');
+    const ok2 = setFieldError('loginPass', pass.length >= 8 ? '' : 'La contraseña tiene mínimo 8 caracteres.');
+    if (!ok1) { $('#loginEmail').focus(); return; }
+    if (!ok2) { $('#loginPass').focus(); return; }
+    finishAuth({ nombre: nombreDesdeCorreo(correo), correo, rol: state.loginRole, marca: state.loginRole === 'ASESOR' ? $('#advisorBrand').value : null });
+  });
+
+  $('#panelRegister').addEventListener('submit', e => {
+    e.preventDefault();
+    const nombre = $('#regName').value.trim();
+    const correo = $('#regEmail').value.trim();
+    const tel = $('#regPhone').value.trim();
+    const pass = $('#regPass').value;
+    const checks = [
+      ['regName', nombre.split(/\s+/).length >= 2 ? '' : 'Escribe tu nombre y apellido.'],
+      ['regEmail', validEmail(correo) ? '' : 'Escribe un correo válido.'],
+      ['regPhone', validPhone(tel) ? '' : 'El celular tiene 10 dígitos y empieza por 3.'],
+      ['regPass', pass.length >= 8 && /\d/.test(pass) ? '' : 'Usa mínimo 8 caracteres y al menos un número.'],
+      ['regTerms', $('#regTerms').checked ? '' : 'Debes autorizar el tratamiento de datos para crear la cuenta.']
+    ];
+    const first = checks.find(([id, msg]) => !setFieldError(id, msg));
+    checks.forEach(([id, msg]) => setFieldError(id, msg));
+    if (first) { document.getElementById(first[0]).focus(); return; }
+    finishAuth({ nombre, correo, telefono: tel, rol: 'CLIENTE', marca: null });
+  });
+
+  ['qInicial', 'qPlazo'].forEach(id => $('#' + id).addEventListener('input', updateQuoteCalc));
+  document.querySelectorAll('input[name="qTipo"]').forEach(r => r.addEventListener('change', syncQuoteTipo));
+
+  $('#quoteForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const nombre = $('#qName').value.trim();
+    const correo = $('#qEmail').value.trim();
+    const tel = $('#qPhone').value.trim();
+    const checks = [
+      ['qName', nombre.length >= 3 ? '' : 'Escribe tu nombre.'],
+      ['qEmail', validEmail(correo) ? '' : 'Escribe un correo válido.'],
+      ['qPhone', validPhone(tel) ? '' : 'El celular tiene 10 dígitos y empieza por 3.'],
+      ['qTerms', $('#qTerms').checked ? '' : 'Necesitamos tu autorización para que el asesor te contacte.']
+    ];
+    checks.forEach(([id, msg]) => setFieldError(id, msg));
+    const first = checks.find(([, msg]) => msg);
+    if (first) { document.getElementById(first[0]).focus(); return; }
+    const m = state.quoteMoto;
+    const tipo = $('#qTipoTd').checked ? 'testdrive' : 'cotizacion';
+    const asesor = asignarAsesor(m.marca);
+    const codigo = generarCodigo();
+    const estado = tipo === 'testdrive' ? 'PENDIENTE' : 'NUEVO';
+    state.codigos.set(codigo, { tipo, estado, asesor: asesor.nombre, marca: m.marca, moto: m.modelo });
+    const pct = +$('#qInicial').value, n = +$('#qPlazo').value;
+    $('#quoteForm').classList.add('hidden');
+    $('#quoteForm').classList.remove('flex');
+    const res = $('#quoteResult');
+    res.classList.remove('hidden'); res.classList.add('flex');
+    res.innerHTML = `<div class="flex items-center gap-2 text-sm text-ok"><i data-lucide="check-circle-2" class="h-5 w-5"></i>${tipo === 'testdrive' ? 'Test drive en la cola del asesor' : 'Cotización registrada'}</div>
+      <div class="rounded-lg border border-line bg-surface2 p-4">
+        <p class="text-xs text-muted">Tu código de seguimiento</p>
+        <div class="mt-1 flex items-center justify-between gap-3">
+          <span id="codeOut" class="select-all font-mono text-3xl font-semibold tracking-widest">${codigo}</span>
+          <button type="button" id="copyCode" class="inline-flex h-9 items-center gap-1.5 rounded-md border border-line bg-surface px-3 text-sm font-medium hover:bg-bg"><i data-lucide="copy" class="h-4 w-4"></i>Copiar</button>
+        </div>
+        <p class="mt-1 text-xs text-muted">Estado inicial: <span class="font-mono">${estado}</span></p>
+      </div>
+      <dl class="grid grid-cols-2 gap-3 text-sm">
+        <div><dt class="text-xs text-muted">Asesor ${BRANDS[m.marca].nombre}</dt><dd class="font-bold">${esc(asesor.nombre)}</dd></div>
+        <div><dt class="text-xs text-muted">WhatsApp del asesor</dt><dd class="select-all font-mono">${asesor.wa}</dd></div>
+        <div><dt class="text-xs text-muted">Moto</dt><dd>${esc(m.modelo)} · ${licencia(m)}</dd></div>
+        <div><dt class="text-xs text-muted">Cuota estimada</dt><dd class="num font-mono">${fmt(cuota(m.precio, pct, n))} × ${n}</dd></div>
+      </dl>
+      <p class="text-xs text-muted">El asesor te escribirá por WhatsApp. Guarda el código para consultar el estado sin crear cuenta.</p>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" id="goTrack" class="cta inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-bold">Ver seguimiento</button>
+        <button type="button" data-close class="inline-flex h-10 items-center rounded-md border border-line px-4 text-sm font-medium hover:bg-surface2">Cerrar</button>
+      </div>`;
+    icons();
+    $('#copyCode').focus();
+    $('#copyCode').addEventListener('click', ev => {
+      const btn = ev.currentTarget;
+      const done = () => { btn.innerHTML = '<i data-lucide="check" class="h-4 w-4"></i>Copiado'; icons(); };
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents($('#codeOut')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selecciónalo y copia'; };
+      try { navigator.clipboard.writeText(codigo).then(done, fallback); } catch (err) { fallback(); }
+    });
+    $('#goTrack').addEventListener('click', () => {
+      $('#quoteDialog').close();
+      $('#trackCode').value = codigo;
+      trackLookup(codigo);
+      document.getElementById('cotizar').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+
+  ['bcCuota', 'bcInicial'].forEach(id => $('#' + id).addEventListener('input', e => {
+    const v = parseCop(e.target.value);
+    e.target.value = v ? v.toLocaleString('es-CO') : '';
+  }));
+
+  $('#cuotaForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const c = parseCop($('#bcCuota').value);
+    const ini = parseCop($('#bcInicial').value);
+    const n = +$('#bcPlazo').value;
+    if (c < 100000) { setFieldError('bcCuota', 'Escribe una cuota de al menos $100.000.'); $('#bcCuota').focus(); return; }
+    setFieldError('bcCuota', '');
+    const max = precioMaxPorCuota(c, ini, n);
+    state.maxPrecio = max;
+    state.rango = 'todos';
+    state.segmento = $('#bcLicA1').checked ? 'a1' : 'a2';
+    renderCatalogo();
+    const total = filtrar().length;
+    $('#bcResult').textContent = `Alcanzas motos de hasta ${fmt(max)}: ${total} ${total === 1 ? 'opción' : 'opciones'}.`;
+    setTimeout(() => document.getElementById('catalogo').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }), 400);
+  });
+
+  $('#trackForm').addEventListener('submit', e => { e.preventDefault(); trackLookup($('#trackCode').value); });
+  $('#trackCode').addEventListener('input', e => {
+    let v = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    if (/^CM[A-Z0-9]/.test(v)) v = 'CM-' + v.slice(2);
+    e.target.value = v.slice(0, 7);
+  });
+
+  setInterval(() => { if (state.reservaHasta) tickReserva(); }, 1000);
+
+  let saved = 'neutral';
+  try { saved = localStorage.getItem('cm-brand') || 'neutral'; } catch (e) {}
+  if (!(saved in BRANDS)) saved = 'neutral';
+  renderHero();
+  renderAccesorios();
+  renderAuth();
+  renderCart();
+  setBrand(saved, false);
+  setLoginRole('CLIENTE');
+  setPauseUI();
+  startAuto();
+  icons();
+})();
+</script>
+
+</body></html>

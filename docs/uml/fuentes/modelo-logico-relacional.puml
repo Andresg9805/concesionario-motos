@@ -1,0 +1,241 @@
+@startuml modelo-logico-relacional
+skinparam linetype ortho
+
+entity "marcas" {
+  + id : int [PK]
+  --
+  nombre : varchar
+  color_hex : char(7)
+  descripcion : text
+}
+
+entity "motos" {
+  + id : int [PK]
+  --
+  # marca_id : int [FK]
+  modelo : varchar
+  anio : smallint
+  cilindraje_cc : int
+  tipo : enum("naked", "deportiva", "trail", "doble_proposito")
+  categoria_licencia : enum("A1", "A2")
+  precio_cop : int
+  stock : int
+  consumo_km_galon : float
+  costo_mantenimiento_km_cop : int
+  descripcion : text
+  imagen_url : varchar
+}
+
+entity "parametros_costo" {
+  + id : int [PK]
+  --
+  precio_galon_cop : int
+  porcentaje_impuesto : decimal(5,2)
+  actualizado_en : datetime
+}
+
+entity "tarifas_soat" {
+  + id : int [PK]
+  --
+  cilindraje_min : smallint
+  cilindraje_max : smallint
+  valor_anual_cop : int
+}
+
+entity "busquedas" {
+  + id : int [PK]
+  --
+  fecha : datetime
+  cuota_maxima_cop : int
+  cuota_inicial_cop : int
+  categoria_licencia : enum("A1", "A2")
+  uso : enum("ciudad", "carretera", "trabajo")
+  # marca_id : int [FK, nullable]
+  cantidad_resultados : int
+}
+
+entity "usuarios" {
+  + id : int [PK]
+  --
+  nombre : varchar
+  correo : varchar [UNIQUE]
+  telefono : varchar
+  hash_contrasena : varchar
+  rol : enum("cliente", "asesor", "admin")
+  # marca_especialidad_id : int [FK, nullable]
+}
+
+entity "clientes" {
+  + id : int [PK]
+  --
+  nombre : varchar
+  correo : varchar
+  telefono : varchar
+  # usuario_id : int [FK, nullable]
+}
+
+entity "cotizaciones" {
+  + id : int [PK]
+  --
+  codigo_seguimiento : varchar [UNIQUE]
+  # cliente_id : int [FK]
+  # moto_id : int [FK]
+  # asesor_id : int [FK]
+  fecha : date
+  precio_cop : int
+  cuota_inicial_cop : int
+  plazo_meses : smallint
+  tasa_mensual : decimal(7,4)
+  cuota_mensual_cop : int
+  estado_atencion : enum("nuevo", "contactado", "test_drive", "negociando", "vendido", "descartado")
+}
+
+entity "test_drives" {
+  + id : int [PK]
+  --
+  codigo_seguimiento : varchar [UNIQUE]
+  # cliente_id : int [FK]
+  # moto_id : int [FK]
+  # asesor_id : int [FK]
+  fecha_solicitud : datetime
+  fecha_programada : datetime
+  estado : enum("pendiente", "programado", "realizado", "cancelado")
+}
+
+entity "accesorios" {
+  + id : int [PK]
+  --
+  sku : varchar [UNIQUE]
+  nombre : varchar
+  categoria : enum("casco", "chaqueta", "rodillera", "hombrera")
+  descripcion : text
+  precio_cop : int
+  stock : int
+  imagen_url : varchar
+}
+
+entity "compatibilidades" {
+  + accesorio_id : int [PK, FK]
+  + moto_id : int [PK, FK]
+}
+
+entity "departamentos" {
+  + codigo : char(2) [PK]
+  --
+  nombre : varchar
+  costo_envio_cop : int
+  dias_envio : smallint
+}
+
+entity "municipios" {
+  + codigo : char(5) [PK]
+  --
+  nombre : varchar
+  # departamento_codigo : char(2) [FK]
+}
+
+entity "direcciones" {
+  + id : int [PK]
+  --
+  # usuario_id : int [FK]
+  # municipio_codigo : char(5) [FK]
+  detalle : text
+  telefono_contacto : varchar(20)
+}
+
+entity "pedidos" {
+  + id : int [PK]
+  --
+  # usuario_id : int [FK]
+  # direccion_id : int [FK]
+  estado : enum("pendiente_pago", "pagado", "expirado")
+  subtotal_cop : int
+  costo_envio_cop : int
+  total_cop : int
+  creado_en : datetime
+  reservado_hasta : datetime
+}
+
+entity "items_pedido" {
+  + id : int [PK]
+  --
+  # pedido_id : int [FK]
+  # accesorio_id : int [FK]
+  cantidad : int
+  precio_unitario_cop : int
+}
+
+entity "pagos" {
+  + id : int [PK]
+  --
+  # pedido_id : int [FK]
+  referencia : varchar [UNIQUE]
+  transaccion_id : varchar
+  metodo : enum("tarjeta", "nequi", "pse")
+  estado : enum("pendiente", "aprobado", "rechazado", "error")
+  monto_cop : int
+  creado_en : datetime
+  actualizado_en : datetime
+}
+
+entity "eventos_pago" {
+  + id : int [PK]
+  --
+  # pago_id : int [FK]
+  checksum : varchar [UNIQUE]
+  estado_recibido : varchar
+  recibido_en : datetime
+}
+
+entity "envios" {
+  + id : int [PK]
+  --
+  # pedido_id : int [FK, UNIQUE]
+  numero_guia : varchar [UNIQUE]
+  costo_cop : int
+  estado : enum("preparando", "enviado", "en_camino", "entregado")
+  creado_en : datetime
+}
+
+entity "eventos_envio" {
+  + id : int [PK]
+  --
+  # envio_id : int [FK]
+  estado : enum("preparando", "enviado", "en_camino", "entregado")
+  fecha : datetime
+  nota : text
+}
+
+' Relaciones
+
+marcas ||--o{ motos
+marcas |o--o{ busquedas
+marcas |o--o{ usuarios
+
+motos ||--o{ cotizaciones
+motos ||--o{ test_drives
+motos ||--{ compatibilidades
+accesorios ||--{ compatibilidades
+accesorios ||--|{ items_pedido
+
+clientes ||--o{ cotizaciones
+clientes ||--o{ test_drives
+usuarios ||--o{ cotizaciones
+usuarios ||--o{ test_drives
+
+usuarios ||--o{ direcciones
+usuarios ||--o{ pedidos
+usuarios ||--o| clientes
+
+departamentos ||--o{ municipios
+municipios ||--o{ direcciones
+direcciones ||--o{ pedidos
+
+pedidos ||--|{ items_pedido
+pedidos ||--o{ pagos
+pedidos ||--o| envios
+
+pagos ||--o{ eventos_pago
+envios ||--o{ eventos_envio
+
+@enduml
