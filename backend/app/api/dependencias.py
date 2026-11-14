@@ -6,11 +6,33 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.application.autenticacion import IniciarSesion, RegistrarCliente
+from app.application.motos import (
+    BuscarMotosPorCuota,
+    CalcularCostoReal,
+    ListarMarcas,
+    ListarMotos,
+    ObtenerMoto,
+)
 from app.config import obtener_configuracion
 from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
-from app.domain.puertos import RepositorioClientes, RepositorioUsuarios
+from app.domain.puertos import (
+    RepositorioBusquedas,
+    RepositorioClientes,
+    RepositorioMarcas,
+    RepositorioMotos,
+    RepositorioParametros,
+    RepositorioSimulaciones,
+    RepositorioUsuarios,
+)
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.memoria.catalogo import (
+    RepositorioBusquedasEnMemoria,
+    RepositorioMarcasEnMemoria,
+    RepositorioMotosEnMemoria,
+    RepositorioParametrosEnMemoria,
+    RepositorioSimulacionesEnMemoria,
+)
 from app.infrastructure.memoria.usuarios import (
     RepositorioClientesEnMemoria,
     RepositorioUsuariosEnMemoria,
@@ -95,3 +117,62 @@ def requerir_rol(*roles: Rol | str) -> Callable[[DatosToken], DatosToken]:
         return sesion
 
     return verificar
+
+
+@lru_cache
+def obtener_repositorio_marcas() -> RepositorioMarcas:
+    return RepositorioMarcasEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_motos() -> RepositorioMotos:
+    return RepositorioMotosEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_parametros() -> RepositorioParametros:
+    return RepositorioParametrosEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_busquedas() -> RepositorioBusquedas:
+    return RepositorioBusquedasEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_simulaciones() -> RepositorioSimulaciones:
+    return RepositorioSimulacionesEnMemoria()
+
+
+def obtener_listar_marcas(
+    marcas: Annotated[RepositorioMarcas, Depends(obtener_repositorio_marcas)],
+) -> ListarMarcas:
+    return ListarMarcas(marcas)
+
+
+def obtener_listar_motos(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+) -> ListarMotos:
+    return ListarMotos(motos)
+
+
+def obtener_obtener_moto(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+) -> ObtenerMoto:
+    return ObtenerMoto(motos)
+
+
+def obtener_buscar_por_cuota(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+    parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
+    busquedas: Annotated[RepositorioBusquedas, Depends(obtener_repositorio_busquedas)],
+    simulaciones: Annotated[RepositorioSimulaciones, Depends(obtener_repositorio_simulaciones)],
+) -> BuscarMotosPorCuota:
+    return BuscarMotosPorCuota(motos, parametros, busquedas, simulaciones)
+
+
+def obtener_calcular_costo_real(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+    parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
+) -> CalcularCostoReal:
+    return CalcularCostoReal(motos, parametros)

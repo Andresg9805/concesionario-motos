@@ -9,6 +9,7 @@ from app.domain.catalogo import (
     CategoriaLicencia,
     Marca,
     Moto,
+    PlanCredito,
     TasaCambio,
     TipoMoto,
 )
@@ -31,6 +32,8 @@ class FiltrosMoto:
     categoria_licencia: CategoriaLicencia | None = None
     precio_min: int | None = None
     precio_max: int | None = None
+    cilindraje_min: int | None = None
+    cilindraje_max: int | None = None
 
 
 class RepositorioMotos(ABC):
@@ -66,6 +69,17 @@ class RepositorioParametros(ABC):
 class RepositorioBusquedas(ABC):
     @abstractmethod
     def guardar(self, busqueda: Busqueda) -> Busqueda: ...
+
+
+class RepositorioSimulaciones(ABC):
+    @abstractmethod
+    def apilar(self, sesion_id: str, plan: PlanCredito) -> int: ...
+
+    @abstractmethod
+    def ultima(self, sesion_id: str) -> PlanCredito | None: ...
+
+    @abstractmethod
+    def cantidad(self, sesion_id: str) -> int: ...
 
 
 class RepositorioClientes(ABC):
