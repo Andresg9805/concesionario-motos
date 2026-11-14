@@ -98,6 +98,9 @@ class RepositorioUsuarios(ABC):
     def buscar_por_correo(self, correo: str) -> Usuario | None: ...
 
     @abstractmethod
+    def buscar_por_id(self, id: int) -> Usuario | None: ...
+
+    @abstractmethod
     def listar_asesores(self, marca_id: int) -> list[Usuario]: ...
 
 
