@@ -27,6 +27,15 @@ from app.application.motos import (
     ListarMotos,
     ObtenerMoto,
 )
+from app.application.pedidos import (
+    ConfirmarPago,
+    CrearPedido,
+    ExpirarReservas,
+    ListarPedidosPropios,
+    ObtenerPedidoPropio,
+    ProcesarEventoPago,
+    VerificarPago,
+)
 from app.application.tienda import (
     CrearDireccion,
     ListarAccesorios,
@@ -37,24 +46,29 @@ from app.application.tienda import (
     ObtenerDepartamento,
     ObtenerDireccionPropia,
 )
-from app.config import obtener_configuracion
+from app.config import obtener_configuracion, obtener_configuracion_wompi
 from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
+    PasarelaPago,
     RepositorioAccesorios,
     RepositorioBusquedas,
     RepositorioClientes,
     RepositorioCotizaciones,
     RepositorioDirecciones,
+    RepositorioEnvios,
     RepositorioMarcas,
     RepositorioMotos,
+    RepositorioPagos,
     RepositorioParametros,
+    RepositorioPedidos,
     RepositorioSimulaciones,
     RepositorioTestDrives,
     RepositorioUbicaciones,
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.externos.wompi import PasarelaWompi
 from app.infrastructure.memoria.atencion import (
     RepositorioCotizacionesEnMemoria,
     RepositorioTestDrivesEnMemoria,
@@ -67,6 +81,11 @@ from app.infrastructure.memoria.catalogo import (
     RepositorioSimulacionesEnMemoria,
 )
 from app.infrastructure.memoria.datos_prueba import asesores_iniciales
+from app.infrastructure.memoria.pedidos import (
+    RepositorioEnviosEnMemoria,
+    RepositorioPagosEnMemoria,
+    RepositorioPedidosEnMemoria,
+)
 from app.infrastructure.memoria.tienda import (
     RepositorioAccesoriosEnMemoria,
     RepositorioDireccionesEnMemoria,
@@ -357,3 +376,99 @@ def obtener_obtener_direccion_propia(
     direcciones: Annotated[RepositorioDirecciones, Depends(obtener_repositorio_direcciones)],
 ) -> ObtenerDireccionPropia:
     return ObtenerDireccionPropia(direcciones)
+
+
+@lru_cache
+def obtener_repositorio_pedidos() -> RepositorioPedidos:
+    return RepositorioPedidosEnMemoria(obtener_repositorio_accesorios())
+
+
+@lru_cache
+def obtener_repositorio_pagos() -> RepositorioPagos:
+    return RepositorioPagosEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_envios() -> RepositorioEnvios:
+    return RepositorioEnviosEnMemoria()
+
+
+@lru_cache
+def obtener_pasarela_pago() -> PasarelaPago:
+    return PasarelaWompi(obtener_configuracion_wompi())
+
+
+def obtener_expirar_reservas(
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+    reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
+) -> ExpirarReservas:
+    return ExpirarReservas(pedidos, accesorios, reloj)
+
+
+def obtener_confirmar_pago(
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    envios: Annotated[RepositorioEnvios, Depends(obtener_repositorio_envios)],
+    reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
+) -> ConfirmarPago:
+    return ConfirmarPago(pagos, pedidos, envios, reloj)
+
+
+def obtener_crear_pedido(
+    usuarios: Annotated[RepositorioUsuarios, Depends(obtener_repositorio_usuarios)],
+    direcciones: Annotated[RepositorioDirecciones, Depends(obtener_repositorio_direcciones)],
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    pasarela: Annotated[PasarelaPago, Depends(obtener_pasarela_pago)],
+    expirar_reservas: Annotated[ExpirarReservas, Depends(obtener_expirar_reservas)],
+    reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
+) -> CrearPedido:
+    return CrearPedido(
+        usuarios,
+        direcciones,
+        accesorios,
+        pedidos,
+        pagos,
+        pasarela,
+        expirar_reservas,
+        reloj,
+        obtener_configuracion().minutos_reserva_pedido,
+    )
+
+
+def obtener_verificar_pago(
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    envios: Annotated[RepositorioEnvios, Depends(obtener_repositorio_envios)],
+    pasarela: Annotated[PasarelaPago, Depends(obtener_pasarela_pago)],
+    confirmar_pago: Annotated[ConfirmarPago, Depends(obtener_confirmar_pago)],
+) -> VerificarPago:
+    return VerificarPago(pedidos, pagos, envios, pasarela, confirmar_pago)
+
+
+def obtener_procesar_evento_pago(
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    pasarela: Annotated[PasarelaPago, Depends(obtener_pasarela_pago)],
+    confirmar_pago: Annotated[ConfirmarPago, Depends(obtener_confirmar_pago)],
+) -> ProcesarEventoPago:
+    return ProcesarEventoPago(pagos, pasarela, confirmar_pago)
+
+
+def obtener_listar_pedidos_propios(
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    envios: Annotated[RepositorioEnvios, Depends(obtener_repositorio_envios)],
+    expirar_reservas: Annotated[ExpirarReservas, Depends(obtener_expirar_reservas)],
+) -> ListarPedidosPropios:
+    return ListarPedidosPropios(pedidos, pagos, envios, expirar_reservas)
+
+
+def obtener_obtener_pedido_propio(
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    envios: Annotated[RepositorioEnvios, Depends(obtener_repositorio_envios)],
+    expirar_reservas: Annotated[ExpirarReservas, Depends(obtener_expirar_reservas)],
+) -> ObtenerPedidoPropio:
+    return ObtenerPedidoPropio(pedidos, pagos, envios, expirar_reservas)
