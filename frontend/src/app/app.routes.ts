@@ -36,6 +36,24 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'carrito',
+    loadComponent: () => import('./paginas/tienda/carrito').then((m) => m.Carrito),
+    title: 'Carrito | Candela Motors',
+  },
+  {
+    path: 'checkout',
+    canActivate: [soloRol('CLIENTE')],
+    loadComponent: () => import('./paginas/tienda/checkout').then((m) => m.Checkout),
+    title: 'Envío y pago | Candela Motors',
+  },
+  {
+    path: 'pago/resultado',
+    canActivate: [soloRol('CLIENTE')],
+    loadComponent: () =>
+      import('./paginas/tienda/resultado-pago').then((m) => m.ResultadoPagoPagina),
+    title: 'Resultado del pago | Candela Motors',
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./paginas/no-encontrada/no-encontrada').then((m) => m.NoEncontrada),
