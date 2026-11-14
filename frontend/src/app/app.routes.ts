@@ -36,6 +36,11 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'tienda',
+    loadComponent: () => import('./paginas/tienda/tienda').then((m) => m.Tienda),
+    title: 'Tienda del motociclista | Candela Motors',
+  },
+  {
     path: 'carrito',
     loadComponent: () => import('./paginas/tienda/carrito').then((m) => m.Carrito),
     title: 'Carrito | Candela Motors',

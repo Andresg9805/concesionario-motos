@@ -27,9 +27,7 @@ type Campo = 'nombre' | 'telefono' | 'departamento' | 'municipio' | 'direccion';
       @if (carrito.vacio()) {
         <p class="mt-6 rounded-lg border border-dashed border-line p-8 text-sm text-muted">
           No hay productos en el carrito.
-          <a routerLink="/" fragment="accesorios" class="font-bold text-fg underline"
-            >Ir a la tienda</a
-          >
+          <a routerLink="/tienda" class="font-bold text-fg underline">Ir a la tienda</a>
         </p>
       } @else {
         <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
@@ -290,9 +288,10 @@ export class Checkout {
       direccion: this.direccion().trim(),
       detalle: this.detalle().trim(),
     };
-    const items = this.carrito
-      .lineas()
-      .map((l) => ({ accesorio_id: l.accesorio.id, cantidad: l.cantidad }));
+    const items = this.carrito.lineas().map((l) => ({
+      accesorio_id: /^\d+$/.test(l.accesorio.id) ? Number(l.accesorio.id) : l.accesorio.id,
+      cantidad: l.cantidad,
+    }));
     this.enviando.set(true);
     this.tienda.crearPedido(datos, items).subscribe({
       next: (pedido) => {

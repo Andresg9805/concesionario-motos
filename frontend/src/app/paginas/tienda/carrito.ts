@@ -13,8 +13,7 @@ import { IlustracionAccesorio } from '../../shared/ilustracion-accesorio';
   template: `
     <div class="gutter mx-auto max-w-5xl py-10">
       <a
-        routerLink="/"
-        fragment="accesorios"
+        routerLink="/tienda"
         class="inline-flex items-center gap-1 text-sm font-medium text-muted hover:text-fg"
         ><app-icono nombre="arrow-left" class="h-4 w-4" /> Seguir comprando</a
       >
@@ -27,8 +26,7 @@ import { IlustracionAccesorio } from '../../shared/ilustracion-accesorio';
           <p class="font-display text-lg font-extrabold">Tu carrito está vacío.</p>
           <p class="text-sm text-muted">Agrega cascos, chaquetas y más desde la tienda.</p>
           <a
-            routerLink="/"
-            fragment="accesorios"
+            routerLink="/tienda"
             class="cta inline-flex h-10 items-center rounded-md px-4 text-sm font-bold"
             >Ir a la tienda</a
           >

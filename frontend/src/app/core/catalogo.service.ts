@@ -1,6 +1,7 @@
 import { Injectable, Injector, inject, signal } from '@angular/core';
 import { ACCESORIOS, DESTACADAS, MOTOS, RECOMENDADAS_MULTIMARCA } from './datos-prueba';
 import { Accesorio, ClaveMarca, Destacada, Moto } from './modelos';
+import { AccesoriosApiService } from './accesorios-api';
 import { MotosApiService } from './motos-api';
 
 export type OrigenCatalogo = 'prueba' | 'cargando' | 'api';
@@ -11,8 +12,30 @@ export class CatalogoService {
   readonly destacadas = signal<readonly Destacada[]>(DESTACADAS);
   readonly accesorios = signal<readonly Accesorio[]>(ACCESORIOS);
   readonly origen = signal<OrigenCatalogo>('prueba');
+  readonly origenAccesorios = signal<OrigenCatalogo>('prueba');
 
   private readonly injector = inject(Injector);
+
+  cargarAccesorios(): void {
+    if (this.origenAccesorios() !== 'prueba') {
+      return;
+    }
+    this.origenAccesorios.set('cargando');
+    this.injector
+      .get(AccesoriosApiService)
+      .listar()
+      .subscribe({
+        next: (lista) => {
+          if (lista.length) {
+            this.accesorios.set(lista);
+            this.origenAccesorios.set('api');
+          } else {
+            this.origenAccesorios.set('prueba');
+          }
+        },
+        error: () => this.origenAccesorios.set('prueba'),
+      });
+  }
 
   cargar(): void {
     if (this.origen() !== 'prueba') {
