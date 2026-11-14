@@ -5,6 +5,11 @@ import { Inicio } from './paginas/inicio/inicio';
 export const routes: Routes = [
   { path: '', component: Inicio },
   {
+    path: 'motos/:id',
+    loadComponent: () => import('./paginas/detalle/detalle-moto').then((m) => m.DetalleMoto),
+    title: 'Detalle y costo real | Candela Motors',
+  },
+  {
     path: 'asesor',
     canActivate: [soloRol('ASESOR')],
     loadComponent: () =>
