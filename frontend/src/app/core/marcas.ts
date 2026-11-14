@@ -35,10 +35,12 @@ export const NOMBRE_TIPO: Record<TipoMoto, string> = {
 
 export const SILUETA_TIPO: Record<TipoMoto, Silueta> = {
   NAKED: 'naked',
-  DOBLE_PROPOSITO: 'trail',
+  DOBLE_PROPOSITO: 'doble',
   TRAIL: 'trail',
   DEPORTIVA: 'sport',
 };
+
+export const ORDEN_TIPOS: readonly TipoMoto[] = ['NAKED', 'DOBLE_PROPOSITO', 'TRAIL', 'DEPORTIVA'];
 
 export function esClaveMarca(valor: string | null | undefined): valor is ClaveMarca {
   return valor === 'honda' || valor === 'kawasaki' || valor === 'yamaha';

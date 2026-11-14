@@ -34,7 +34,27 @@ describe('FiltrosService', () => {
     expect(lista[0].modelo).toBe('CRF1100L Africa Twin');
   });
 
+  it('el filtro por tipo solo deja motos de ese estilo', () => {
+    filtros.tipo.set('DOBLE_PROPOSITO');
+    const lista = filtros.aplicar(MOTOS);
+    expect(lista.length).toBeGreaterThan(0);
+    expect(lista.every((moto) => moto.tipo === 'DOBLE_PROPOSITO')).toBe(true);
+  });
+
+  it('el tipo se combina con la licencia', () => {
+    filtros.tipo.set('DEPORTIVA');
+    filtros.segmento.set('a2');
+    const lista = filtros.aplicar(MOTOS);
+    expect(lista.every((moto) => moto.tipo === 'DEPORTIVA' && moto.cc > 125)).toBe(true);
+  });
+
+  it('se puede ignorar el tipo para contar por estilo', () => {
+    filtros.tipo.set('TRAIL');
+    expect(filtros.aplicar(MOTOS, { tipo: true })).toHaveLength(MOTOS.length);
+  });
+
   it('limpiar quita los filtros', () => {
+    filtros.tipo.set('NAKED');
     filtros.segmento.set('a2');
     filtros.precioMaximo.set(1);
     filtros.limpiar();

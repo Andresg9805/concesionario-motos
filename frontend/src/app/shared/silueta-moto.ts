@@ -44,6 +44,27 @@ import { Silueta } from '../core/modelos';
           <path d="M168 64 L206 58 L208 65 L172 71 Z" fill="currentColor" />
           <path d="M60 64 L98 62 L94 76 L66 78 Z" class="acc" />
         }
+        @case ('doble') {
+          <circle cx="50" cy="104" r="27" fill="none" stroke="currentColor" stroke-width="7" />
+          <circle cx="50" cy="104" r="5" fill="currentColor" />
+          <circle cx="192" cy="102" r="29" fill="none" stroke="currentColor" stroke-width="7" />
+          <circle cx="192" cy="102" r="5" fill="currentColor" />
+          <path
+            d="M50 104 L108 84 M192 102 L170 44 M160 38 L182 40"
+            stroke="currentColor"
+            stroke-width="6"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <path d="M24 56 L60 54 L62 66 L30 68 Z" fill="currentColor" />
+          <rect x="32" y="40" width="26" height="14" rx="3" fill="currentColor" opacity=".75" />
+          <path d="M58 56 L108 54 L108 64 L62 68 Z" fill="currentColor" />
+          <path d="M106 50 Q128 38 156 44 L160 62 L108 68 Z" fill="currentColor" />
+          <rect x="110" y="68" width="42" height="24" rx="4" fill="currentColor" />
+          <path d="M166 58 L196 40 L204 46 L178 66 Z" fill="currentColor" />
+          <path d="M190 42 L198 24 L208 28 L202 44 Z" fill="currentColor" opacity=".55" />
+          <path d="M70 58 L100 57 L98 66 L74 68 Z" class="acc" />
+        }
         @default {
           <circle cx="52" cy="106" r="26" fill="none" stroke="currentColor" stroke-width="7" />
           <circle cx="52" cy="106" r="5" fill="currentColor" />

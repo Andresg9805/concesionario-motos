@@ -1,10 +1,28 @@
 import { Component, computed, inject } from '@angular/core';
 import { CatalogoService } from '../../../core/catalogo.service';
+import { FiltrosService } from '../../../core/filtros.service';
 import { MarcaService } from '../../../core/marca.service';
-import { LISTA_MARCAS } from '../../../core/marcas';
-import { ClaveMarca } from '../../../core/modelos';
+import { LISTA_MARCAS, NOMBRE_TIPO, ORDEN_TIPOS } from '../../../core/marcas';
+import { ClaveMarca, TipoMoto } from '../../../core/modelos';
 import { Icono } from '../../../shared/icono';
-import { TarjetaMoto } from '../../../shared/tarjeta-moto';
+
+const CARPETA_TIPO: Record<TipoMoto, string> = {
+  NAKED: 'naked',
+  DOBLE_PROPOSITO: 'doble-proposito',
+  TRAIL: 'trail',
+  DEPORTIVA: 'deportiva',
+};
+
+interface ImagenTipo {
+  src: string;
+  alt: string;
+}
+
+interface TarjetaTipo {
+  clave: TipoMoto;
+  nombre: string;
+  imagenes: ImagenTipo[];
+}
 
 interface OpcionMarca {
   clave: ClaveMarca | null;
@@ -17,7 +35,38 @@ interface OpcionMarca {
 
 @Component({
   selector: 'app-marcas',
-  imports: [TarjetaMoto, Icono],
+  imports: [Icono],
+  styles: `
+    .rotar {
+      opacity: 0;
+      animation: rotar 12s infinite;
+    }
+    .rotar:first-child {
+      opacity: 1;
+    }
+    @keyframes rotar {
+      0%,
+      30% {
+        opacity: 1;
+      }
+      36%,
+      94% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rotar {
+        animation: none;
+        opacity: 0;
+      }
+      .rotar:first-child {
+        opacity: 1;
+      }
+    }
+  `,
   template: `
     <section
       id="marcas"
@@ -80,24 +129,57 @@ interface OpcionMarca {
       </div>
 
       <div class="gutter relative mx-auto max-w-7xl pt-7 pb-[52px]">
-        <div
-          class="flex flex-wrap items-baseline justify-between gap-2 border-t border-bandline pt-6"
-        >
+        <div class="border-t border-bandline pt-6">
           <h3 class="font-display text-xl font-extrabold">
-            Motos recomendadas del mercado
+            Tipos de moto
             <span class="text-bandmuted"
-              >· {{ marcaService.marca()?.nombre ?? 'selección multimarca' }}</span
+              >· {{ marcaService.marca()?.nombre ?? 'las tres marcas' }}</span
             >
           </h3>
-          <a
-            href="#catalogo"
-            class="inline-flex items-center gap-1 text-sm font-medium text-bandmuted hover:text-onband"
-            >Ver catálogo completo <app-icono nombre="arrow-down" class="h-4 w-4"
-          /></a>
         </div>
-        <div class="mt-5 grid gap-4 md:grid-cols-3">
-          @for (moto of recomendadas(); track moto.id; let i = $index) {
-            <app-tarjeta-moto [moto]="moto" [banda]="true" [destacada]="i === 0" />
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          @for (tipo of tipos(); track tipo.clave) {
+            <button
+              type="button"
+              class="tipo group block w-full overflow-hidden rounded-lg border text-left transition-colors"
+              [class]="
+                filtros.tipo() === tipo.clave
+                  ? 'border-accent ring-2 ring-accent'
+                  : 'border-bandline hover:border-accent'
+              "
+              [attr.aria-pressed]="filtros.tipo() === tipo.clave"
+              [attr.aria-label]="'Ver motos ' + tipo.nombre"
+              (click)="elegirTipo(tipo.clave)"
+            >
+              <span class="relative block aspect-[16/9] overflow-hidden">
+                @for (imagen of tipo.imagenes; track imagen.src; let i = $index) {
+                  <img
+                    class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    [class.rotar]="tipo.imagenes.length > 1"
+                    [style.animation-delay]="i * 4 + 's'"
+                    [src]="imagen.src"
+                    [alt]="imagen.alt"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                }
+              </span>
+              <span
+                class="flex items-center justify-between gap-3 border-t border-bandline px-5 py-3"
+              >
+                <span class="font-display text-xl font-extrabold">{{ tipo.nombre }}</span>
+                @if (filtros.tipo() === tipo.clave) {
+                  <span class="inline-flex items-center gap-1 text-sm font-bold text-accenttext"
+                    >Quitar filtro <app-icono nombre="x" class="h-4 w-4"
+                  /></span>
+                } @else {
+                  <span
+                    class="inline-flex items-center gap-1 text-sm font-bold text-bandmuted group-hover:text-accenttext"
+                    >Ver motos <app-icono nombre="arrow-down" class="h-4 w-4"
+                  /></span>
+                }
+              </span>
+            </button>
           }
         </div>
       </div>
@@ -107,6 +189,7 @@ interface OpcionMarca {
 export class Marcas {
   protected readonly marcaService = inject(MarcaService);
   private readonly catalogo = inject(CatalogoService);
+  protected readonly filtros = inject(FiltrosService);
 
   protected readonly opciones = computed<OpcionMarca[]>(() => [
     {
@@ -127,12 +210,32 @@ export class Marcas {
     })),
   ]);
 
-  protected readonly recomendadas = computed(() =>
-    this.catalogo.recomendadas(this.marcaService.actual()),
-  );
+  protected readonly tipos = computed<TarjetaTipo[]>(() => {
+    const elegida = this.marcaService.marca();
+    const marcas = elegida ? [elegida] : LISTA_MARCAS;
+    return ORDEN_TIPOS.map((tipo) => ({
+      clave: tipo,
+      nombre: NOMBRE_TIPO[tipo],
+      imagenes: marcas.map((marca) => ({
+        src: `estilos/${marca.clave}/${CARPETA_TIPO[tipo]}.webp`,
+        alt: `Moto tipo ${NOMBRE_TIPO[tipo]} de ${marca.nombre}`,
+      })),
+    }));
+  });
 
   protected readonly estado = computed(() => {
     const marca = this.marcaService.marca();
     return `Paleta activa: ${marca ? marca.nombre : 'neutra'}`;
   });
+
+  protected elegirTipo(tipo: TipoMoto): void {
+    if (this.filtros.tipo() === tipo) {
+      this.filtros.tipo.set('todos');
+      return;
+    }
+    this.filtros.tipo.set(tipo);
+    const reducir =
+      typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('catalogo')?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth' });
+  }
 }

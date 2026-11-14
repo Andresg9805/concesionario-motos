@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Moto } from './modelos';
+import { Moto, TipoMoto } from './modelos';
 
 export interface Segmento {
   id: 'todas' | 'a1' | 'a2';
@@ -12,6 +12,13 @@ export interface Rango {
   texto: string;
   minimo: number;
   maximo: number;
+}
+
+export type FiltroTipo = 'todos' | TipoMoto;
+
+export interface Ignorar {
+  segmento?: boolean;
+  tipo?: boolean;
 }
 
 export type Orden = 'precio-asc' | 'precio-desc' | 'cc-asc' | 'cc-desc';
@@ -33,16 +40,19 @@ export const RANGOS: readonly Rango[] = [
 @Injectable({ providedIn: 'root' })
 export class FiltrosService {
   readonly segmento = signal<Segmento['id']>('todas');
+  readonly tipo = signal<FiltroTipo>('todos');
   readonly rango = signal('todos');
   readonly orden = signal<Orden>('precio-asc');
   readonly precioMaximo = signal<number | null>(null);
 
-  aplicar(motos: readonly Moto[], ignorarSegmento = false): Moto[] {
+  aplicar(motos: readonly Moto[], ignorar: Ignorar = {}): Moto[] {
     const segmento = SEGMENTOS.find((s) => s.id === this.segmento()) ?? SEGMENTOS[0];
     const rango = RANGOS.find((r) => r.id === this.rango()) ?? RANGOS[0];
     const maximo = this.precioMaximo();
+    const tipo = this.tipo();
     return motos
-      .filter((moto) => ignorarSegmento || segmento.cumple(moto))
+      .filter((moto) => ignorar.segmento || segmento.cumple(moto))
+      .filter((moto) => ignorar.tipo || tipo === 'todos' || moto.tipo === tipo)
       .filter((moto) => moto.precio >= rango.minimo && moto.precio < rango.maximo)
       .filter((moto) => maximo === null || moto.precio <= maximo);
   }
@@ -55,6 +65,7 @@ export class FiltrosService {
 
   limpiar(): void {
     this.segmento.set('todas');
+    this.tipo.set('todos');
     this.rango.set('todos');
     this.precioMaximo.set(null);
   }
