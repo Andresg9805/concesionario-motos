@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CatalogoService } from '../../core/catalogo.service';
 import { Accesorios } from './secciones/accesorios';
 import { Catalogo } from './secciones/catalogo';
 import { Cotizar } from './secciones/cotizar';
@@ -16,4 +17,8 @@ import { Portada } from './secciones/portada';
     <app-cotizar />
   `,
 })
-export class Inicio {}
+export class Inicio {
+  constructor() {
+    inject(CatalogoService).cargar();
+  }
+}

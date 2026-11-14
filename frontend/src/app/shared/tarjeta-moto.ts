@@ -1,4 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { cuotaMensual, licenciaPara } from '../core/finanzas';
 import { MARCAS, NOMBRE_TIPO, SILUETA_TIPO } from '../core/marcas';
 import { Moto } from '../core/modelos';
@@ -9,7 +10,7 @@ import { SiluetaMoto } from './silueta-moto';
 
 @Component({
   selector: 'app-tarjeta-moto',
-  imports: [SiluetaMoto, Icono, CopPipe],
+  imports: [SiluetaMoto, Icono, CopPipe, RouterLink],
   host: { class: 'block' },
   template: `
     <article
@@ -52,7 +53,7 @@ import { SiluetaMoto } from './silueta-moto';
             >{{ marca().nombre }}
           </p>
           <h4 class="mt-0.5 font-display text-lg leading-snug font-extrabold">
-            {{ moto().modelo }}
+            <a [routerLink]="['/motos', moto().id]" class="hover:underline">{{ moto().modelo }}</a>
           </h4>
         </div>
         <dl class="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
@@ -83,6 +84,11 @@ import { SiluetaMoto } from './silueta-moto';
             </dd>
           </div>
         </dl>
+        <a
+          [routerLink]="['/motos', moto().id]"
+          class="inline-flex items-center gap-1 text-sm font-bold text-accenttext hover:underline"
+          >Ver costo real <app-icono nombre="arrow-right" class="h-4 w-4"
+        /></a>
         <div class="mt-auto grid grid-cols-2 gap-2">
           <button
             type="button"

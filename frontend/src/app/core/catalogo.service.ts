@@ -1,12 +1,39 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Injector, inject, signal } from '@angular/core';
 import { ACCESORIOS, DESTACADAS, MOTOS, RECOMENDADAS_MULTIMARCA } from './datos-prueba';
 import { Accesorio, ClaveMarca, Destacada, Moto } from './modelos';
+import { MotosApiService } from './motos-api';
+
+export type OrigenCatalogo = 'prueba' | 'cargando' | 'api';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogoService {
   readonly motos = signal<readonly Moto[]>(MOTOS);
   readonly destacadas = signal<readonly Destacada[]>(DESTACADAS);
   readonly accesorios = signal<readonly Accesorio[]>(ACCESORIOS);
+  readonly origen = signal<OrigenCatalogo>('prueba');
+
+  private readonly injector = inject(Injector);
+
+  cargar(): void {
+    if (this.origen() !== 'prueba') {
+      return;
+    }
+    this.origen.set('cargando');
+    this.injector
+      .get(MotosApiService)
+      .listar()
+      .subscribe({
+        next: (motos) => {
+          if (motos.length) {
+            this.motos.set(motos);
+            this.origen.set('api');
+          } else {
+            this.origen.set('prueba');
+          }
+        },
+        error: () => this.origen.set('prueba'),
+      });
+  }
 
   porId(id: string): Moto | undefined {
     return this.motos().find((moto) => moto.id === id);

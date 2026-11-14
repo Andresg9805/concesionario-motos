@@ -104,8 +104,11 @@ export class Accesorios {
     'Todos',
     'Cascos',
     'Chaquetas',
+    'Guantes',
     'Rodilleras',
     'Hombreras',
+    'Maletas',
+    'Mantenimiento',
   ];
   protected readonly filtro = signal<Filtro>('Todos');
 
