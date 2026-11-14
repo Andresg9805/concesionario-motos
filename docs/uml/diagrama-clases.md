@@ -43,10 +43,10 @@ classDiagram
 
     class TipoMoto {
         <<enumeration>>
-        CALLE
-        DEPORTIVA
+        NAKED
         DOBLE_PROPOSITO
-        SCOOTER
+        DEPORTIVA
+        TRAIL
     }
 
     class CategoriaLicencia {
@@ -304,6 +304,8 @@ classDiagram
         CASCO
         CHAQUETA
         GUANTES
+        RODILLERA
+        HOMBRERA
         MALETA
         MANTENIMIENTO
     }

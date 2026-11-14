@@ -2,7 +2,14 @@ from datetime import date
 
 import pytest
 
-from app.domain.catalogo import CategoriaLicencia, Marca, Moto, PlanCredito, TasaCambio
+from app.domain.catalogo import (
+    CategoriaLicencia,
+    Marca,
+    Moto,
+    PlanCredito,
+    TasaCambio,
+    TipoMoto,
+)
 from app.domain.excepciones import CreditoInvalidoError
 from tests.domain import fabricas
 
@@ -99,3 +106,18 @@ def test_planes_invalidos(precio, inicial, plazo, tasa):
 def test_cuota_cero_no_permite_buscar():
     with pytest.raises(CreditoInvalidoError):
         PlanCredito.precio_maximo_para_cuota(0, 0, 24, 0.02)
+
+
+def test_los_tipos_de_moto_son_naked_doble_proposito_deportiva_y_trail():
+    assert {tipo.value for tipo in TipoMoto} == {"NAKED", "DOBLE_PROPOSITO", "DEPORTIVA", "TRAIL"}
+
+
+def test_ya_no_existen_calle_ni_scooter():
+    assert "CALLE" not in TipoMoto.__members__
+    assert "SCOOTER" not in TipoMoto.__members__
+
+
+@pytest.mark.parametrize("tipo", ["NAKED", "TRAIL"])
+def test_se_puede_crear_una_moto_naked_o_trail(tipo):
+    moto = fabricas.moto(tipo=TipoMoto(tipo))
+    assert moto.tipo == TipoMoto(tipo)
