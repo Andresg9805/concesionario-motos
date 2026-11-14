@@ -66,3 +66,11 @@ class PermisoDenegadoError(DominioError):
 
 class DireccionInvalidaError(DominioError):
     pass
+
+
+class PasarelaNoDisponibleError(DominioError):
+    pass
+
+
+class EventoIgnoradoError(DominioError):
+    pass

@@ -9,6 +9,7 @@ from app.api.routers import (
     direcciones,
     marcas,
     motos,
+    pedidos,
     ubicaciones,
 )
 
@@ -35,6 +36,9 @@ app.include_router(asesor.router)
 app.include_router(accesorios.router)
 app.include_router(ubicaciones.router)
 app.include_router(direcciones.router)
+app.include_router(pedidos.router_pedidos)
+app.include_router(pedidos.router_mis_pedidos)
+app.include_router(pedidos.router_webhooks)
 
 
 @app.get("/health", tags=["Sistema"])
