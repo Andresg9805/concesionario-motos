@@ -27,8 +27,8 @@ from app.infrastructure.seguridad.jwt_emisor import EmisorTokensJWT
 from app.main import app
 
 AHORA = datetime(2026, 11, 13, 20, 0, tzinfo=ZONA_COLOMBIA)
-MOTO_HONDA = 3
-MOTO_KAWASAKI = 9
+MOTO_HONDA = 20
+MOTO_KAWASAKI = 21
 
 CONTACTO = {
     "nombre": "Ana Pérez",

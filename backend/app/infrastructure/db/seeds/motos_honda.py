@@ -1,6 +1,9 @@
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.infrastructure.models.marca import Marca
 from app.infrastructure.models.moto import Moto
 
 DESC_CB500_HORNET = (
@@ -105,9 +108,8 @@ DESC_XR190L = (
 )
 
 
-MOTOS_HONDA = [
+MOTOS_HONDA: list[dict[str, Any]] = [
     {
-        "marca_id": 2,
         "modelo": "CB500 HORNET",
         "anio": 2027,
         "cilindraje_cc": 471,
@@ -118,10 +120,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 85.0,
         "costo_mantenimiento_km_cop": 55,
         "descripcion": DESC_CB500_HORNET,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CB650R",
         "anio": 2027,
         "cilindraje_cc": 649,
@@ -132,10 +133,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 58.0,
         "costo_mantenimiento_km_cop": 120,
         "descripcion": DESC_CB650R,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CB750 HORNET",
         "anio": 2027,
         "cilindraje_cc": 755,
@@ -146,10 +146,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 65.0,
         "costo_mantenimiento_km_cop": 95,
         "descripcion": DESC_CB750_HORNET,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CB1000F",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -160,10 +159,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 45.0,
         "costo_mantenimiento_km_cop": 180,
         "descripcion": DESC_CB1000F,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CB1000 HORNET SP",
         "anio": 2027,
         "cilindraje_cc": 999,
@@ -174,10 +172,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 40.0,
         "costo_mantenimiento_km_cop": 210,
         "descripcion": DESC_CB1000_HORNET_SP,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CBR500R",
         "anio": 2027,
         "cilindraje_cc": 471,
@@ -188,10 +185,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 85.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_CBR500R,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CBR650R",
         "anio": 2027,
         "cilindraje_cc": 649,
@@ -202,10 +198,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 58.0,
         "costo_mantenimiento_km_cop": 130,
         "descripcion": DESC_CBR650R,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CBR600RR",
         "anio": 2027,
         "cilindraje_cc": 599,
@@ -216,10 +211,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 48.0,
         "costo_mantenimiento_km_cop": 170,
         "descripcion": DESC_CBR600RR,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CBR1000RR",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -230,10 +224,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 40.0,
         "costo_mantenimiento_km_cop": 220,
         "descripcion": DESC_CBR1000RR,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CBR1000RR-R FIREBLADE SP",
         "anio": 2027,
         "cilindraje_cc": 1000,
@@ -244,10 +237,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 35.0,
         "costo_mantenimiento_km_cop": 280,
         "descripcion": DESC_CBR1000RR_R_FIREBLADE_SP,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CRF1100L AFRICA TWIN",
         "anio": 2027,
         "cilindraje_cc": 1084,
@@ -258,10 +250,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 52.0,
         "costo_mantenimiento_km_cop": 130,
         "descripcion": DESC_CRF1100L_AFRICA_TWIN,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "AFRICA TWIN ADVENTURE SPORTS",
         "anio": 2027,
         "cilindraje_cc": 1084,
@@ -272,10 +263,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 50.0,
         "costo_mantenimiento_km_cop": 145,
         "descripcion": DESC_AFRICA_TWIN_ADVENTURE_SPORTS,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "XL750 TRANSALP",
         "anio": 2027,
         "cilindraje_cc": 755,
@@ -286,10 +276,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 68.0,
         "costo_mantenimiento_km_cop": 95,
         "descripcion": DESC_XL750_TRANSALP,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "NC750X",
         "anio": 2027,
         "cilindraje_cc": 745,
@@ -300,10 +289,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 82.0,
         "costo_mantenimiento_km_cop": 75,
         "descripcion": DESC_NC750X,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "NX500",
         "anio": 2027,
         "cilindraje_cc": 471,
@@ -314,10 +302,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 88.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_NX500,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CRF450RL",
         "anio": 2027,
         "cilindraje_cc": 449,
@@ -328,10 +315,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 70.0,
         "costo_mantenimiento_km_cop": 95,
         "descripcion": DESC_CRF450RL,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "CRF300L",
         "anio": 2027,
         "cilindraje_cc": 286,
@@ -342,10 +328,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 95.0,
         "costo_mantenimiento_km_cop": 50,
         "descripcion": DESC_CRF300L,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "XR650L",
         "anio": 2027,
         "cilindraje_cc": 644,
@@ -356,10 +341,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 65.0,
         "costo_mantenimiento_km_cop": 75,
         "descripcion": DESC_XR650L,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "XR150L",
         "anio": 2027,
         "cilindraje_cc": 149,
@@ -370,10 +354,9 @@ MOTOS_HONDA = [
         "consumo_km_galon": 125.0,
         "costo_mantenimiento_km_cop": 35,
         "descripcion": DESC_XR150L,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 2,
         "modelo": "XR190L",
         "anio": 2027,
         "cilindraje_cc": 184,
@@ -384,18 +367,21 @@ MOTOS_HONDA = [
         "consumo_km_galon": 110.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_XR190L,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
 ]
 
 
 def seed_motos_honda(db: Session) -> None:
+    marca = db.scalar(select(Marca).where(Marca.nombre.ilike("Honda")))
+    if marca is None:
+        return
     for datos in MOTOS_HONDA:
         moto_existente = db.scalar(
             select(Moto).where(
-                Moto.marca_id == datos["marca_id"],
+                Moto.marca_id == marca.id,
                 Moto.modelo.ilike(datos["modelo"]),
             )
         )
         if moto_existente is None:
-            db.add(Moto(**datos))
+            db.add(Moto(**datos, marca_id=marca.id))

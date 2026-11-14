@@ -11,11 +11,12 @@ def ejecutar_seeds() -> None:
 
     try:
         seed_marcas(db)
+        db.flush()
         seed_motos_kawasaki(db)
         seed_motos_honda(db)
         seed_motos_yamaha(db)
         seed_accesorios(db)
-        
+
         db.commit()
 
     except Exception:

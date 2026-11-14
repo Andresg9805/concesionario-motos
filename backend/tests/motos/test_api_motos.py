@@ -15,7 +15,7 @@ def test_listar_motos_sin_filtros(cliente_http):
     respuesta = cliente_http.get("/motos")
     assert respuesta.status_code == 200
     cuerpo = respuesta.json()
-    assert len(cuerpo) == 22
+    assert len(cuerpo) == 60
     assert "stock" not in cuerpo[0]
     assert "consumo_km_galon" not in cuerpo[0]
 
@@ -36,7 +36,7 @@ def test_listar_motos_con_tipo_no_permitido_responde_422(cliente_http, tipo):
 def test_listar_motos_por_marca_y_licencia(cliente_http):
     respuesta = cliente_http.get("/motos", params={"marca_id": 3, "licencia": "A1"})
     assert respuesta.status_code == 200
-    assert [moto["modelo"] for moto in respuesta.json()] == ["XTZ 125"]
+    assert [moto["modelo"] for moto in respuesta.json()] == ["XTZ 125", "WR125R"]
 
 
 def test_listar_motos_por_rango_de_cilindraje_y_precio(cliente_http):
@@ -51,7 +51,7 @@ def test_listar_motos_por_rango_de_cilindraje_y_precio(cliente_http):
     )
     assert respuesta.status_code == 200
     modelos = {moto["modelo"] for moto in respuesta.json()}
-    assert modelos == {"XRE 300 Rally", "Versys-X 300", "Z400", "MT-03"}
+    assert modelos == {"CRF300L", "KLX 300", "MT-03"}
 
 
 @pytest.mark.parametrize(
@@ -68,7 +68,7 @@ def test_listar_motos_con_filtros_invalidos_responde_422(cliente_http, consulta)
 
 
 def test_detalle_de_moto(cliente_http):
-    respuesta = cliente_http.get("/motos/22")
+    respuesta = cliente_http.get("/motos/44")
     assert respuesta.status_code == 200
     cuerpo = respuesta.json()
     assert cuerpo["modelo"] == "MT-03"
@@ -98,7 +98,7 @@ def test_por_cuota_con_licencia_a1(cliente_http):
     respuesta = cliente_http.get(
         "/motos/por-cuota",
         params={
-            "cuota_maxima_cop": 350_000,
+            "cuota_maxima_cop": 400_000,
             "cuota_inicial_cop": 1_000_000,
             "plazo_meses": 36,
             "licencia": "A1",
@@ -108,7 +108,7 @@ def test_por_cuota_con_licencia_a1(cliente_http):
     cuerpo = respuesta.json()
     assert cuerpo["cantidad_resultados"] == len(cuerpo["motos"]) > 0
     assert all(item["moto"]["cilindraje_cc"] <= 125 for item in cuerpo["motos"])
-    assert all(item["cuota_mensual_cop"] <= 350_000 for item in cuerpo["motos"])
+    assert all(item["cuota_mensual_cop"] <= 400_000 for item in cuerpo["motos"])
     assert all(
         item["moto"]["precio_cop"] <= cuerpo["precio_maximo_cop"] for item in cuerpo["motos"]
     )
@@ -166,7 +166,7 @@ def test_por_cuota_con_sesion_invalida_responde_422(cliente_http):
 
 def test_costo_real(cliente_http):
     respuesta = cliente_http.get(
-        "/motos/14/costo-real",
+        "/motos/15/costo-real",
         params={"km_mes": 800, "uso": "CIUDAD", "cuota_inicial_cop": 5_000_000, "plazo_meses": 24},
     )
     assert respuesta.status_code == 200

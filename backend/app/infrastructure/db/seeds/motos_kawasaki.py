@@ -1,6 +1,9 @@
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.infrastructure.models.marca import Marca
 from app.infrastructure.models.moto import Moto
 
 DESC_Z125 = (
@@ -111,9 +114,8 @@ DESC_KLX_300_DF = (
     "y capacidad para recorridos urbanos y todoterreno."
 )
 
-MOTOS_KAWASAKI = [
+MOTOS_KAWASAKI: list[dict[str, Any]] = [
     {
-        "marca_id": 3,
         "modelo": "Z125",
         "anio": 2027,
         "cilindraje_cc": 125,
@@ -124,10 +126,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 130.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_Z125,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "Z500",
         "anio": 2027,
         "cilindraje_cc": 451,
@@ -138,10 +139,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 95.0,
         "costo_mantenimiento_km_cop": 65,
         "descripcion": DESC_Z500,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "Z900",
         "anio": 2027,
         "cilindraje_cc": 948,
@@ -152,10 +152,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 55.0,
         "costo_mantenimiento_km_cop": 110,
         "descripcion": DESC_Z900,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "Z900 SE",
         "anio": 2027,
         "cilindraje_cc": 948,
@@ -166,10 +165,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 54.0,
         "costo_mantenimiento_km_cop": 125,
         "descripcion": DESC_Z900_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "Z H2 SE",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -180,10 +178,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 38.0,
         "costo_mantenimiento_km_cop": 220,
         "descripcion": DESC_Z_H2_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "NINJA H2R",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -194,10 +191,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 30.0,
         "costo_mantenimiento_km_cop": 350,
         "descripcion": DESC_NINJA_H2R,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "NINJA H2",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -208,10 +204,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 35.0,
         "costo_mantenimiento_km_cop": 250,
         "descripcion": DESC_NINJA_H2,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "NINJA H2 CARBON",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -222,10 +217,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 35.0,
         "costo_mantenimiento_km_cop": 260,
         "descripcion": DESC_NINJA_H2_CARBON,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "NINJA H2 SX SE",
         "anio": 2027,
         "cilindraje_cc": 998,
@@ -236,10 +230,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 42.0,
         "costo_mantenimiento_km_cop": 210,
         "descripcion": DESC_NINJA_H2_SX_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "NINJA 1100SX SE",
         "anio": 2027,
         "cilindraje_cc": 1099,
@@ -250,10 +243,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 50.0,
         "costo_mantenimiento_km_cop": 140,
         "descripcion": DESC_NINJA_1100_SX_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "VERSYS 1100 SE",
         "anio": 2027,
         "cilindraje_cc": 1099,
@@ -264,10 +256,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 48.0,
         "costo_mantenimiento_km_cop": 140,
         "descripcion": DESC_VERSYS_1100_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "VERSYS 900 SE",
         "anio": 2027,
         "cilindraje_cc": 900,
@@ -278,10 +269,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 55.0,
         "costo_mantenimiento_km_cop": 115,
         "descripcion": DESC_VERSYS_900_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "VERSYS 650",
         "anio": 2027,
         "cilindraje_cc": 649,
@@ -292,10 +282,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 75.0,
         "costo_mantenimiento_km_cop": 80,
         "descripcion": DESC_VERSYS_650,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLE650 SE",
         "anio": 2027,
         "cilindraje_cc": 649,
@@ -306,10 +295,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 70.0,
         "costo_mantenimiento_km_cop": 85,
         "descripcion": DESC_KLE_650_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLE500 SE",
         "anio": 2027,
         "cilindraje_cc": 451,
@@ -320,10 +308,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 92.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_KLE_500_SE,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLX 300",
         "anio": 2027,
         "cilindraje_cc": 292,
@@ -334,10 +321,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 90.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_KLX_300,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLX 230 S",
         "anio": 2027,
         "cilindraje_cc": 233,
@@ -348,24 +334,22 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 110.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_KLX_230_S,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLX 150",
         "anio": 2027,
         "cilindraje_cc": 144,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A1",
+        "categoria_licencia": "A2",
         "precio_cop": 14990000,
         "stock": 4,
         "consumo_km_galon": 100.0,
         "costo_mantenimiento_km_cop": 40,
         "descripcion": DESC_KLX_150,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLX 230 DF",
         "anio": 2027,
         "cilindraje_cc": 233,
@@ -376,10 +360,9 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 100.0,
         "costo_mantenimiento_km_cop": 50,
         "descripcion": DESC_KLX_230_DF,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
     {
-        "marca_id": 3,
         "modelo": "KLX 300 DF",
         "anio": 2027,
         "cilindraje_cc": 292,
@@ -390,19 +373,21 @@ MOTOS_KAWASAKI = [
         "consumo_km_galon": 90.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_KLX_300_DF,
-        "imagen_url": "foto",
+        "imagen_url": "",
     },
 ]
 
 
 def seed_motos_kawasaki(db: Session) -> None:
+    marca = db.scalar(select(Marca).where(Marca.nombre.ilike("Kawasaki")))
+    if marca is None:
+        return
     for datos in MOTOS_KAWASAKI:
         moto_existente = db.scalar(
             select(Moto).where(
-                Moto.marca_id == datos["marca_id"],
+                Moto.marca_id == marca.id,
                 Moto.modelo.ilike(datos["modelo"]),
             )
         )
-
         if moto_existente is None:
-            db.add(Moto(**datos))
+            db.add(Moto(**datos, marca_id=marca.id))

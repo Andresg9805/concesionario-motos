@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -21,7 +23,7 @@ DESC_KAWASAKI = (
     "inigualable y diseño deportivo de vanguardia."
 )
 
-MARCAS_INICIALES = [
+MARCAS_INICIALES: list[dict[str, Any]] = [
     {
         "nombre": "Yamaha",
         "color_hex": "#003399",
@@ -42,8 +44,6 @@ MARCAS_INICIALES = [
 
 def seed_marcas(db: Session) -> None:
     for datos in MARCAS_INICIALES:
-        marca_existente = db.scalar(
-            select(Marca).where(Marca.nombre.ilike(datos["nombre"]))
-        )
+        marca_existente = db.scalar(select(Marca).where(Marca.nombre.ilike(datos["nombre"])))
         if marca_existente is None:
             db.add(Marca(**datos))
