@@ -1,3 +1,5 @@
+import os
+import secrets
 from collections.abc import Callable
 from functools import lru_cache
 from typing import Annotated
@@ -5,6 +7,18 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from app.application.atencion import (
+    AsignacionAtencion,
+    AtenderSiguienteTestDrive,
+    CambiarEstadoCotizacion,
+    ConsultarSeguimiento,
+    ListarAtencionesAsesor,
+    ListarColaTestDrives,
+    Reloj,
+    SolicitarCotizacion,
+    SolicitarTestDrive,
+    reloj_colombia,
+)
 from app.application.autenticacion import IniciarSesion, RegistrarCliente
 from app.application.motos import (
     BuscarMotosPorCuota,
@@ -19,13 +33,19 @@ from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
     RepositorioBusquedas,
     RepositorioClientes,
+    RepositorioCotizaciones,
     RepositorioMarcas,
     RepositorioMotos,
     RepositorioParametros,
     RepositorioSimulaciones,
+    RepositorioTestDrives,
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.memoria.atencion import (
+    RepositorioCotizacionesEnMemoria,
+    RepositorioTestDrivesEnMemoria,
+)
 from app.infrastructure.memoria.catalogo import (
     RepositorioBusquedasEnMemoria,
     RepositorioMarcasEnMemoria,
@@ -33,6 +53,7 @@ from app.infrastructure.memoria.catalogo import (
     RepositorioParametrosEnMemoria,
     RepositorioSimulacionesEnMemoria,
 )
+from app.infrastructure.memoria.datos_prueba import asesores_iniciales
 from app.infrastructure.memoria.usuarios import (
     RepositorioClientesEnMemoria,
     RepositorioUsuariosEnMemoria,
@@ -45,7 +66,12 @@ esquema_bearer = HTTPBearer(auto_error=False)
 
 @lru_cache
 def obtener_repositorio_usuarios() -> RepositorioUsuarios:
-    return RepositorioUsuariosEnMemoria()
+    usuarios = RepositorioUsuariosEnMemoria()
+    contrasena = os.environ.get("CONTRASENA_ASESORES_DEMO") or secrets.token_urlsafe(32)
+    hash_contrasena = obtener_hasheador().hashear(contrasena)
+    for asesor in asesores_iniciales(hash_contrasena):
+        usuarios.guardar(asesor)
+    return usuarios
 
 
 @lru_cache
@@ -176,3 +202,75 @@ def obtener_calcular_costo_real(
     parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
 ) -> CalcularCostoReal:
     return CalcularCostoReal(motos, parametros)
+
+
+@lru_cache
+def obtener_repositorio_cotizaciones() -> RepositorioCotizaciones:
+    return RepositorioCotizacionesEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_test_drives() -> RepositorioTestDrives:
+    return RepositorioTestDrivesEnMemoria()
+
+
+def obtener_reloj_atencion() -> Reloj:
+    return reloj_colombia
+
+
+def obtener_asignacion_atencion(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+    clientes: Annotated[RepositorioClientes, Depends(obtener_repositorio_clientes)],
+    usuarios: Annotated[RepositorioUsuarios, Depends(obtener_repositorio_usuarios)],
+    cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
+    test_drives: Annotated[RepositorioTestDrives, Depends(obtener_repositorio_test_drives)],
+) -> AsignacionAtencion:
+    return AsignacionAtencion(motos, clientes, usuarios, cotizaciones, test_drives)
+
+
+def obtener_solicitar_cotizacion(
+    asignacion: Annotated[AsignacionAtencion, Depends(obtener_asignacion_atencion)],
+    cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
+    parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
+    reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
+) -> SolicitarCotizacion:
+    return SolicitarCotizacion(asignacion, cotizaciones, parametros, reloj)
+
+
+def obtener_solicitar_test_drive(
+    asignacion: Annotated[AsignacionAtencion, Depends(obtener_asignacion_atencion)],
+    test_drives: Annotated[RepositorioTestDrives, Depends(obtener_repositorio_test_drives)],
+    reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
+) -> SolicitarTestDrive:
+    return SolicitarTestDrive(asignacion, test_drives, reloj)
+
+
+def obtener_consultar_seguimiento(
+    cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
+    test_drives: Annotated[RepositorioTestDrives, Depends(obtener_repositorio_test_drives)],
+) -> ConsultarSeguimiento:
+    return ConsultarSeguimiento(cotizaciones, test_drives)
+
+
+def obtener_listar_atenciones_asesor(
+    cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
+) -> ListarAtencionesAsesor:
+    return ListarAtencionesAsesor(cotizaciones)
+
+
+def obtener_cambiar_estado_cotizacion(
+    cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
+) -> CambiarEstadoCotizacion:
+    return CambiarEstadoCotizacion(cotizaciones)
+
+
+def obtener_listar_cola_test_drives(
+    test_drives: Annotated[RepositorioTestDrives, Depends(obtener_repositorio_test_drives)],
+) -> ListarColaTestDrives:
+    return ListarColaTestDrives(test_drives)
+
+
+def obtener_atender_siguiente_test_drive(
+    test_drives: Annotated[RepositorioTestDrives, Depends(obtener_repositorio_test_drives)],
+) -> AtenderSiguienteTestDrive:
+    return AtenderSiguienteTestDrive(test_drives)

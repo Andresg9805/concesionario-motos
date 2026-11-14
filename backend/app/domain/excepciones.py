@@ -58,3 +58,7 @@ class CredencialesInvalidasError(DominioError):
 
 class TokenInvalidoError(DominioError):
     pass
+
+
+class PermisoDenegadoError(DominioError):
+    pass
