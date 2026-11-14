@@ -7,7 +7,7 @@ from app.domain.excepciones import (
     StockInsuficienteError,
     TransicionInvalidaError,
 )
-from app.domain.tienda import EstadoPedido, ItemPedido, Pedido
+from app.domain.tienda import CategoriaAccesorio, EstadoPedido, ItemPedido, Pedido
 from tests.domain import fabricas
 
 
@@ -110,3 +110,15 @@ def test_pedido_pagado_no_expira():
     pedido.marcar_pagado()
     with pytest.raises(TransicionInvalidaError):
         pedido.expirar()
+
+
+def test_categorias_de_accesorios():
+    assert {categoria.value for categoria in CategoriaAccesorio} == {
+        "CASCO",
+        "CHAQUETA",
+        "GUANTES",
+        "RODILLERA",
+        "HOMBRERA",
+        "MALETA",
+        "MANTENIMIENTO",
+    }
