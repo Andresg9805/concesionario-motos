@@ -46,3 +46,15 @@ class PagoInvalidoError(DominioError):
 
 class FirmaInvalidaError(DominioError):
     pass
+
+
+class CorreoYaRegistradoError(DominioError):
+    pass
+
+
+class CredencialesInvalidasError(DominioError):
+    pass
+
+
+class TokenInvalidoError(DominioError):
+    pass
