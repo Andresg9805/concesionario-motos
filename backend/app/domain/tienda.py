@@ -89,6 +89,7 @@ class Direccion:
     municipio: Municipio
     detalle: str
     telefono_contacto: str
+    nombre_recibe: str = ""
 
     def __post_init__(self) -> None:
         if not self.detalle.strip():

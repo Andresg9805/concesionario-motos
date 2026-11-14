@@ -62,3 +62,7 @@ class TokenInvalidoError(DominioError):
 
 class PermisoDenegadoError(DominioError):
     pass
+
+
+class DireccionInvalidaError(DominioError):
+    pass

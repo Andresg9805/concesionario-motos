@@ -26,6 +26,10 @@ class RepositorioUsuariosEnMemoria(RepositorioUsuarios):
         with self._candado:
             return self._buscar(correo)
 
+    def buscar_por_id(self, id: int) -> Usuario | None:
+        with self._candado:
+            return self._usuarios.get(id)
+
     def listar_asesores(self, marca_id: int) -> list[Usuario]:
         with self._candado:
             return [

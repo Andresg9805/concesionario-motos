@@ -1,6 +1,7 @@
 from app.domain.atencion import Rol, Usuario
 from app.domain.catalogo import Marca, Moto, TipoMoto
 from app.domain.costo_real import ParametrosCosto, TarifaSoat
+from app.domain.tienda import Accesorio, CategoriaAccesorio
 
 ANIO_CATALOGO = 2026
 
@@ -118,4 +119,155 @@ def asesores_iniciales(hash_contrasena: str) -> list[Usuario]:
             marca_especialidad=marcas[marca_id],
         )
         for marca_id, nombre, correo, telefono in ASESORES
+    ]
+
+
+ACCESORIOS: tuple[tuple[str, str, CategoriaAccesorio, str, int, int, str, tuple[int, ...]], ...] = (
+    (
+        "CAS-001",
+        "Casco integral ECE 22.06",
+        CategoriaAccesorio.CASCO,
+        "Doble visor, cierre micrométrico.",
+        489_000,
+        12,
+        "",
+        (),
+    ),
+    (
+        "CAS-002",
+        "Casco abatible DOT",
+        CategoriaAccesorio.CASCO,
+        "Certificado DOT y NTC 4533. Mentonera abatible y gafa solar interna.",
+        629_000,
+        6,
+        "",
+        (),
+    ),
+    (
+        "CHA-001",
+        "Chaqueta textil con protecciones",
+        CategoriaAccesorio.CHAQUETA,
+        "Protecciones CE nivel 2 en hombros y codos, bolsillo para espaldar y reflectivos.",
+        559_000,
+        9,
+        "",
+        (),
+    ),
+    (
+        "CHA-002",
+        "Chaqueta en malla para clima cálido",
+        CategoriaAccesorio.CHAQUETA,
+        "Malla de alta ventilación con protecciones CE nivel 1 removibles.",
+        399_000,
+        4,
+        "",
+        (),
+    ),
+    (
+        "GUA-001",
+        "Guantes con protección en nudillos",
+        CategoriaAccesorio.GUANTES,
+        "Cuero y textil con protección rígida en nudillos y palma reforzada.",
+        179_000,
+        10,
+        "",
+        (),
+    ),
+    (
+        "ROD-001",
+        "Rodilleras articuladas",
+        CategoriaAccesorio.RODILLERA,
+        "Concha rígida con certificación EN 1621-1 y ajuste en velcro de doble banda.",
+        149_000,
+        15,
+        "",
+        (),
+    ),
+    (
+        "HOM-001",
+        "Hombreras con espaldar",
+        CategoriaAccesorio.HOMBRERA,
+        "Protección de hombros EN 1621-1 y espaldar nivel 1 con correas ajustables.",
+        189_000,
+        3,
+        "",
+        (),
+    ),
+    (
+        "MAL-001",
+        "Baúl trasero de 45 litros",
+        CategoriaAccesorio.MALETA,
+        "Cabe un casco integral. Incluye base universal, llave y reflectivos.",
+        329_000,
+        7,
+        "",
+        (1, 2, 3, 4, 10, 11, 16, 17, 18, 19),
+    ),
+    (
+        "MAL-002",
+        "Maletas laterales rígidas de 30 litros",
+        CategoriaAccesorio.MALETA,
+        "Par de maletas con soportes de acero y cierre con llave para uso en carretera.",
+        1_190_000,
+        3,
+        "",
+        (6, 8, 12, 21),
+    ),
+    (
+        "MAN-001",
+        "Kit de mantenimiento de cadena",
+        CategoriaAccesorio.MANTENIMIENTO,
+        "Limpiador, lubricante de cadena y cepillo de tres caras.",
+        89_000,
+        20,
+        "",
+        (),
+    ),
+    (
+        "MAN-002",
+        "Aceite sintético 10W-40 de 1 litro",
+        CategoriaAccesorio.MANTENIMIENTO,
+        "Aceite JASO MA2 para motores de cuatro tiempos con embrague húmedo.",
+        62_000,
+        30,
+        "",
+        (),
+    ),
+    (
+        "MAN-003",
+        "Kit de arrastre para naked de baja cilindrada",
+        CategoriaAccesorio.MANTENIMIENTO,
+        "Cadena, piñón y catalina de relación original.",
+        245_000,
+        5,
+        "",
+        (1, 3, 10, 17, 19),
+    ),
+)
+
+
+def accesorios_iniciales() -> list[Accesorio]:
+    motos = motos_iniciales()
+    return [
+        Accesorio(
+            id=indice,
+            sku=sku,
+            nombre=nombre,
+            categoria=categoria,
+            descripcion=descripcion,
+            precio_cop=precio,
+            stock=stock,
+            imagen_url=imagen,
+            motos_compatibles=[moto for moto in motos if not compatibles or moto.id in compatibles],
+        )
+        for indice, (
+            sku,
+            nombre,
+            categoria,
+            descripcion,
+            precio,
+            stock,
+            imagen,
+            compatibles,
+        ) in enumerate(ACCESORIOS, start=1)
     ]

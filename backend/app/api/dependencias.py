@@ -27,18 +27,31 @@ from app.application.motos import (
     ListarMotos,
     ObtenerMoto,
 )
+from app.application.tienda import (
+    CrearDireccion,
+    ListarAccesorios,
+    ListarDepartamentos,
+    ListarDireccionesPropias,
+    ListarMunicipios,
+    ObtenerAccesorio,
+    ObtenerDepartamento,
+    ObtenerDireccionPropia,
+)
 from app.config import obtener_configuracion
 from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
+    RepositorioAccesorios,
     RepositorioBusquedas,
     RepositorioClientes,
     RepositorioCotizaciones,
+    RepositorioDirecciones,
     RepositorioMarcas,
     RepositorioMotos,
     RepositorioParametros,
     RepositorioSimulaciones,
     RepositorioTestDrives,
+    RepositorioUbicaciones,
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
@@ -54,6 +67,11 @@ from app.infrastructure.memoria.catalogo import (
     RepositorioSimulacionesEnMemoria,
 )
 from app.infrastructure.memoria.datos_prueba import asesores_iniciales
+from app.infrastructure.memoria.tienda import (
+    RepositorioAccesoriosEnMemoria,
+    RepositorioDireccionesEnMemoria,
+    RepositorioUbicacionesEnMemoria,
+)
 from app.infrastructure.memoria.usuarios import (
     RepositorioClientesEnMemoria,
     RepositorioUsuariosEnMemoria,
@@ -274,3 +292,68 @@ def obtener_atender_siguiente_test_drive(
     test_drives: Annotated[RepositorioTestDrives, Depends(obtener_repositorio_test_drives)],
 ) -> AtenderSiguienteTestDrive:
     return AtenderSiguienteTestDrive(test_drives)
+
+
+@lru_cache
+def obtener_repositorio_accesorios() -> RepositorioAccesorios:
+    return RepositorioAccesoriosEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_ubicaciones() -> RepositorioUbicaciones:
+    return RepositorioUbicacionesEnMemoria()
+
+
+@lru_cache
+def obtener_repositorio_direcciones() -> RepositorioDirecciones:
+    return RepositorioDireccionesEnMemoria()
+
+
+def obtener_listar_accesorios(
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+) -> ListarAccesorios:
+    return ListarAccesorios(accesorios)
+
+
+def obtener_obtener_accesorio(
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+) -> ObtenerAccesorio:
+    return ObtenerAccesorio(accesorios)
+
+
+def obtener_listar_departamentos(
+    ubicaciones: Annotated[RepositorioUbicaciones, Depends(obtener_repositorio_ubicaciones)],
+) -> ListarDepartamentos:
+    return ListarDepartamentos(ubicaciones)
+
+
+def obtener_obtener_departamento(
+    ubicaciones: Annotated[RepositorioUbicaciones, Depends(obtener_repositorio_ubicaciones)],
+) -> ObtenerDepartamento:
+    return ObtenerDepartamento(ubicaciones)
+
+
+def obtener_listar_municipios(
+    ubicaciones: Annotated[RepositorioUbicaciones, Depends(obtener_repositorio_ubicaciones)],
+) -> ListarMunicipios:
+    return ListarMunicipios(ubicaciones)
+
+
+def obtener_crear_direccion(
+    direcciones: Annotated[RepositorioDirecciones, Depends(obtener_repositorio_direcciones)],
+    ubicaciones: Annotated[RepositorioUbicaciones, Depends(obtener_repositorio_ubicaciones)],
+    usuarios: Annotated[RepositorioUsuarios, Depends(obtener_repositorio_usuarios)],
+) -> CrearDireccion:
+    return CrearDireccion(direcciones, ubicaciones, usuarios)
+
+
+def obtener_listar_direcciones_propias(
+    direcciones: Annotated[RepositorioDirecciones, Depends(obtener_repositorio_direcciones)],
+) -> ListarDireccionesPropias:
+    return ListarDireccionesPropias(direcciones)
+
+
+def obtener_obtener_direccion_propia(
+    direcciones: Annotated[RepositorioDirecciones, Depends(obtener_repositorio_direcciones)],
+) -> ObtenerDireccionPropia:
+    return ObtenerDireccionPropia(direcciones)

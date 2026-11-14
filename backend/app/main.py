@@ -1,7 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers import asesor, atencion, auth, marcas, motos
+from app.api.routers import (
+    accesorios,
+    asesor,
+    atencion,
+    auth,
+    direcciones,
+    marcas,
+    motos,
+    ubicaciones,
+)
 
 app = FastAPI(
     title="Concesionario de Motos API",
@@ -23,6 +32,9 @@ app.include_router(marcas.router)
 app.include_router(motos.router)
 app.include_router(atencion.router)
 app.include_router(asesor.router)
+app.include_router(accesorios.router)
+app.include_router(ubicaciones.router)
+app.include_router(direcciones.router)
 
 
 @app.get("/health", tags=["Sistema"])
