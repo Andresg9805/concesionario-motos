@@ -293,7 +293,11 @@ export class AccesoDialogo {
           `Hola${primerNombre ? ', ' + primerNombre : ''}. Ingresaste como ${NOMBRE_ROL[usuario.rol].toLowerCase()}.`,
           'ok',
         );
-        this.router.navigateByUrl(INICIO_POR_ROL[usuario.rol]);
+        const destino = this.ui.destinoTrasAcceso();
+        this.ui.destinoTrasAcceso.set(null);
+        this.router.navigateByUrl(
+          usuario.rol === 'CLIENTE' && destino ? destino : INICIO_POR_ROL[usuario.rol],
+        );
       },
       error: (error: Error) => {
         this.enviando.set(false);

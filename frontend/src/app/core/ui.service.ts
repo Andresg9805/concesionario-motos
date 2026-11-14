@@ -20,6 +20,7 @@ export class UiService {
 
   readonly cotizacion = signal<SolicitudCotizacion | null>(null);
   readonly accesoAbierto = signal(false);
+  readonly destinoTrasAcceso = signal<string | null>(null);
   readonly avisos = signal<Aviso[]>([]);
   readonly codigoBuscado = signal<string | null>(null);
 
