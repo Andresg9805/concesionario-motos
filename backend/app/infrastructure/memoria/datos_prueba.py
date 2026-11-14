@@ -1,3 +1,4 @@
+from app.domain.atencion import Rol, Usuario
 from app.domain.catalogo import Marca, Moto, TipoMoto
 from app.domain.costo_real import ParametrosCosto, TarifaSoat
 
@@ -96,3 +97,25 @@ def parametros_iniciales() -> ParametrosCosto:
         valor_tramites_cop=380_000,
         tasa_mensual=0.0179,
     )
+
+
+ASESORES: tuple[tuple[int, str, str, str], ...] = (
+    (1, "Laura Ruiz", "laura.ruiz@candela.com", "3001112233"),
+    (2, "Camilo Torres", "camilo.torres@candela.com", "3002223344"),
+    (3, "Daniela Pardo", "daniela.pardo@candela.com", "3003334455"),
+)
+
+
+def asesores_iniciales(hash_contrasena: str) -> list[Usuario]:
+    marcas = {marca.id: marca for marca in marcas_iniciales()}
+    return [
+        Usuario(
+            nombre=nombre,
+            correo=correo,
+            telefono=telefono,
+            hash_contrasena=hash_contrasena,
+            rol=Rol.ASESOR,
+            marca_especialidad=marcas[marca_id],
+        )
+        for marca_id, nombre, correo, telefono in ASESORES
+    ]

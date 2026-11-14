@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers import auth, marcas, motos
+from app.api.routers import asesor, atencion, auth, marcas, motos
 
 app = FastAPI(
     title="Concesionario de Motos API",
@@ -21,6 +21,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(marcas.router)
 app.include_router(motos.router)
+app.include_router(atencion.router)
+app.include_router(asesor.router)
 
 
 @app.get("/health", tags=["Sistema"])

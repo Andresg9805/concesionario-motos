@@ -109,6 +109,9 @@ class RepositorioCotizaciones(ABC):
     def buscar_por_codigo(self, codigo: str) -> Cotizacion | None: ...
 
     @abstractmethod
+    def buscar_por_id(self, id: int) -> Cotizacion | None: ...
+
+    @abstractmethod
     def listar_por_asesor(self, asesor_id: int) -> list[Cotizacion]: ...
 
     @abstractmethod
@@ -127,6 +130,9 @@ class RepositorioTestDrives(ABC):
 
     @abstractmethod
     def listar_pendientes(self, asesor_id: int) -> list[TestDrive]: ...
+
+    @abstractmethod
+    def contar_abiertos_por_asesor(self, marca_id: int) -> dict[int, int]: ...
 
 
 class ProveedorTasaCambio(ABC):
