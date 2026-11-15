@@ -36,18 +36,12 @@ class RepositorioAccesoriosEnMemoria(RepositorioAccesorios):
         for accesorio in iniciales:
             self.guardar(accesorio)
 
-    def listar(
-        self, categoria: CategoriaAccesorio | None = None, moto_id: int | None = None
-    ) -> list[Accesorio]:
+    def listar(self, categoria: CategoriaAccesorio | None = None) -> list[Accesorio]:
         with self._candado:
             return [
                 accesorio
                 for accesorio in self._accesorios.values()
-                if (categoria is None or accesorio.categoria == categoria)
-                and (
-                    moto_id is None
-                    or any(moto.id == moto_id for moto in accesorio.motos_compatibles)
-                )
+                if categoria is None or accesorio.categoria == categoria
             ]
 
     def buscar_por_id(self, id: int) -> Accesorio | None:

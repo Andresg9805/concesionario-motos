@@ -1,9 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import StrEnum
 
 from app.domain.atencion import Usuario
-from app.domain.catalogo import Moto
 from app.domain.excepciones import (
     PedidoInvalidoError,
     StockInsuficienteError,
@@ -35,11 +34,11 @@ class Accesorio:
     sku: str
     nombre: str
     categoria: CategoriaAccesorio
+    fabricante: str = ""
     descripcion: str = ""
     precio_cop: int
     stock: int = 0
     imagen_url: str = ""
-    motos_compatibles: list[Moto] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if self.precio_cop <= 0:

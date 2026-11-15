@@ -1,76 +1,17 @@
-
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
-from app.domain.catalogo import (
-    CategoriaLicencia,
-    Marca,
-    Moto,
-    TipoMoto,
-)
+from app.domain.catalogo import CategoriaLicencia, Marca, Moto, TipoMoto
 from app.domain.puertos import FiltrosMoto
-from app.infrastructure.db.base import Base
-from app.infrastructure.db.repositorios.marca import (
-    RepositorioMarcasSQLAlchemy,
-)
-from app.infrastructure.db.repositorios.moto import (
-    RepositorioMotosSQLAlchemy,
-)
-from app.infrastructure.models import Marca as MarcaModelo
-from app.infrastructure.models import Moto as MotoModelo
-
-
-@pytest.fixture
-def sesion():
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-    Base.metadata.create_all(engine)
-
-    SesionLocal = sessionmaker(bind=engine, autoflush=False)
-    with SesionLocal() as session:
-        yield session
-
-    Base.metadata.drop_all(engine)
-    engine.dispose()
+from app.infrastructure.db.repositorios.marca import RepositorioMarcasSQLAlchemy
+from app.infrastructure.db.repositorios.moto import RepositorioMotosSQLAlchemy
+from tests.bd.datos import crear_marca, crear_moto
 
 
 @pytest.fixture
 def datos(sesion):
-    honda = MarcaModelo(
-        nombre="Honda",
-        color_hex="#CC0000",
-        descripcion="Marca Honda",
-    )
-    yamaha = MarcaModelo(
-        nombre="Yamaha",
-        color_hex="#0000CC",
-        descripcion="Marca Yamaha",
-    )
-    sesion.add_all([honda, yamaha])
-    sesion.flush()
-
-    moto = MotoModelo(
-        marca_id=honda.id,
-        modelo="CB 190R",
-        anio=2025,
-        cilindraje_cc=184,
-        tipo="NAKED",
-        categoria_licencia="A2",
-        precio_cop=12000000,
-        stock=5,
-        consumo_km_galon=120.0,
-        costo_mantenimiento_km_cop=50,
-        descripcion="Moto de prueba",
-        imagen_url="",
-    )
-    sesion.add(moto)
-    sesion.flush()
-
+    honda = crear_marca(sesion, "Honda")
+    yamaha = crear_marca(sesion, "Yamaha", "#0033A0")
+    moto = crear_moto(sesion, honda)
     return {"honda": honda, "yamaha": yamaha, "moto": moto}
 
 
@@ -152,11 +93,9 @@ def test_buscar_moto_inexistente(sesion):
 
 def test_guardar_moto_nueva(sesion, datos):
     repositorio = RepositorioMotosSQLAlchemy(sesion)
-    marca = RepositorioMarcasSQLAlchemy(sesion).buscar_por_id(
-        datos["yamaha"].id
-    )
+    marca = RepositorioMarcasSQLAlchemy(sesion).buscar_por_id(datos["yamaha"].id)
     assert marca is not None
-    
+
     moto = Moto(
         marca=marca,
         modelo="MT-03",

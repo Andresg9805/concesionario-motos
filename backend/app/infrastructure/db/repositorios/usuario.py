@@ -1,98 +1,90 @@
-
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.domain.atencion import Rol
-from app.domain.atencion import Usuario as UsuarioDominio
-from app.domain.catalogo import Marca as MarcaDominio
-from app.domain.puertos import RepositorioUsuarios
+from app.domain.atencion import Cliente, Rol, Usuario
+from app.domain.puertos import RepositorioClientes, RepositorioUsuarios
+from app.infrastructure.db.repositorios.conversiones import cliente_a_dominio, usuario_a_dominio
+from app.infrastructure.models.asesor import Asesor as AsesorModelo
+from app.infrastructure.models.persona import Persona as PersonaModelo
 from app.infrastructure.models.usuario import Usuario as UsuarioModelo
+
+
+def _persona_por_correo(sesion: Session, correo: str) -> PersonaModelo | None:
+    return sesion.scalar(select(PersonaModelo).where(PersonaModelo.correo == correo))
+
+
+class RepositorioClientesSQLAlchemy(RepositorioClientes):
+    def __init__(self, sesion: Session):
+        self.sesion = sesion
+
+    def guardar(self, cliente: Cliente) -> Cliente:
+        persona = _persona_por_correo(self.sesion, cliente.correo)
+        if persona is None:
+            persona = PersonaModelo(correo=cliente.correo)
+            self.sesion.add(persona)
+        persona.nombre = cliente.nombre
+        persona.telefono = cliente.telefono
+        self.sesion.flush()
+        self.sesion.refresh(persona)
+        return cliente_a_dominio(persona)
+
+    def buscar_por_correo(self, correo: str) -> Cliente | None:
+        persona = _persona_por_correo(self.sesion, correo.strip().lower())
+        return None if persona is None else cliente_a_dominio(persona)
 
 
 class RepositorioUsuariosSQLAlchemy(RepositorioUsuarios):
     def __init__(self, sesion: Session):
         self.sesion = sesion
 
-    @staticmethod
-    def _a_dominio(usuario: UsuarioModelo) -> UsuarioDominio:
-        marca = None
-
-        if usuario.marca_especialidad is not None:
-            marca = MarcaDominio(
-                id=usuario.marca_especialidad.id,
-                nombre=usuario.marca_especialidad.nombre,
-                color_hex=usuario.marca_especialidad.color_hex,
-                descripcion=usuario.marca_especialidad.descripcion or "",
-            )
-
-        return UsuarioDominio(
-            id=usuario.id,
-            nombre=usuario.nombre,
-            correo=usuario.correo,
-            telefono=usuario.telefono,
-            hash_contrasena=usuario.hash_contrasena,
-            rol=Rol(usuario.rol),
-            marca_especialidad=marca,
-        )
-
-    def guardar(self, usuario: UsuarioDominio) -> UsuarioDominio:
+    def guardar(self, usuario: Usuario) -> Usuario:
         modelo = self.sesion.get(UsuarioModelo, usuario.id) if usuario.id else None
+        persona = _persona_por_correo(self.sesion, usuario.correo)
+
+        if persona is not None and persona.usuario is not None and persona.usuario is not modelo:
+            raise ValueError("Ya existe un usuario con ese correo")
 
         if modelo is None:
-            modelo = UsuarioModelo()
+            if persona is None:
+                persona = PersonaModelo(correo=usuario.correo)
+                self.sesion.add(persona)
+            modelo = UsuarioModelo(persona=persona)
+            self.sesion.add(modelo)
+        elif persona is None:
+            modelo.persona.correo = usuario.correo
 
-        modelo.nombre = usuario.nombre
-        modelo.correo = usuario.correo.strip().lower()
-        modelo.telefono = usuario.telefono
+        modelo.persona.nombre = usuario.nombre
+        modelo.persona.telefono = usuario.telefono
         modelo.hash_contrasena = usuario.hash_contrasena
         modelo.rol = usuario.rol.value
-        modelo.marca_especialidad_id = (
-            usuario.marca_especialidad.id
-            if usuario.marca_especialidad is not None
-            else None
-        )
+        self.sesion.flush()
 
-        self.sesion.add(modelo)
+        if usuario.rol == Rol.ASESOR and usuario.marca_especialidad is not None:
+            if modelo.asesor is None:
+                modelo.asesor = AsesorModelo(usuario_id=modelo.id)
+            modelo.asesor.marca_id = usuario.marca_especialidad.id or 0
+        elif modelo.asesor is not None:
+            self.sesion.delete(modelo.asesor)
 
-        try:
-            self.sesion.flush()
-        except IntegrityError as error:
-            self.sesion.rollback()
-            raise ValueError(
-                "Ya existe un usuario con ese correo"
-            ) from error
+        self.sesion.flush()
+        self.sesion.refresh(modelo)
+        return usuario_a_dominio(modelo)
 
-        return self._a_dominio(modelo)
-
-    def buscar_por_correo(self, correo: str) -> UsuarioDominio | None:
-        consulta = select(UsuarioModelo).where(
-            UsuarioModelo.correo == correo.strip().lower()
-        )
-        usuario = self.sesion.scalars(consulta).first()
-
-        if usuario is None:
+    def buscar_por_correo(self, correo: str) -> Usuario | None:
+        persona = _persona_por_correo(self.sesion, correo.strip().lower())
+        if persona is None or persona.usuario is None:
             return None
+        return usuario_a_dominio(persona.usuario)
 
-        return self._a_dominio(usuario)
-
-    def buscar_por_id(self, id: int) -> UsuarioDominio | None:
+    def buscar_por_id(self, id: int) -> Usuario | None:
         usuario = self.sesion.get(UsuarioModelo, id)
+        return None if usuario is None else usuario_a_dominio(usuario)
 
-        if usuario is None:
-            return None
-
-        return self._a_dominio(usuario)
-
-    def listar_asesores(self, marca_id: int) -> list[UsuarioDominio]:
-        consulta = (
+    def listar_asesores(self, marca_id: int) -> list[Usuario]:
+        usuarios = self.sesion.scalars(
             select(UsuarioModelo)
-            .where(
-                UsuarioModelo.rol == Rol.ASESOR.value,
-                UsuarioModelo.marca_especialidad_id == marca_id,
-            )
+            .join(UsuarioModelo.asesor)
+            .where(AsesorModelo.marca_id == marca_id)
             .order_by(UsuarioModelo.id)
-        )
-
-        usuarios = self.sesion.scalars(consulta).all()
-        return [self._a_dominio(usuario) for usuario in usuarios]
+        ).all()
+        return [usuario_a_dominio(usuario) for usuario in usuarios]

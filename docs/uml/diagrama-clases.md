@@ -289,11 +289,11 @@ classDiagram
         +sku: str
         +nombre: str
         +categoria: CategoriaAccesorio
+        +fabricante: str
         +descripcion: str
         +precio_cop: int
         +stock: int
         +imagen_url: str
-        +motos_compatibles: list~Moto~
         +hay_stock(cantidad: int) bool
         +reservar(cantidad: int) None
         +liberar(cantidad: int) None
@@ -365,7 +365,6 @@ classDiagram
     class Usuario
 
     Accesorio --> CategoriaAccesorio
-    Accesorio "*" -- "*" Moto : compatible con
     Pedido *-- "1..*" ItemPedido
     ItemPedido "*" --> "1" Accesorio
     Pedido --> EstadoPedido
@@ -570,7 +569,7 @@ classDiagram
 
     class RepositorioAccesorios {
         <<interface>>
-        +listar(categoria: CategoriaAccesorio, moto_id: int) list~Accesorio~
+        +listar(categoria: CategoriaAccesorio) list~Accesorio~
         +buscar_por_id(id: int) Accesorio
         +guardar(accesorio: Accesorio) Accesorio
         +eliminar(id: int) None

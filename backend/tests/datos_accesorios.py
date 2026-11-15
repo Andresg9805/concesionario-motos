@@ -1,9 +1,6 @@
 from app.domain.tienda import Accesorio, CategoriaAccesorio
-from app.infrastructure.memoria.datos_prueba import motos_iniciales
 
-ACCESORIOS_DE_PRUEBA: tuple[
-    tuple[str, str, CategoriaAccesorio, str, int, int, str, tuple[int, ...]], ...
-] = (
+ACCESORIOS_DE_PRUEBA: tuple[tuple[str, str, CategoriaAccesorio, str, int, int, str], ...] = (
     (
         "CAS-001",
         "Casco integral ECE 22.06",
@@ -12,7 +9,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         489_000,
         12,
         "",
-        (),
     ),
     (
         "CAS-002",
@@ -22,7 +18,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         629_000,
         6,
         "",
-        (),
     ),
     (
         "CHA-001",
@@ -32,7 +27,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         559_000,
         9,
         "",
-        (),
     ),
     (
         "CHA-002",
@@ -42,7 +36,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         399_000,
         4,
         "",
-        (),
     ),
     (
         "GUA-001",
@@ -52,7 +45,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         179_000,
         10,
         "",
-        (),
     ),
     (
         "ROD-001",
@@ -62,7 +54,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         149_000,
         15,
         "",
-        (),
     ),
     (
         "HOM-001",
@@ -72,7 +63,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         189_000,
         3,
         "",
-        (),
     ),
     (
         "MAL-001",
@@ -82,7 +72,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         329_000,
         7,
         "",
-        (1, 2, 3, 4, 10, 11, 16, 17, 18, 19),
     ),
     (
         "MAL-002",
@@ -92,7 +81,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         1_190_000,
         3,
         "",
-        (6, 8, 12, 21),
     ),
     (
         "MAN-001",
@@ -102,7 +90,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         89_000,
         20,
         "",
-        (),
     ),
     (
         "MAN-002",
@@ -112,7 +99,6 @@ ACCESORIOS_DE_PRUEBA: tuple[
         62_000,
         30,
         "",
-        (),
     ),
     (
         "MAN-003",
@@ -122,13 +108,11 @@ ACCESORIOS_DE_PRUEBA: tuple[
         245_000,
         5,
         "",
-        (1, 3, 10, 17, 19),
     ),
 )
 
 
 def accesorios_de_prueba() -> list[Accesorio]:
-    motos = motos_iniciales()
     return [
         Accesorio(
             id=indice,
@@ -139,7 +123,6 @@ def accesorios_de_prueba() -> list[Accesorio]:
             precio_cop=precio,
             stock=stock,
             imagen_url=imagen,
-            motos_compatibles=[moto for moto in motos if not compatibles or moto.id in compatibles],
         )
         for indice, (
             sku,
@@ -149,6 +132,5 @@ def accesorios_de_prueba() -> list[Accesorio]:
             precio,
             stock,
             imagen,
-            compatibles,
         ) in enumerate(ACCESORIOS_DE_PRUEBA, start=1)
     ]

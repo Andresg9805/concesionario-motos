@@ -57,7 +57,7 @@ Las motos no se venden en línea (casi nadie compra una moto por internet). Los 
 
 ### 3.3 Tienda de accesorios
 
-- Catálogo de accesorios por categoría (cascos, chaquetas, guantes, maletas, mantenimiento) y por moto compatible: "accesorios para tu MT-03".
+- Tienda aparte con el equipo para el motociclista (cascos, chaquetas, guantes, rodilleras, hombreras, maletas), filtrado por categoría. Los accesorios no dependen de una moto.
 - Registro e inicio de sesión del cliente.
 - Carrito y direcciones de envío guardadas. Los departamentos y municipios son los oficiales del DANE.
 - **Pago 100 % virtual con Wompi** en ambiente de pruebas (sandbox): tarjeta, Nequi y PSE. El flujo es real, pero no se mueve plata.
@@ -77,11 +77,11 @@ Las motos no se venden en línea (casi nadie compra una moto por internet). Los 
 | Prioridad | Qué entra |
 | --- | --- |
 | Obligatorio | Catálogo, buscar por cuota, costo real y modo trabajo, cotización y test drive con asesor y código de seguimiento, panel del asesor con estados y cola, login con 3 roles, tienda de accesorios con carrito, pago con Wompi sandbox, pedidos y envíos con seguimiento, CRUD del administrador |
-| Ligero | Radar de demanda y reporte de ventas con DuckDB, TRM informativa con circuit breaker, comparador por costo real, accesorios compatibles por moto, mutmut solo sobre el dominio |
+| Ligero | Radar de demanda y reporte de ventas con DuckDB, TRM informativa con circuit breaker, comparador por costo real, mutmut solo sobre el dominio |
 | Solo si sobra tiempo | Candela Bot en Telegram, alertas "avísame cuando…", retoma de la moto usada, precio congelado con la TRM, pasaporte de la moto, asesor virtual con IA |
 | Fuera de alcance | Venta o separación de motos en línea, cobros reales (solo sandbox), devoluciones y reembolsos, conexión con transportadoras reales (el envío es simulado), citas de taller |
 
-Si falta tiempo, se recorta en este orden: comparador, accesorios compatibles, reporte de ventas.
+Si falta tiempo, se recorta en este orden: comparador, reporte de ventas.
 
 ## 5. Reglas de negocio
 
@@ -112,32 +112,35 @@ Si falta tiempo, se recorta en este orden: comparador, accesorios compatibles, r
 
 Un pedido puede tener varios intentos de pago (si el primero es rechazado). Cuando el pedido queda `PAGADO`, el avance del despacho se ve en el estado del envío.
 
-## 7. Modelo de datos (propuesta; Laura la ajusta en el MER)
+## 7. Modelo de datos (normalizado hasta 3FN, ver `docs/normalizacion.md`)
 
 | Tabla | Columnas propuestas |
 | --- | --- |
-| `marcas` | id, nombre, color_hex, descripcion |
-| `motos` | id, marca_id, modelo, anio, cilindraje_cc, tipo, categoria_licencia, precio_cop, stock, consumo_km_galon, costo_mantenimiento_km_cop, descripcion, imagen_url |
+| `marcas` | id, nombre (único), color_hex, descripcion |
+| `tipos_moto` | id, clave (único), nombre |
+| `motos` | id, marca_id, tipo_id, modelo, anio, cilindraje_cc, precio_cop, stock, consumo_km_galon, costo_mantenimiento_km_cop, descripcion, imagen_url · único (marca_id, modelo, anio) |
 | `parametros_costo` | id, precio_galon_cop, porcentaje_impuesto, actualizado_en |
 | `tarifas_soat` | id, cilindraje_min, cilindraje_max, valor_anual_cop |
-| `busquedas` | id, fecha, cuota_maxima_cop, cuota_inicial_cop, categoria_licencia, uso, marca_id, cantidad_resultados |
-| `usuarios` | id, nombre, correo, telefono, hash_contrasena, rol, marca_especialidad_id (solo asesores) |
-| `clientes` | id, nombre, correo, telefono, usuario_id (si tiene cuenta) |
-| `cotizaciones` | id, codigo_seguimiento, cliente_id, moto_id, asesor_id, fecha, precio_cop, cuota_inicial_cop, plazo_meses, tasa_mensual, cuota_mensual_cop, estado_atencion |
-| `test_drives` | id, codigo_seguimiento, cliente_id, moto_id, asesor_id, fecha_solicitud, fecha_programada, estado |
-| `accesorios` | id, sku, nombre, categoria, descripcion, precio_cop, stock, imagen_url |
-| `compatibilidades` | accesorio_id, moto_id (llave compuesta) |
+| `busquedas` | id, fecha, cuota_maxima_cop, cuota_inicial_cop, uso, marca_id, cantidad_resultados |
+| `personas` | id, nombre, correo (único), telefono |
+| `usuarios` | id, persona_id (único), hash_contrasena, rol |
+| `asesores` | usuario_id, marca_id |
+| `cotizaciones` | id, codigo_seguimiento, cliente_id (persona), moto_id, asesor_id, fecha, precio_cop, cuota_inicial_cop, plazo_meses, tasa_mensual, estado_atencion |
+| `test_drives` | id, codigo_seguimiento, cliente_id (persona), moto_id, asesor_id, fecha_solicitud, fecha_programada (vacía mientras está pendiente), estado |
+| `fabricantes` | id, nombre (único) |
+| `categorias_accesorio` | id, clave (único), nombre |
+| `accesorios` | id, sku, nombre, categoria_id, fabricante_id, descripcion, precio_cop, stock, imagen_url |
 | `departamentos` | codigo, nombre, costo_envio_cop, dias_envio |
 | `municipios` | codigo, nombre, departamento_codigo |
 | `direcciones` | id, usuario_id, municipio_codigo, detalle, telefono_contacto |
-| `pedidos` | id, usuario_id, direccion_id, estado, subtotal_cop, costo_envio_cop, total_cop, creado_en, reservado_hasta |
+| `pedidos` | id, usuario_id, direccion_id, estado, costo_envio_cop, creado_en, reservado_hasta |
 | `items_pedido` | id, pedido_id, accesorio_id, cantidad, precio_unitario_cop |
 | `pagos` | id, pedido_id, referencia, transaccion_id, metodo, estado, monto_cop, creado_en, actualizado_en |
 | `eventos_pago` | id, pago_id, checksum (único), estado_recibido, recibido_en |
-| `envios` | id, pedido_id, numero_guia, costo_cop, estado, creado_en |
+| `envios` | id, pedido_id, numero_guia, creado_en |
 | `eventos_envio` | id, envio_id, estado, fecha, nota |
 
-Relaciones principales: una marca tiene muchas motos; un asesor atiende muchas cotizaciones y test drives; un cliente tiene muchas cotizaciones y test drives; un accesorio sirve para muchas motos y una moto acepta muchos accesorios (muchos a muchos); un usuario tiene muchas direcciones y muchos pedidos; un pedido tiene muchos ítems, muchos intentos de pago y un envío; un envío tiene muchos eventos.
+Relaciones principales: una marca y un tipo tienen muchas motos; una persona puede tener una cuenta de usuario y muchas cotizaciones y test drives; un usuario puede ser asesor de una marca y atiende muchas cotizaciones y test drives; un fabricante y una categoría tienen muchos accesorios; un usuario tiene muchas direcciones y muchos pedidos; un pedido tiene muchos ítems, muchos intentos de pago y un envío; un envío tiene muchos eventos.
 
 ## 8. API (propuesta; Nicolás la ajusta)
 

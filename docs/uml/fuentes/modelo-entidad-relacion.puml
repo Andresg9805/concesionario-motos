@@ -1,0 +1,250 @@
+@startchen modelo-entidad-relacion
+left to right direction
+
+entity MARCA {
+  id <<key>>
+  nombre
+  color_hex
+  descripcion
+}
+entity TIPO_MOTO {
+  id <<key>>
+  clave
+  nombre
+}
+entity MOTO {
+  id <<key>>
+  modelo
+  anio
+  cilindraje_cc
+  precio_cop
+  stock
+  consumo_km_galon
+  costo_mantenimiento_km_cop
+  descripcion
+  imagen_url
+  categoria_licencia <<derived>>
+}
+entity PERSONA {
+  id <<key>>
+  nombre
+  correo
+  telefono
+}
+entity USUARIO {
+  id <<key>>
+  hash_contrasena
+  rol
+}
+entity ASESOR {
+  usuario_id <<key>>
+}
+entity COTIZACION {
+  id <<key>>
+  codigo_seguimiento
+  fecha
+  precio_cop
+  cuota_inicial_cop
+  plazo_meses
+  tasa_mensual
+  estado_atencion
+  cuota_mensual_cop <<derived>>
+}
+entity TEST_DRIVE {
+  id <<key>>
+  codigo_seguimiento
+  fecha_solicitud
+  fecha_programada
+  estado
+}
+entity BUSQUEDA {
+  id <<key>>
+  fecha
+  cuota_maxima_cop
+  cuota_inicial_cop
+  uso
+  cantidad_resultados
+}
+entity FABRICANTE {
+  id <<key>>
+  nombre
+}
+entity CATEGORIA_ACCESORIO {
+  id <<key>>
+  clave
+  nombre
+}
+entity ACCESORIO {
+  id <<key>>
+  sku
+  nombre
+  descripcion
+  precio_cop
+  stock
+  imagen_url
+}
+entity DEPARTAMENTO {
+  codigo <<key>>
+  nombre
+  costo_envio_cop
+  dias_envio
+}
+entity MUNICIPIO {
+  codigo <<key>>
+  nombre
+}
+entity DIRECCION {
+  id <<key>>
+  telefono_contacto
+  detalle
+}
+entity PEDIDO {
+  id <<key>>
+  estado
+  costo_envio_cop
+  creado_en
+  reservado_hasta
+  subtotal_cop <<derived>>
+  total_cop <<derived>>
+}
+entity PAGO {
+  id <<key>>
+  referencia
+  transaccion_id
+  metodo
+  estado
+  monto_cop
+  creado_en
+  actualizado_en
+}
+entity EVENTO_PAGO {
+  id <<key>>
+  checksum
+  estado_recibido
+  recibido_en
+}
+entity ENVIO {
+  id <<key>>
+  numero_guia
+  creado_en
+  estado_actual <<derived>>
+}
+entity EVENTO_ENVIO {
+  id <<key>>
+  estado
+  fecha
+  nota
+}
+entity PARAMETROS_COSTO {
+  id <<key>>
+  precio_galon_cop
+  porcentaje_impuesto
+  actualizado_en
+}
+entity TARIFA_SOAT {
+  id <<key>>
+  cilindraje_min
+  cilindraje_max
+  valor_anual_cop
+}
+
+relationship FABRICA {
+}
+relationship CLASIFICA {
+}
+relationship TIENE_CUENTA {
+}
+relationship ES_ASESOR {
+}
+relationship ESPECIALISTA_EN {
+}
+relationship SOLICITA_COTIZACION {
+}
+relationship SOLICITA_TEST_DRIVE {
+}
+relationship ATIENDE_COTIZACION {
+}
+relationship ATIENDE_TEST_DRIVE {
+}
+relationship SE_COTIZA {
+}
+relationship SE_PRUEBA {
+}
+relationship FILTRA {
+}
+relationship HECHO_POR {
+}
+relationship DE_CATEGORIA {
+}
+relationship INCLUYE {
+  cantidad
+  precio_unitario_cop
+}
+relationship CONTIENE {
+}
+relationship UBICADA_EN {
+}
+relationship REGISTRA {
+}
+relationship SE_ENVIA_A {
+}
+relationship REALIZA {
+}
+relationship SE_PAGA_CON {
+}
+relationship NOTIFICA {
+}
+relationship GENERA {
+}
+relationship REPORTA {
+}
+
+MARCA -1- FABRICA
+FABRICA -N- MOTO
+TIPO_MOTO -1- CLASIFICA
+CLASIFICA -N- MOTO
+PERSONA -1- TIENE_CUENTA
+TIENE_CUENTA -1- USUARIO
+USUARIO -1- ES_ASESOR
+ES_ASESOR -1- ASESOR
+MARCA -1- ESPECIALISTA_EN
+ESPECIALISTA_EN -N- ASESOR
+PERSONA -1- SOLICITA_COTIZACION
+SOLICITA_COTIZACION -N- COTIZACION
+PERSONA -1- SOLICITA_TEST_DRIVE
+SOLICITA_TEST_DRIVE -N- TEST_DRIVE
+ASESOR -1- ATIENDE_COTIZACION
+ATIENDE_COTIZACION -N- COTIZACION
+ASESOR -1- ATIENDE_TEST_DRIVE
+ATIENDE_TEST_DRIVE -N- TEST_DRIVE
+MOTO -1- SE_COTIZA
+SE_COTIZA -N- COTIZACION
+MOTO -1- SE_PRUEBA
+SE_PRUEBA -N- TEST_DRIVE
+MARCA -1- FILTRA
+FILTRA -N- BUSQUEDA
+FABRICANTE -1- HECHO_POR
+HECHO_POR -N- ACCESORIO
+CATEGORIA_ACCESORIO -1- DE_CATEGORIA
+DE_CATEGORIA -N- ACCESORIO
+PEDIDO -N- INCLUYE
+INCLUYE -N- ACCESORIO
+DEPARTAMENTO -1- CONTIENE
+CONTIENE -N- MUNICIPIO
+MUNICIPIO -1- UBICADA_EN
+UBICADA_EN -N- DIRECCION
+USUARIO -1- REGISTRA
+REGISTRA -N- DIRECCION
+DIRECCION -1- SE_ENVIA_A
+SE_ENVIA_A -N- PEDIDO
+USUARIO -1- REALIZA
+REALIZA -N- PEDIDO
+PEDIDO -1- SE_PAGA_CON
+SE_PAGA_CON -N- PAGO
+PAGO -1- NOTIFICA
+NOTIFICA -N- EVENTO_PAGO
+PEDIDO -1- GENERA
+GENERA -1- ENVIO
+ENVIO -1- REPORTA
+REPORTA -N- EVENTO_ENVIO
+@endchen

@@ -1,88 +1,27 @@
-
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
 from app.domain.atencion import Rol, Usuario
 from app.domain.catalogo import Marca
-from app.infrastructure.db.base import Base
 from app.infrastructure.db.repositorios.usuario import (
     RepositorioUsuariosSQLAlchemy,
 )
-from app.infrastructure.models.marca import Marca as MarcaModelo
-from app.infrastructure.models.usuario import Usuario as UsuarioModelo
-
-
-@pytest.fixture
-def sesion():
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-
-    Base.metadata.create_all(engine)
-    SesionLocal = sessionmaker(bind=engine, autoflush=False)
-
-    with SesionLocal() as session:
-        yield session
-
-    Base.metadata.drop_all(engine)
-    engine.dispose()
+from tests.bd.datos import crear_marca, crear_usuario
 
 
 @pytest.fixture
 def datos(sesion):
-    marca = MarcaModelo(
-        nombre="Honda",
-        color_hex="#CC0000",
-        descripcion="Motocicletas Honda",
-    )
-    otra_marca = MarcaModelo(
-        nombre="Yamaha",
-        color_hex="#0000FF",
-        descripcion="Motocicletas Yamaha",
-    )
-
-    sesion.add_all([marca, otra_marca])
-    sesion.flush()
-
-    asesor = UsuarioModelo(
-        nombre="Carlos Gómez",
-        correo="carlos@candela.com",
-        telefono="3001234567",
-        hash_contrasena="hash",
-        rol="ASESOR",
-        marca_especialidad_id=marca.id,
-    )
-
-    otro_asesor = UsuarioModelo(
-        nombre="Pedro López",
-        correo="pedro@candela.com",
-        telefono="3001111111",
-        hash_contrasena="hash",
-        rol="ASESOR",
-        marca_especialidad_id=otra_marca.id,
-    )
-
-    cliente = UsuarioModelo(
-        nombre="Ana Pérez",
-        correo="ana@candela.com",
-        telefono="3007654321",
-        hash_contrasena="hash",
-        rol="CLIENTE",
-    )
-
-    sesion.add_all([asesor, otro_asesor, cliente])
-    sesion.flush()
-
+    marca = crear_marca(sesion, "Honda")
+    otra_marca = crear_marca(sesion, "Yamaha", "#0033A0")
     return {
         "marca": marca,
         "otra_marca": otra_marca,
-        "asesor": asesor,
-        "otro_asesor": otro_asesor,
-        "cliente": cliente,
+        "asesor": crear_usuario(
+            sesion, "Carlos Gómez", "carlos@candela.com", "3001234567", "ASESOR", marca
+        ),
+        "otro_asesor": crear_usuario(
+            sesion, "Pedro López", "pedro@candela.com", "3001111111", "ASESOR", otra_marca
+        ),
+        "cliente": crear_usuario(sesion, "Ana Pérez", "ana@candela.com", "3007654321", "CLIENTE"),
     }
 
 
@@ -91,7 +30,7 @@ def repositorio(sesion):
     return RepositorioUsuariosSQLAlchemy(sesion)
 
 
-def crear_usuario(marca):
+def asesor_nuevo(marca):
     return Usuario(
         nombre="Laura Gómez",
         correo="laura@candela.com",
@@ -103,7 +42,7 @@ def crear_usuario(marca):
 
 
 def test_guardar_usuario_nuevo(repositorio, datos):
-    usuario = crear_usuario(
+    usuario = asesor_nuevo(
         Marca(
             id=datos["marca"].id,
             nombre="Honda",
@@ -170,10 +109,7 @@ def test_listar_asesores_por_marca(repositorio, datos):
 def test_no_listar_asesores_de_otra_marca(repositorio, datos):
     resultado = repositorio.listar_asesores(datos["marca"].id)
 
-    assert all(
-        usuario.marca_especialidad.id == datos["marca"].id
-        for usuario in resultado
-    )
+    assert all(usuario.marca_especialidad.id == datos["marca"].id for usuario in resultado)
 
 
 def test_no_listar_clientes_como_asesores(repositorio, datos):

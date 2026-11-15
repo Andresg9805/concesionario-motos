@@ -1,9 +1,6 @@
 from datetime import datetime, timedelta
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
 from app.domain.atencion import (
     Cliente,
@@ -20,95 +17,26 @@ from app.domain.catalogo import (
     Moto,
     TipoMoto,
 )
-from app.infrastructure.db.base import Base
 from app.infrastructure.db.repositorios.test_drive import (
     RepositorioTestDrivesSQLAlchemy,
 )
-from app.infrastructure.models.cliente import Cliente as ClienteModelo
-from app.infrastructure.models.marca import Marca as MarcaModelo
-from app.infrastructure.models.moto import Moto as MotoModelo
-from app.infrastructure.models.usuario import Usuario as UsuarioModelo
-
-
-@pytest.fixture
-def sesion():
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-
-    Base.metadata.create_all(engine)
-    SesionLocal = sessionmaker(bind=engine, autoflush=False)
-
-    with SesionLocal() as session:
-        yield session
-
-    Base.metadata.drop_all(engine)
-    engine.dispose()
+from tests.bd.datos import crear_marca, crear_moto, crear_usuario
 
 
 @pytest.fixture
 def datos(sesion):
-    marca = MarcaModelo(
-        nombre="Honda",
-        color_hex="#CC0000",
-        descripcion="Motocicletas Honda",
+    marca = crear_marca(sesion, "Honda")
+    moto = crear_moto(sesion, marca)
+    asesor = crear_usuario(
+        sesion, "Carlos Gómez", "carlos@candela.com", "3001234567", "ASESOR", marca
     )
-    sesion.add(marca)
-    sesion.flush()
-
-    moto = MotoModelo(
-        marca_id=marca.id,
-        modelo="CB 190R",
-        anio=2026,
-        cilindraje_cc=184,
-        tipo="NAKED",
-        categoria_licencia="A2",
-        precio_cop=12000000,
-        stock=5,
-        consumo_km_galon=120.0,
-        costo_mantenimiento_km_cop=50,
-        descripcion="Moto urbana",
-        imagen_url="https://ejemplo.com/cb190r.jpg",
-    )
-    sesion.add(moto)
-
-    asesor = UsuarioModelo(
-        nombre="Carlos Gómez",
-        correo="carlos@candela.com",
-        telefono="3001234567",
-        hash_contrasena="hash",
-        rol="ASESOR",
-        marca_especialidad_id=marca.id,
-    )
-
-    usuario = UsuarioModelo(
-        nombre="Ana Pérez",
-        correo="ana@candela.com",
-        telefono="3007654321",
-        hash_contrasena="hash",
-        rol="CLIENTE",
-    )
-
-    sesion.add_all([asesor, usuario])
-    sesion.flush()
-
-    cliente = ClienteModelo(
-        nombre="Ana Pérez",
-        correo="ana@candela.com",
-        telefono="3007654321",
-        usuario_id=usuario.id,
-    )
-    sesion.add(cliente)
-    sesion.flush()
-
+    usuario = crear_usuario(sesion, "Ana Pérez", "ana@candela.com", "3007654321", "CLIENTE")
     return {
         "marca": marca,
         "moto": moto,
         "asesor": asesor,
         "usuario": usuario,
-        "cliente": cliente,
+        "cliente": usuario.persona,
     }
 
 
