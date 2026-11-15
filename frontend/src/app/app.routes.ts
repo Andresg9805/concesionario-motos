@@ -12,13 +12,8 @@ export const routes: Routes = [
   {
     path: 'asesor',
     canActivate: [soloRol('ASESOR')],
-    loadComponent: () =>
-      import('./paginas/panel/panel-provisional').then((m) => m.PanelProvisional),
+    loadComponent: () => import('./paginas/asesor/panel-asesor').then((m) => m.PanelAsesor),
     title: 'Panel del asesor | Candela Motors',
-    data: {
-      titulo: 'Panel del asesor',
-      historias: ['Mis atenciones y sus estados (HU-06)', 'Cola de test drives (HU-06)'],
-    },
   },
   {
     path: 'admin',
