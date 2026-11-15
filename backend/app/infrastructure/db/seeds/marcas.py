@@ -25,25 +25,24 @@ DESC_KAWASAKI = (
 
 MARCAS_INICIALES: list[dict[str, Any]] = [
     {
-        "nombre": "Yamaha",
-        "color_hex": "#003399",
-        "descripcion": DESC_YAMAHA,
-    },
-    {
         "nombre": "Honda",
         "color_hex": "#CC0000",
         "descripcion": DESC_HONDA,
     },
     {
         "nombre": "Kawasaki",
-        "color_hex": "#00A650",
+        "color_hex": "#66CC33",
         "descripcion": DESC_KAWASAKI,
+    },
+    {
+        "nombre": "Yamaha",
+        "color_hex": "#0033A0",
+        "descripcion": DESC_YAMAHA,
     },
 ]
 
 
 def seed_marcas(db: Session) -> None:
     for datos in MARCAS_INICIALES:
-        marca_existente = db.scalar(select(Marca).where(Marca.nombre.ilike(datos["nombre"])))
-        if marca_existente is None:
+        if db.scalar(select(Marca).where(Marca.nombre == datos["nombre"])) is None:
             db.add(Marca(**datos))

@@ -1,11 +1,5 @@
 from typing import Any
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from app.infrastructure.models.marca import Marca
-from app.infrastructure.models.moto import Moto
-
 DESC_CB500_HORNET = (
     "Naked bicilíndrica de media cilindrada, ideal para el día a día "
     "y con una estética agresiva heredada de la familia Hornet."
@@ -114,7 +108,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 471,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 32990000,
         "stock": 5,
         "consumo_km_galon": 85.0,
@@ -127,7 +120,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 649,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 58990000,
         "stock": 3,
         "consumo_km_galon": 58.0,
@@ -140,7 +132,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 755,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 48990000,
         "stock": 4,
         "consumo_km_galon": 65.0,
@@ -153,7 +144,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 65990000,
         "stock": 2,
         "consumo_km_galon": 45.0,
@@ -166,7 +156,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 999,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 78990000,
         "stock": 1,
         "consumo_km_galon": 40.0,
@@ -179,7 +168,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 471,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 34990000,
         "stock": 4,
         "consumo_km_galon": 85.0,
@@ -192,7 +180,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 649,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 61990000,
         "stock": 3,
         "consumo_km_galon": 58.0,
@@ -205,7 +192,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 599,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 74990000,
         "stock": 2,
         "consumo_km_galon": 48.0,
@@ -218,7 +204,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 95990000,
         "stock": 2,
         "consumo_km_galon": 40.0,
@@ -231,7 +216,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 1000,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 129990000,
         "stock": 1,
         "consumo_km_galon": 35.0,
@@ -244,7 +228,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 1084,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 79990000,
         "stock": 3,
         "consumo_km_galon": 52.0,
@@ -257,7 +240,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 1084,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 89990000,
         "stock": 2,
         "consumo_km_galon": 50.0,
@@ -270,7 +252,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 755,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 54990000,
         "stock": 4,
         "consumo_km_galon": 68.0,
@@ -283,7 +264,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 745,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 48990000,
         "stock": 4,
         "consumo_km_galon": 82.0,
@@ -296,7 +276,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 471,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 35990000,
         "stock": 5,
         "consumo_km_galon": 88.0,
@@ -309,7 +288,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 449,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 48990000,
         "stock": 2,
         "consumo_km_galon": 70.0,
@@ -322,7 +300,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 286,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 27990000,
         "stock": 4,
         "consumo_km_galon": 95.0,
@@ -335,7 +312,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 644,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 39990000,
         "stock": 3,
         "consumo_km_galon": 65.0,
@@ -348,7 +324,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 149,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 9990000,
         "stock": 6,
         "consumo_km_galon": 125.0,
@@ -361,7 +336,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 184,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 12990000,
         "stock": 5,
         "consumo_km_galon": 110.0,
@@ -370,18 +344,3 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "imagen_url": "",
     },
 ]
-
-
-def seed_motos_honda(db: Session) -> None:
-    marca = db.scalar(select(Marca).where(Marca.nombre.ilike("Honda")))
-    if marca is None:
-        return
-    for datos in MOTOS_HONDA:
-        moto_existente = db.scalar(
-            select(Moto).where(
-                Moto.marca_id == marca.id,
-                Moto.modelo.ilike(datos["modelo"]),
-            )
-        )
-        if moto_existente is None:
-            db.add(Moto(**datos, marca_id=marca.id))

@@ -19,11 +19,9 @@ RESPUESTA_404: dict[int | str, dict[str, Any]] = {
 def listar_accesorios(
     caso_de_uso: Annotated[ListarAccesorios, Depends(obtener_listar_accesorios)],
     categoria: Annotated[CategoriaAccesorio | None, Query()] = None,
-    moto_id: Annotated[int | None, Query(ge=1)] = None,
 ) -> list[AccesorioSalida]:
     return [
-        AccesorioSalida.desde_dominio(accesorio)
-        for accesorio in caso_de_uso.ejecutar(categoria, moto_id)
+        AccesorioSalida.desde_dominio(accesorio) for accesorio in caso_de_uso.ejecutar(categoria)
     ]
 
 

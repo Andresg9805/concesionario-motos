@@ -56,11 +56,11 @@
 
 ### Módulo 3: Tienda de Accesorios y Envíos
 
-* **RF-08: Catálogo de accesorios y compatibilidad por modelo de moto**
-  * **Descripción:** El sistema debe listar los accesorios disponibles permitiendo filtrar por categoría y por compatibilidad con modelos específicos de moto.
+* **RF-08: Catálogo de accesorios para el motociclista**
+  * **Descripción:** El sistema debe listar el equipo para el motociclista en una tienda aparte del catálogo de motos, permitiendo filtrar por categoría.
   * **Reglas asociadas:** N/A (Tienda).
-  * **Entradas:** Parámetros de consulta opcionales: categoría de accesorio y `moto_id`.
-  * **Salida:** Lista de accesorios disponibles con nombre, descripción, precio en COP, stock actual, `imagen_url` y lista de motos compatibles.
+  * **Entradas:** Parámetro de consulta opcional: categoría de accesorio.
+  * **Salida:** Lista de accesorios disponibles con nombre, descripción, precio en COP, stock actual, `imagen_url`, categoría y fabricante.
 
 * **RF-09: Carrito de compras y gestión de direcciones del cliente (DIVIPOLA)**
   * **Descripción:** El sistema debe permitir al cliente autenticado agregar accesorios a un carrito de compras y registrar múltiples direcciones de entrega validadas contra los departamentos y municipios oficiales de Colombia (DANE / DIVIPOLA).
