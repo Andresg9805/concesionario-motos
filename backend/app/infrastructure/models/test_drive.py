@@ -29,7 +29,7 @@ class TestDrive(Base):
 
     fecha_solicitud: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    fecha_programada: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    fecha_programada: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     estado: Mapped[str] = mapped_column(
         Enum("PENDIENTE", "PROGRAMADO", "REALIZADO", "CANCELADO", name="estado_test_drive"),
