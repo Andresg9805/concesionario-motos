@@ -16,6 +16,7 @@ from app.infrastructure.memoria.tienda import (
 from app.infrastructure.memoria.usuarios import RepositorioUsuariosEnMemoria
 from app.infrastructure.seguridad.jwt_emisor import EmisorTokensJWT
 from app.main import app
+from tests.datos_accesorios import accesorios_de_prueba
 
 DIRECCION = {
     "nombre_recibe": "Ana Pérez",
@@ -53,7 +54,7 @@ def emisor():
 
 @pytest.fixture
 def cliente_http(usuarios, emisor):
-    accesorios = RepositorioAccesoriosEnMemoria()
+    accesorios = RepositorioAccesoriosEnMemoria(accesorios_de_prueba())
     ubicaciones = RepositorioUbicacionesEnMemoria()
     direcciones = RepositorioDireccionesEnMemoria()
     app.dependency_overrides[dependencias.obtener_repositorio_accesorios] = lambda: accesorios
