@@ -7,6 +7,18 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from app.application.admin import (
+    ActualizarAccesorio,
+    ActualizarMoto,
+    ActualizarParametros,
+    AvanzarEnvio,
+    CrearAccesorio,
+    CrearMoto,
+    EliminarAccesorio,
+    EliminarMoto,
+    ListarPedidosAdmin,
+    ObtenerParametros,
+)
 from app.application.atencion import (
     AsignacionAtencion,
     AtenderSiguienteTestDrive,
@@ -25,7 +37,7 @@ from app.application.motos import (
     CalcularCostoReal,
     ListarMarcas,
     ListarMotos,
-    ObtenerMoto,
+    ObtenerDetalleMoto,
 )
 from app.application.pedidos import (
     ConfirmarPago,
@@ -51,6 +63,7 @@ from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
     PasarelaPago,
+    ProveedorTasaCambio,
     RepositorioAccesorios,
     RepositorioBusquedas,
     RepositorioClientes,
@@ -68,6 +81,7 @@ from app.domain.puertos import (
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.externos.trm import ProveedorTasaCambioDatosGov, url_trm_configurada
 from app.infrastructure.externos.wompi import PasarelaWompi
 from app.infrastructure.memoria.atencion import (
     RepositorioCotizacionesEnMemoria,
@@ -80,7 +94,7 @@ from app.infrastructure.memoria.catalogo import (
     RepositorioParametrosEnMemoria,
     RepositorioSimulacionesEnMemoria,
 )
-from app.infrastructure.memoria.datos_prueba import asesores_iniciales
+from app.infrastructure.memoria.datos_prueba import administrador_inicial, asesores_iniciales
 from app.infrastructure.memoria.pedidos import (
     RepositorioEnviosEnMemoria,
     RepositorioPagosEnMemoria,
@@ -108,6 +122,8 @@ def obtener_repositorio_usuarios() -> RepositorioUsuarios:
     hash_contrasena = obtener_hasheador().hashear(contrasena)
     for asesor in asesores_iniciales(hash_contrasena):
         usuarios.guardar(asesor)
+    contrasena_admin = os.environ.get("CONTRASENA_ADMIN_DEMO") or secrets.token_urlsafe(32)
+    usuarios.guardar(administrador_inicial(obtener_hasheador().hashear(contrasena_admin)))
     return usuarios
 
 
@@ -207,6 +223,11 @@ def obtener_repositorio_simulaciones() -> RepositorioSimulaciones:
     return RepositorioSimulacionesEnMemoria()
 
 
+@lru_cache
+def obtener_proveedor_trm() -> ProveedorTasaCambio:
+    return ProveedorTasaCambioDatosGov(url_trm_configurada())
+
+
 def obtener_listar_marcas(
     marcas: Annotated[RepositorioMarcas, Depends(obtener_repositorio_marcas)],
 ) -> ListarMarcas:
@@ -219,10 +240,11 @@ def obtener_listar_motos(
     return ListarMotos(motos)
 
 
-def obtener_obtener_moto(
+def obtener_detalle_moto(
     motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
-) -> ObtenerMoto:
-    return ObtenerMoto(motos)
+    tasa_cambio: Annotated[ProveedorTasaCambio, Depends(obtener_proveedor_trm)],
+) -> ObtenerDetalleMoto:
+    return ObtenerDetalleMoto(motos, tasa_cambio)
 
 
 def obtener_buscar_por_cuota(
@@ -406,6 +428,14 @@ def obtener_expirar_reservas(
     return ExpirarReservas(pedidos, accesorios, reloj)
 
 
+def crear_expirar_reservas() -> ExpirarReservas:
+    return obtener_expirar_reservas(
+        obtener_repositorio_pedidos(),
+        obtener_repositorio_accesorios(),
+        obtener_reloj_atencion(),
+    )
+
+
 def obtener_confirmar_pago(
     pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
     pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
@@ -472,3 +502,69 @@ def obtener_obtener_pedido_propio(
     expirar_reservas: Annotated[ExpirarReservas, Depends(obtener_expirar_reservas)],
 ) -> ObtenerPedidoPropio:
     return ObtenerPedidoPropio(pedidos, pagos, envios, expirar_reservas)
+
+
+def obtener_crear_moto(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+    marcas: Annotated[RepositorioMarcas, Depends(obtener_repositorio_marcas)],
+) -> CrearMoto:
+    return CrearMoto(motos, marcas)
+
+
+def obtener_actualizar_moto(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+    marcas: Annotated[RepositorioMarcas, Depends(obtener_repositorio_marcas)],
+) -> ActualizarMoto:
+    return ActualizarMoto(motos, marcas)
+
+
+def obtener_eliminar_moto(
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+) -> EliminarMoto:
+    return EliminarMoto(motos)
+
+
+def obtener_crear_accesorio(
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+) -> CrearAccesorio:
+    return CrearAccesorio(accesorios)
+
+
+def obtener_actualizar_accesorio(
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+) -> ActualizarAccesorio:
+    return ActualizarAccesorio(accesorios)
+
+
+def obtener_eliminar_accesorio(
+    accesorios: Annotated[RepositorioAccesorios, Depends(obtener_repositorio_accesorios)],
+) -> EliminarAccesorio:
+    return EliminarAccesorio(accesorios)
+
+
+def obtener_obtener_parametros(
+    parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
+) -> ObtenerParametros:
+    return ObtenerParametros(parametros)
+
+
+def obtener_actualizar_parametros(
+    parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
+) -> ActualizarParametros:
+    return ActualizarParametros(parametros)
+
+
+def obtener_listar_pedidos_admin(
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
+    envios: Annotated[RepositorioEnvios, Depends(obtener_repositorio_envios)],
+    expirar_reservas: Annotated[ExpirarReservas, Depends(obtener_expirar_reservas)],
+) -> ListarPedidosAdmin:
+    return ListarPedidosAdmin(pedidos, pagos, envios, expirar_reservas)
+
+
+def obtener_avanzar_envio(
+    envios: Annotated[RepositorioEnvios, Depends(obtener_repositorio_envios)],
+    reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
+) -> AvanzarEnvio:
+    return AvanzarEnvio(envios, reloj)

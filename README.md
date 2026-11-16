@@ -83,6 +83,21 @@ pytest
 ruff check .
 ```
 
+## Cómo correr todo con Docker
+
+Desde la raíz del repositorio, con Docker instalado:
+
+1. Copia `backend/.env.example` a `backend/.env` y completa las variables (como mínimo `JWT_SECRET`, de al menos 32 caracteres, y las llaves de Wompi sandbox).
+2. Ejecuta:
+
+```
+docker compose up --build
+```
+
+3. Abre http://localhost:4200 para el frontend y http://localhost:8000/docs para la documentación de la API (Swagger).
+
+La base de datos SQLite queda en el volumen `sqlite_data`, así que los datos se conservan entre reinicios. Para apagar los contenedores usa `docker compose down`; si además quieres borrar la base de datos, usa `docker compose down -v`.
+
 ## Cómo trabajamos
 
 Toda la forma de trabajo con Git y GitHub está en [CONTRIBUTING.md](CONTRIBUTING.md). Las tareas están en la pestaña **Projects** de este repositorio, en el tablero **Concesionario Motos**.
