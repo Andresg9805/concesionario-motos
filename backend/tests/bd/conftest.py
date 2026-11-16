@@ -1,3 +1,14 @@
+import os
+
+os.environ.setdefault(
+    "CONTRASENA_ASESORES_DEMO",
+    "contrasena-asesores-pruebas",
+)
+os.environ.setdefault(
+    "CONTRASENA_ADMIN_DEMO",
+    "contrasena-admin-pruebas",
+)
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -15,11 +26,14 @@ def sesion():
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
+
     Base.metadata.create_all(motor)
     Sesion = sessionmaker(bind=motor, autoflush=False)
+
     with Sesion() as sesion:
         seed_catalogos(sesion)
         sesion.flush()
         yield sesion
+
     Base.metadata.drop_all(motor)
     motor.dispose()

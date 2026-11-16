@@ -1,6 +1,8 @@
 import os
 
 os.environ.setdefault("JWT_SECRET", "secreto-de-pruebas-con-mas-de-32-caracteres")
+os.environ.setdefault("CONTRASENA_ASESORES_DEMO", "contrasena-asesores-pruebas")
+os.environ.setdefault("CONTRASENA_ADMIN_DEMO", "contrasena-admin-pruebas")
 
 from datetime import datetime
 
