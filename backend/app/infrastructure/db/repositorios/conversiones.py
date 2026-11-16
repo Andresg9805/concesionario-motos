@@ -1,7 +1,16 @@
 from datetime import datetime, timedelta, timezone
 
 from app.domain.atencion import Cliente, Rol, Usuario
-from app.domain.catalogo import CILINDRAJE_MAXIMO_A1, CategoriaLicencia, Marca, Moto, TipoMoto
+from app.domain.catalogo import (
+    CILINDRAJE_MAXIMO_A1,
+    Busqueda,
+    CategoriaLicencia,
+    Marca,
+    Moto,
+    TipoMoto,
+    UsoMoto,
+)
+from app.domain.costo_real import ParametrosCosto, TarifaSoat
 from app.domain.pagos_envios import (
     Envio,
     EstadoEnvio,
@@ -21,6 +30,7 @@ from app.domain.tienda import (
     Pedido,
 )
 from app.infrastructure.models.accesorio import Accesorio as AccesorioModelo
+from app.infrastructure.models.busqueda import Busqueda as BusquedaModelo
 from app.infrastructure.models.departamento import Departamento as DepartamentoModelo
 from app.infrastructure.models.direccion import Direccion as DireccionModelo
 from app.infrastructure.models.envio import Envio as EnvioModelo
@@ -28,8 +38,10 @@ from app.infrastructure.models.marca import Marca as MarcaModelo
 from app.infrastructure.models.moto import Moto as MotoModelo
 from app.infrastructure.models.municipio import Municipio as MunicipioModelo
 from app.infrastructure.models.pago import Pago as PagoModelo
+from app.infrastructure.models.parametros_costo import ParametrosCosto as ParametrosModelo
 from app.infrastructure.models.pedido import Pedido as PedidoModelo
 from app.infrastructure.models.persona import Persona as PersonaModelo
+from app.infrastructure.models.tarifa_soat import TarifaSoat as TarifaSoatModelo
 from app.infrastructure.models.usuario import Usuario as UsuarioModelo
 
 ZONA_COLOMBIA = timezone(timedelta(hours=-5), "COT")
@@ -196,4 +208,38 @@ def envio_a_dominio(envio: EnvioModelo) -> Envio:
         costo_cop=pedido.costo_envio_cop,
         estado=eventos[-1].estado if eventos else EstadoEnvio.PREPARANDO,
         eventos=eventos,
+    )
+
+
+def parametros_a_dominio(
+    parametros: ParametrosModelo, tarifas: list[TarifaSoatModelo]
+) -> ParametrosCosto:
+    return ParametrosCosto(
+        id=parametros.id,
+        precio_galon_cop=parametros.precio_galon_cop,
+        porcentaje_impuesto=float(parametros.porcentaje_impuesto),
+        tarifas_soat=[
+            TarifaSoat(
+                cilindraje_min=tarifa.cilindraje_min,
+                cilindraje_max=tarifa.cilindraje_max,
+                valor_anual_cop=tarifa.valor_anual_cop,
+            )
+            for tarifa in tarifas
+        ],
+        valor_matricula_cop=parametros.valor_matricula_cop,
+        valor_tramites_cop=parametros.valor_tramites_cop,
+        tasa_mensual=float(parametros.tasa_mensual),
+    )
+
+
+def busqueda_a_dominio(busqueda: BusquedaModelo) -> Busqueda:
+    return Busqueda(
+        id=busqueda.id,
+        fecha=fecha_desde_bd(busqueda.fecha),
+        cuota_maxima_cop=busqueda.cuota_maxima_cop,
+        cuota_inicial_cop=busqueda.cuota_inicial_cop,
+        categoria_licencia=CategoriaLicencia(busqueda.categoria_licencia),
+        uso=UsoMoto(busqueda.uso),
+        marca_id=busqueda.marca_id,
+        cantidad_resultados=busqueda.cantidad_resultados,
     )

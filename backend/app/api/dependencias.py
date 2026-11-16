@@ -89,9 +89,11 @@ from app.domain.puertos import (
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
 from app.infrastructure.db.conexion import SessionLocal
+from app.infrastructure.db.repositorios.busqueda import RepositorioBusquedasSQLAlchemy
 from app.infrastructure.db.repositorios.cotizacion import RepositorioCotizacionesSQLAlchemy
 from app.infrastructure.db.repositorios.marca import RepositorioMarcasSQLAlchemy
 from app.infrastructure.db.repositorios.moto import RepositorioMotosSQLAlchemy
+from app.infrastructure.db.repositorios.parametros import RepositorioParametrosSQLAlchemy
 from app.infrastructure.db.repositorios.pedidos import (
     RepositorioEnviosSQLAlchemy,
     RepositorioPagosSQLAlchemy,
@@ -294,13 +296,37 @@ obtener_repositorio_motos: Callable[..., RepositorioMotos] = (
 
 
 @lru_cache
-def obtener_repositorio_parametros() -> RepositorioParametros:
+def obtener_repositorio_parametros_en_memoria() -> RepositorioParametros:
     return RepositorioParametrosEnMemoria()
 
 
+def obtener_repositorio_parametros_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioParametros:
+    return RepositorioParametrosSQLAlchemy(sesion)
+
+
+obtener_repositorio_parametros: Callable[..., RepositorioParametros] = (
+    obtener_repositorio_parametros_sqlite
+    if USA_SQLITE
+    else obtener_repositorio_parametros_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_busquedas() -> RepositorioBusquedas:
+def obtener_repositorio_busquedas_en_memoria() -> RepositorioBusquedas:
     return RepositorioBusquedasEnMemoria()
+
+
+def obtener_repositorio_busquedas_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioBusquedas:
+    return RepositorioBusquedasSQLAlchemy(sesion)
+
+
+obtener_repositorio_busquedas: Callable[..., RepositorioBusquedas] = (
+    obtener_repositorio_busquedas_sqlite if USA_SQLITE else obtener_repositorio_busquedas_en_memoria
+)
 
 
 @lru_cache

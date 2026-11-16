@@ -70,6 +70,9 @@ class RepositorioBusquedas(ABC):
     @abstractmethod
     def guardar(self, busqueda: Busqueda) -> Busqueda: ...
 
+    @abstractmethod
+    def listar(self) -> list[Busqueda]: ...
+
 
 class RepositorioSimulaciones(ABC):
     @abstractmethod

@@ -17,6 +17,9 @@ def seed_parametros_costo(db: Session) -> None:
             ParametrosCosto(
                 precio_galon_cop=iniciales.precio_galon_cop,
                 porcentaje_impuesto=Decimal(str(iniciales.porcentaje_impuesto)),
+                valor_matricula_cop=iniciales.valor_matricula_cop,
+                valor_tramites_cop=iniciales.valor_tramites_cop,
+                tasa_mensual=Decimal(str(iniciales.tasa_mensual)),
                 actualizado_en=datetime.now(),
             )
         )

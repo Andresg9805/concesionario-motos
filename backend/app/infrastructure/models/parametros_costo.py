@@ -15,5 +15,8 @@ class ParametrosCosto(Base):
     precio_galon_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
     porcentaje_impuesto: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)
+    valor_matricula_cop: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    valor_tramites_cop: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    tasa_mensual: Mapped[Decimal] = mapped_column(Numeric(6, 4), nullable=False)
 
     actualizado_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)

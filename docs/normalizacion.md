@@ -62,6 +62,17 @@ Los estados (de la cotización, del test drive, del pedido, del pago y del enví
 
 `test_drives.fecha_programada` era obligatoria, pero un test drive recién pedido todavía no tiene fecha. Ahora puede quedar vacía mientras el test drive está pendiente.
 
+### 7. Columnas que faltaban
+
+Al conectar la API a SQLite vimos que dos tablas no guardaban datos que el dominio sí usa:
+
+| Tabla | Columna nueva | Por qué no rompe la 3FN |
+| --- | --- | --- |
+| `parametros_costo` | `valor_matricula_cop`, `valor_tramites_cop`, `tasa_mensual` | Son parámetros que configura el administrador, igual que el precio del galón. No se calculan a partir de otra columna |
+| `busquedas` | `categoria_licencia` | Es la licencia que escogió la persona al buscar (A1 o A2). No sale de ninguna otra columna de la búsqueda |
+
+Sin estas columnas, el costo real con SQLite salía sin matrícula ni trámites, y el radar de demanda no podía separar las búsquedas por licencia.
+
 ## Otros ajustes
 
 - Los datos de prueba de la API en memoria y los datos que se cargan en la base de datos salen de los mismos archivos (`app/infrastructure/db/seeds`). Antes había dos versiones de las marcas con colores y descripciones distintas.

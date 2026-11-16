@@ -62,6 +62,7 @@ entity BUSQUEDA {
   fecha
   cuota_maxima_cop
   cuota_inicial_cop
+  categoria_licencia
   uso
   cantidad_resultados
 }
@@ -140,6 +141,9 @@ entity PARAMETROS_COSTO {
   id <<key>>
   precio_galon_cop
   porcentaje_impuesto
+  valor_matricula_cop
+  valor_tramites_cop
+  tasa_mensual
   actualizado_en
 }
 entity TARIFA_SOAT {

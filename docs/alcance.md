@@ -119,9 +119,9 @@ Un pedido puede tener varios intentos de pago (si el primero es rechazado). Cuan
 | `marcas` | id, nombre (único), color_hex, descripcion |
 | `tipos_moto` | id, clave (único), nombre |
 | `motos` | id, marca_id, tipo_id, modelo, anio, cilindraje_cc, precio_cop, stock, consumo_km_galon, costo_mantenimiento_km_cop, descripcion, imagen_url · único (marca_id, modelo, anio) |
-| `parametros_costo` | id, precio_galon_cop, porcentaje_impuesto, actualizado_en |
+| `parametros_costo` | id, precio_galon_cop, porcentaje_impuesto, valor_matricula_cop, valor_tramites_cop, tasa_mensual, actualizado_en |
 | `tarifas_soat` | id, cilindraje_min, cilindraje_max, valor_anual_cop |
-| `busquedas` | id, fecha, cuota_maxima_cop, cuota_inicial_cop, uso, marca_id, cantidad_resultados |
+| `busquedas` | id, fecha, cuota_maxima_cop, cuota_inicial_cop, categoria_licencia, uso, marca_id, cantidad_resultados |
 | `personas` | id, nombre, correo (único), telefono |
 | `usuarios` | id, persona_id (único), hash_contrasena, rol |
 | `asesores` | usuario_id, marca_id |

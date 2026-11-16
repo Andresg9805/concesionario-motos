@@ -1,5 +1,10 @@
 import sqlite3
 
+import pytest
+from sqlalchemy import create_engine
+
+import app.infrastructure.models  # noqa: F401
+from app.infrastructure.db.base import Base
 from tests.api_sqlite.conftest import CONTRASENA_ADMIN
 
 CLIENTE = {
@@ -76,3 +81,68 @@ def test_borrar_una_moto_con_cotizacion_responde_409(cliente_sqlite, ruta_base_d
         "detail": "No se puede borrar porque ya tiene cotizaciones o pedidos"
     }
     assert _consultar(ruta_base_datos, "SELECT COUNT(*) FROM motos WHERE id = ?", moto_id) == [(1,)]
+
+
+def _cabeceras_admin(cliente_sqlite) -> dict:
+    login = cliente_sqlite.post(
+        "/auth/login", json={"correo": "admin@candela.com", "contrasena": CONTRASENA_ADMIN}
+    )
+    assert login.status_code == 200, login.text
+    return {"Authorization": f"Bearer {login.json()['access_token']}"}
+
+
+def test_buscar_por_cuota_guarda_la_busqueda_en_sqlite(cliente_sqlite, ruta_base_datos):
+    respuesta = cliente_sqlite.get(
+        "/motos/por-cuota",
+        params={"cuota_maxima_cop": 900_000, "licencia": "A2", "uso": "TRABAJO"},
+    )
+
+    assert respuesta.status_code == 200, respuesta.text
+    filas = _consultar(
+        ruta_base_datos, "SELECT cuota_maxima_cop, categoria_licencia, uso FROM busquedas"
+    )
+    assert filas == [(900_000, "A2", "TRABAJO")]
+
+
+def test_los_parametros_que_cambia_el_admin_quedan_en_sqlite(cliente_sqlite, ruta_base_datos):
+    cabeceras = _cabeceras_admin(cliente_sqlite)
+    actuales = cliente_sqlite.get("/parametros-costo", headers=cabeceras).json()
+    actuales["precio_galon_cop"] = 17_500
+
+    respuesta = cliente_sqlite.put("/parametros-costo", json=actuales, headers=cabeceras)
+
+    assert respuesta.status_code == 200, respuesta.text
+    assert _consultar(ruta_base_datos, "SELECT precio_galon_cop FROM parametros_costo") == [
+        (17_500,)
+    ]
+    assert (
+        cliente_sqlite.get("/parametros-costo", headers=cabeceras).json()["valor_matricula_cop"]
+        == 520_000
+    )
+
+
+@pytest.fixture
+def base_de_datos_vieja(ruta_base_datos):
+    motor = create_engine(f"sqlite:///{ruta_base_datos.as_posix()}")
+    Base.metadata.create_all(motor)
+    motor.dispose()
+    with sqlite3.connect(ruta_base_datos) as conexion:
+        for tabla, columna in [
+            ("parametros_costo", "valor_matricula_cop"),
+            ("parametros_costo", "valor_tramites_cop"),
+            ("parametros_costo", "tasa_mensual"),
+            ("busquedas", "categoria_licencia"),
+        ]:
+            conexion.execute(f"ALTER TABLE {tabla} DROP COLUMN {columna}")
+    return ruta_base_datos
+
+
+def test_una_base_de_datos_vieja_se_actualiza_sola_al_arrancar(base_de_datos_vieja, cliente_sqlite):
+    busqueda = cliente_sqlite.get("/motos/por-cuota", params={"cuota_maxima_cop": 600_000})
+    costo = cliente_sqlite.get(f"/motos/{_primera_moto(cliente_sqlite)}/costo-real")
+
+    assert busqueda.status_code == 200, busqueda.text
+    assert costo.status_code == 200, costo.text
+    assert _consultar(
+        base_de_datos_vieja, "SELECT valor_matricula_cop, valor_tramites_cop FROM parametros_costo"
+    ) == [(520_000, 380_000)]
