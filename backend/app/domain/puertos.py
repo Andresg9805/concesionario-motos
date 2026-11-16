@@ -140,7 +140,7 @@ class RepositorioTestDrives(ABC):
 
 class ProveedorTasaCambio(ABC):
     @abstractmethod
-    def obtener_trm(self) -> TasaCambio: ...
+    async def obtener_trm(self) -> TasaCambio: ...
 
 
 class RepositorioAccesorios(ABC):
