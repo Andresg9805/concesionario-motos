@@ -20,3 +20,7 @@ testpaths = ["tests"]
 [tool.mypy]
 python_version = "3.11"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["duckdb", "duckdb.*"]
+follow_imports = "skip"

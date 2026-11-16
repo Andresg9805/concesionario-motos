@@ -12,6 +12,8 @@ from app.api.dependencias import (
     obtener_crear_moto,
     obtener_eliminar_accesorio,
     obtener_eliminar_moto,
+    obtener_generar_radar_demanda,
+    obtener_generar_reporte_ventas,
     obtener_listar_motos,
     obtener_listar_pedidos_admin,
     obtener_obtener_parametros,
@@ -28,6 +30,7 @@ from app.api.schemas.admin import (
     PedidoAdminSalida,
 )
 from app.api.schemas.motos import MotoDetalleSalida
+from app.api.schemas.reportes import FilaRadarSalida, RadarDemandaSalida, ReporteVentasSalida
 from app.api.schemas.tienda import AccesorioSalida
 from app.application.admin import (
     ActualizarAccesorio,
@@ -42,6 +45,7 @@ from app.application.admin import (
     ObtenerParametros,
 )
 from app.application.motos import ListarMotos
+from app.application.reportes import GenerarRadarDemanda, GenerarReporteVentas
 from app.domain.atencion import Rol
 from app.domain.excepciones import EntidadNoEncontradaError, TransicionInvalidaError
 from app.domain.puertos import FiltrosMoto
@@ -240,17 +244,19 @@ def cambiar_estado_envio(
     return EnvioAdminSalida.desde_dominio(envio)
 
 
-@router.get("/reportes/demanda", responses=RESPUESTAS_ADMIN)
-def reporte_demanda() -> None:
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="El radar de demanda con DuckDB aún no está integrado",
+@router.get("/reportes/demanda", response_model=RadarDemandaSalida, responses=RESPUESTAS_ADMIN)
+def reporte_demanda(
+    caso_de_uso: Annotated[GenerarRadarDemanda, Depends(obtener_generar_radar_demanda)],
+) -> RadarDemandaSalida:
+    filas = caso_de_uso.ejecutar()
+    return RadarDemandaSalida(
+        total_busquedas=sum(fila.busquedas for fila in filas),
+        filas=[FilaRadarSalida.desde_dominio(fila) for fila in filas],
     )
 
 
-@router.get("/reportes/ventas", responses=RESPUESTAS_ADMIN)
-def reporte_ventas() -> None:
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="El reporte de ventas con DuckDB aún no está integrado",
-    )
+@router.get("/reportes/ventas", response_model=ReporteVentasSalida, responses=RESPUESTAS_ADMIN)
+def reporte_ventas(
+    caso_de_uso: Annotated[GenerarReporteVentas, Depends(obtener_generar_reporte_ventas)],
+) -> ReporteVentasSalida:
+    return ReporteVentasSalida.desde_dominio(caso_de_uso.ejecutar())

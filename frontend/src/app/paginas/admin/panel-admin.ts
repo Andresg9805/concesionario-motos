@@ -5,19 +5,21 @@ import { AdminAccesorios } from './admin-accesorios';
 import { AdminMotos } from './admin-motos';
 import { AdminParametros } from './admin-parametros';
 import { AdminPedidos } from './admin-pedidos';
+import { AdminReportes } from './admin-reportes';
 
-type Pestana = 'pedidos' | 'motos' | 'accesorios' | 'parametros';
+type Pestana = 'pedidos' | 'motos' | 'accesorios' | 'parametros' | 'reportes';
 
 const PESTANAS: readonly { clave: Pestana; nombre: string; icono: string }[] = [
   { clave: 'pedidos', nombre: 'Pedidos y envíos', icono: 'shopping-bag' },
   { clave: 'motos', nombre: 'Motos', icono: 'flag' },
   { clave: 'accesorios', nombre: 'Accesorios', icono: 'shield' },
   { clave: 'parametros', nombre: 'Parámetros de costo', icono: 'wallet' },
+  { clave: 'reportes', nombre: 'Reportes', icono: 'chart-column' },
 ];
 
 @Component({
   selector: 'app-panel-admin',
-  imports: [AdminAccesorios, AdminMotos, AdminParametros, AdminPedidos, Icono],
+  imports: [AdminAccesorios, AdminMotos, AdminParametros, AdminPedidos, AdminReportes, Icono],
   template: `
     <section class="relative overflow-hidden border-b border-line bg-surface2">
       <div class="resplandor pointer-events-none absolute inset-0" aria-hidden="true"></div>
@@ -27,8 +29,8 @@ const PESTANAS: readonly { clave: Pestana; nombre: string; icono: string }[] = [
           Hola, {{ primerNombre }}
         </h1>
         <p class="mt-2 max-w-xl text-sm text-muted">
-          Despacha los pedidos de la tienda, mantén el catálogo al día y ajusta los valores con los
-          que se calcula el costo real de cada moto.
+          Despacha los pedidos de la tienda, mantén el catálogo al día, ajusta los valores con los
+          que se calcula el costo real de cada moto y revisa los reportes.
         </p>
         @if (porDespachar() > 0) {
           <p
@@ -69,6 +71,9 @@ const PESTANAS: readonly { clave: Pestana; nombre: string; icono: string }[] = [
           }
           @case ('parametros') {
             <app-admin-parametros />
+          }
+          @case ('reportes') {
+            <app-admin-reportes />
           }
         }
       </div>
