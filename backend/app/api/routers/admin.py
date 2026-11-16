@@ -1,6 +1,7 @@
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Response, status
+from sqlalchemy.exc import IntegrityError
 
 from app.api.dependencias import (
     obtener_actualizar_accesorio,
@@ -54,11 +55,22 @@ RESPUESTAS_RECURSO: dict[int | str, dict[str, Any]] = {
     status.HTTP_422_UNPROCESSABLE_CONTENT: {"description": "Datos inválidos"},
 }
 
+RESPUESTAS_ELIMINAR: dict[int | str, dict[str, Any]] = {
+    **RESPUESTAS_RECURSO,
+    status.HTTP_409_CONFLICT: {"description": "Tiene cotizaciones o pedidos asociados"},
+}
+
+DETALLE_CON_ASOCIACIONES = "No se puede borrar porque ya tiene cotizaciones o pedidos"
+
 IdPath = Annotated[int, Path(ge=1)]
 
 
 def no_encontrado(error: EntidadNoEncontradaError) -> HTTPException:
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=error.mensaje)
+
+
+def con_asociaciones() -> HTTPException:
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail=DETALLE_CON_ASOCIACIONES)
 
 
 def invalido(error: ValueError | TransicionInvalidaError) -> HTTPException:
@@ -105,7 +117,7 @@ def actualizar_moto(
 @router.delete(
     "/admin/motos/{moto_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses=RESPUESTAS_RECURSO,
+    responses=RESPUESTAS_ELIMINAR,
 )
 def eliminar_moto(
     moto_id: IdPath,
@@ -115,6 +127,8 @@ def eliminar_moto(
         caso_de_uso.ejecutar(moto_id)
     except EntidadNoEncontradaError as error:
         raise no_encontrado(error) from error
+    except IntegrityError as error:
+        raise con_asociaciones() from error
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -157,7 +171,7 @@ def actualizar_accesorio(
 @router.delete(
     "/admin/accesorios/{accesorio_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses=RESPUESTAS_RECURSO,
+    responses=RESPUESTAS_ELIMINAR,
 )
 def eliminar_accesorio(
     accesorio_id: IdPath,
@@ -167,6 +181,8 @@ def eliminar_accesorio(
         caso_de_uso.ejecutar(accesorio_id)
     except EntidadNoEncontradaError as error:
         raise no_encontrado(error) from error
+    except IntegrityError as error:
+        raise con_asociaciones() from error
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
