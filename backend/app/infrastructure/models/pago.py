@@ -22,7 +22,7 @@ class Pago(Base):
 
     referencia: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
-    transaccion_id: Mapped[str] = mapped_column(String, nullable=False)
+    transaccion_id: Mapped[str | None] = mapped_column(String, nullable=True)
 
     metodo: Mapped[str] = mapped_column(
         Enum("TARJETA", "NEQUI", "PSE", name="metodo_pago"), nullable=False

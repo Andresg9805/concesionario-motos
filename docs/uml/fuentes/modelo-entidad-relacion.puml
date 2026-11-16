@@ -95,6 +95,7 @@ entity MUNICIPIO {
 }
 entity DIRECCION {
   id <<key>>
+  nombre_recibe
   telefono_contacto
   detalle
 }

@@ -26,6 +26,8 @@ class Direccion(Base):
         nullable=False,
     )
 
+    nombre_recibe: Mapped[str] = mapped_column(String, nullable=False)
+
     telefono_contacto: Mapped[str] = mapped_column(String(20), nullable=False)
 
     detalle: Mapped[str] = mapped_column(Text, nullable=False)
