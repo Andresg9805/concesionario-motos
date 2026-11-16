@@ -51,6 +51,7 @@ from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
     PasarelaPago,
+    ProveedorTasaCambio,
     RepositorioAccesorios,
     RepositorioBusquedas,
     RepositorioClientes,
@@ -68,6 +69,7 @@ from app.domain.puertos import (
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.externos.trm import ProveedorTasaCambioDatosGov, url_trm_configurada
 from app.infrastructure.externos.wompi import PasarelaWompi
 from app.infrastructure.memoria.atencion import (
     RepositorioCotizacionesEnMemoria,
@@ -239,6 +241,11 @@ def obtener_calcular_costo_real(
     parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
 ) -> CalcularCostoReal:
     return CalcularCostoReal(motos, parametros)
+
+
+@lru_cache
+def obtener_proveedor_trm() -> ProveedorTasaCambio:
+    return ProveedorTasaCambioDatosGov(url_trm_configurada())
 
 
 @lru_cache
