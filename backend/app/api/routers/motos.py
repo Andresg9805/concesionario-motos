@@ -6,8 +6,8 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Path, Query, Resp
 from app.api.dependencias import (
     obtener_buscar_por_cuota,
     obtener_calcular_costo_real,
+    obtener_detalle_moto,
     obtener_listar_motos,
-    obtener_obtener_moto,
 )
 from app.api.schemas.motos import (
     PATRON_SESION,
@@ -30,7 +30,7 @@ from app.application.motos import (
     ConsultaCostoReal,
     ConsultaPorCuota,
     ListarMotos,
-    ObtenerMoto,
+    ObtenerDetalleMoto,
 )
 from app.domain.excepciones import CreditoInvalidoError, EntidadNoEncontradaError
 from app.domain.puertos import FiltrosMoto
@@ -117,15 +117,15 @@ def buscar_por_cuota(
 
 
 @router.get("/{moto_id}", response_model=MotoDetalleSalida, responses=RESPUESTA_404)
-def obtener_moto(
+async def obtener_moto(
     moto_id: IdMoto,
-    caso_de_uso: Annotated[ObtenerMoto, Depends(obtener_obtener_moto)],
+    caso_de_uso: Annotated[ObtenerDetalleMoto, Depends(obtener_detalle_moto)],
 ) -> MotoDetalleSalida:
     try:
-        moto = caso_de_uso.ejecutar(moto_id)
+        detalle = await caso_de_uso.ejecutar(moto_id)
     except EntidadNoEncontradaError as error:
         raise _no_encontrada(error) from error
-    return MotoDetalleSalida.desde_dominio(moto)
+    return MotoDetalleSalida.con_precio_usd(detalle.moto, detalle.precio_usd)
 
 
 @router.get("/{moto_id}/costo-real", response_model=CostoRealSalida, responses=RESPUESTA_404)

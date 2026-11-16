@@ -37,7 +37,7 @@ from app.application.motos import (
     CalcularCostoReal,
     ListarMarcas,
     ListarMotos,
-    ObtenerMoto,
+    ObtenerDetalleMoto,
 )
 from app.application.pedidos import (
     ConfirmarPago,
@@ -63,6 +63,7 @@ from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
     PasarelaPago,
+    ProveedorTasaCambio,
     RepositorioAccesorios,
     RepositorioBusquedas,
     RepositorioClientes,
@@ -80,6 +81,7 @@ from app.domain.puertos import (
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.externos.trm import ProveedorTasaCambioDatosGov, url_trm_configurada
 from app.infrastructure.externos.wompi import PasarelaWompi
 from app.infrastructure.memoria.atencion import (
     RepositorioCotizacionesEnMemoria,
@@ -221,6 +223,11 @@ def obtener_repositorio_simulaciones() -> RepositorioSimulaciones:
     return RepositorioSimulacionesEnMemoria()
 
 
+@lru_cache
+def obtener_proveedor_trm() -> ProveedorTasaCambio:
+    return ProveedorTasaCambioDatosGov(url_trm_configurada())
+
+
 def obtener_listar_marcas(
     marcas: Annotated[RepositorioMarcas, Depends(obtener_repositorio_marcas)],
 ) -> ListarMarcas:
@@ -233,10 +240,11 @@ def obtener_listar_motos(
     return ListarMotos(motos)
 
 
-def obtener_obtener_moto(
+def obtener_detalle_moto(
     motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
-) -> ObtenerMoto:
-    return ObtenerMoto(motos)
+    tasa_cambio: Annotated[ProveedorTasaCambio, Depends(obtener_proveedor_trm)],
+) -> ObtenerDetalleMoto:
+    return ObtenerDetalleMoto(motos, tasa_cambio)
 
 
 def obtener_buscar_por_cuota(
@@ -418,6 +426,14 @@ def obtener_expirar_reservas(
     reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
 ) -> ExpirarReservas:
     return ExpirarReservas(pedidos, accesorios, reloj)
+
+
+def crear_expirar_reservas() -> ExpirarReservas:
+    return obtener_expirar_reservas(
+        obtener_repositorio_pedidos(),
+        obtener_repositorio_accesorios(),
+        obtener_reloj_atencion(),
+    )
 
 
 def obtener_confirmar_pago(

@@ -1,6 +1,11 @@
+import asyncio
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager, suppress
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.dependencias import crear_expirar_reservas
 from app.api.routers import (
     accesorios,
     admin,
@@ -13,11 +18,25 @@ from app.api.routers import (
     pedidos,
     ubicaciones,
 )
+from app.api.tareas import ciclo_expirar_reservas
+
+
+@asynccontextmanager
+async def ciclo_de_vida(_: FastAPI) -> AsyncIterator[None]:
+    tarea = asyncio.create_task(ciclo_expirar_reservas(crear_expirar_reservas))
+    try:
+        yield
+    finally:
+        tarea.cancel()
+        with suppress(asyncio.CancelledError):
+            await tarea
+
 
 app = FastAPI(
     title="Concesionario de Motos API",
     version="0.1.0",
     description="API del proyecto final de Taller de Programación - UMB",
+    lifespan=ciclo_de_vida,
 )
 
 app.add_middleware(
