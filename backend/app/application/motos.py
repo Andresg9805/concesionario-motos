@@ -1,13 +1,27 @@
+import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from app.domain.catalogo import Busqueda, CategoriaLicencia, Marca, Moto, PlanCredito, UsoMoto
+from app.domain.catalogo import (
+    Busqueda,
+    CategoriaLicencia,
+    Marca,
+    Moto,
+    PlanCredito,
+    TasaCambio,
+    UsoMoto,
+)
 from app.domain.costo_real import CostoAdquisicion, CostoMensual, PerfilUso
 from app.domain.estructuras.arbol_motos import ArbolMotosPorPrecio
-from app.domain.excepciones import CreditoInvalidoError, EntidadNoEncontradaError
+from app.domain.excepciones import (
+    CreditoInvalidoError,
+    EntidadNoEncontradaError,
+    TasaNoDisponibleError,
+)
 from app.domain.puertos import (
     FiltrosMoto,
+    ProveedorTasaCambio,
     RepositorioBusquedas,
     RepositorioMarcas,
     RepositorioMotos,
@@ -48,6 +62,33 @@ class ObtenerMoto:
         if moto is None:
             raise EntidadNoEncontradaError(f"No existe una moto con id {moto_id}")
         return moto
+
+
+@dataclass(frozen=True)
+class DetalleMoto:
+    moto: Moto
+    precio_usd: float | None
+
+
+class ObtenerDetalleMoto:
+    def __init__(self, motos: RepositorioMotos, tasa_cambio: ProveedorTasaCambio) -> None:
+        self._motos = motos
+        self._tasa_cambio = tasa_cambio
+
+    async def ejecutar(self, moto_id: int) -> DetalleMoto:
+        moto, trm = await asyncio.gather(
+            asyncio.to_thread(self._motos.buscar_por_id, moto_id),
+            self._obtener_trm(),
+        )
+        if moto is None:
+            raise EntidadNoEncontradaError(f"No existe una moto con id {moto_id}")
+        return DetalleMoto(moto=moto, precio_usd=None if trm is None else moto.precio_en_usd(trm))
+
+    async def _obtener_trm(self) -> TasaCambio | None:
+        try:
+            return await self._tasa_cambio.obtener_trm()
+        except TasaNoDisponibleError:
+            return None
 
 
 @dataclass(frozen=True)

@@ -132,12 +132,18 @@ class MotoDetalleSalida(MotoResumenSalida):
     consumo_km_galon: float
     costo_mantenimiento_km_cop: int
     descripcion: str
+    precio_usd: float | None
 
     @classmethod
     def desde_dominio(cls, moto: Moto) -> "MotoDetalleSalida":
+        return cls.con_precio_usd(moto, None)
+
+    @classmethod
+    def con_precio_usd(cls, moto: Moto, precio_usd: float | None) -> "MotoDetalleSalida":
         resumen = MotoResumenSalida.desde_dominio(moto)
         return cls(
             **resumen.model_dump(),
+            precio_usd=precio_usd,
             consumo_km_galon=moto.consumo_km_galon,
             costo_mantenimiento_km_cop=moto.costo_mantenimiento_km_cop,
             descripcion=moto.descripcion,
