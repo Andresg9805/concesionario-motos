@@ -1,11 +1,12 @@
 import os
 import secrets
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.orm import Session
 
 from app.application.admin import (
     ActualizarAccesorio,
@@ -58,7 +59,12 @@ from app.application.tienda import (
     ObtenerDepartamento,
     ObtenerDireccionPropia,
 )
-from app.config import obtener_configuracion, obtener_configuracion_wompi
+from app.config import (
+    ALMACENAMIENTO_SQLITE,
+    obtener_almacenamiento,
+    obtener_configuracion,
+    obtener_configuracion_wompi,
+)
 from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
@@ -81,6 +87,25 @@ from app.domain.puertos import (
     RepositorioUsuarios,
 )
 from app.domain.seguridad import DatosToken, EmisorTokens, HasheadorContrasenas
+from app.infrastructure.db.conexion import SessionLocal
+from app.infrastructure.db.repositorios.cotizacion import RepositorioCotizacionesSQLAlchemy
+from app.infrastructure.db.repositorios.marca import RepositorioMarcasSQLAlchemy
+from app.infrastructure.db.repositorios.moto import RepositorioMotosSQLAlchemy
+from app.infrastructure.db.repositorios.pedidos import (
+    RepositorioEnviosSQLAlchemy,
+    RepositorioPagosSQLAlchemy,
+    RepositorioPedidosSQLAlchemy,
+)
+from app.infrastructure.db.repositorios.test_drive import RepositorioTestDrivesSQLAlchemy
+from app.infrastructure.db.repositorios.tienda import (
+    RepositorioAccesoriosSQLAlchemy,
+    RepositorioDireccionesSQLAlchemy,
+    RepositorioUbicacionesSQLAlchemy,
+)
+from app.infrastructure.db.repositorios.usuario import (
+    RepositorioClientesSQLAlchemy,
+    RepositorioUsuariosSQLAlchemy,
+)
 from app.infrastructure.externos.trm import ProveedorTasaCambioDatosGov, url_trm_configurada
 from app.infrastructure.externos.wompi import PasarelaWompi
 from app.infrastructure.memoria.atencion import (
@@ -112,11 +137,26 @@ from app.infrastructure.memoria.usuarios import (
 from app.infrastructure.seguridad.bcrypt_hasheador import HasheadorBcrypt
 from app.infrastructure.seguridad.jwt_emisor import EmisorTokensJWT
 
+ALMACENAMIENTO = obtener_almacenamiento()
+USA_SQLITE = ALMACENAMIENTO == ALMACENAMIENTO_SQLITE
+
 esquema_bearer = HTTPBearer(auto_error=False)
 
 
+def obtener_sesion() -> Iterator[Session]:
+    sesion = SessionLocal()
+    try:
+        yield sesion
+        sesion.commit()
+    except Exception:
+        sesion.rollback()
+        raise
+    finally:
+        sesion.close()
+
+
 @lru_cache
-def obtener_repositorio_usuarios() -> RepositorioUsuarios:
+def obtener_repositorio_usuarios_en_memoria() -> RepositorioUsuarios:
     usuarios = RepositorioUsuariosEnMemoria()
     contrasena = os.environ.get("CONTRASENA_ASESORES_DEMO") or secrets.token_urlsafe(32)
     hash_contrasena = obtener_hasheador().hashear(contrasena)
@@ -127,9 +167,31 @@ def obtener_repositorio_usuarios() -> RepositorioUsuarios:
     return usuarios
 
 
+def obtener_repositorio_usuarios_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioUsuarios:
+    return RepositorioUsuariosSQLAlchemy(sesion)
+
+
+obtener_repositorio_usuarios: Callable[..., RepositorioUsuarios] = (
+    obtener_repositorio_usuarios_sqlite if USA_SQLITE else obtener_repositorio_usuarios_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_clientes() -> RepositorioClientes:
+def obtener_repositorio_clientes_en_memoria() -> RepositorioClientes:
     return RepositorioClientesEnMemoria()
+
+
+def obtener_repositorio_clientes_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioClientes:
+    return RepositorioClientesSQLAlchemy(sesion)
+
+
+obtener_repositorio_clientes: Callable[..., RepositorioClientes] = (
+    obtener_repositorio_clientes_sqlite if USA_SQLITE else obtener_repositorio_clientes_en_memoria
+)
 
 
 @lru_cache
@@ -199,13 +261,35 @@ def requerir_rol(*roles: Rol | str) -> Callable[[DatosToken], DatosToken]:
 
 
 @lru_cache
-def obtener_repositorio_marcas() -> RepositorioMarcas:
+def obtener_repositorio_marcas_en_memoria() -> RepositorioMarcas:
     return RepositorioMarcasEnMemoria()
 
 
+def obtener_repositorio_marcas_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioMarcas:
+    return RepositorioMarcasSQLAlchemy(sesion)
+
+
+obtener_repositorio_marcas: Callable[..., RepositorioMarcas] = (
+    obtener_repositorio_marcas_sqlite if USA_SQLITE else obtener_repositorio_marcas_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_motos() -> RepositorioMotos:
+def obtener_repositorio_motos_en_memoria() -> RepositorioMotos:
     return RepositorioMotosEnMemoria()
+
+
+def obtener_repositorio_motos_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioMotos:
+    return RepositorioMotosSQLAlchemy(sesion)
+
+
+obtener_repositorio_motos: Callable[..., RepositorioMotos] = (
+    obtener_repositorio_motos_sqlite if USA_SQLITE else obtener_repositorio_motos_en_memoria
+)
 
 
 @lru_cache
@@ -264,13 +348,39 @@ def obtener_calcular_costo_real(
 
 
 @lru_cache
-def obtener_repositorio_cotizaciones() -> RepositorioCotizaciones:
+def obtener_repositorio_cotizaciones_en_memoria() -> RepositorioCotizaciones:
     return RepositorioCotizacionesEnMemoria()
 
 
+def obtener_repositorio_cotizaciones_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioCotizaciones:
+    return RepositorioCotizacionesSQLAlchemy(sesion)
+
+
+obtener_repositorio_cotizaciones: Callable[..., RepositorioCotizaciones] = (
+    obtener_repositorio_cotizaciones_sqlite
+    if USA_SQLITE
+    else obtener_repositorio_cotizaciones_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_test_drives() -> RepositorioTestDrives:
+def obtener_repositorio_test_drives_en_memoria() -> RepositorioTestDrives:
     return RepositorioTestDrivesEnMemoria()
+
+
+def obtener_repositorio_test_drives_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioTestDrives:
+    return RepositorioTestDrivesSQLAlchemy(sesion)
+
+
+obtener_repositorio_test_drives: Callable[..., RepositorioTestDrives] = (
+    obtener_repositorio_test_drives_sqlite
+    if USA_SQLITE
+    else obtener_repositorio_test_drives_en_memoria
+)
 
 
 def obtener_reloj_atencion() -> Reloj:
@@ -336,18 +446,57 @@ def obtener_atender_siguiente_test_drive(
 
 
 @lru_cache
-def obtener_repositorio_accesorios() -> RepositorioAccesorios:
+def obtener_repositorio_accesorios_en_memoria() -> RepositorioAccesorios:
     return RepositorioAccesoriosEnMemoria()
 
 
+def obtener_repositorio_accesorios_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioAccesorios:
+    return RepositorioAccesoriosSQLAlchemy(sesion)
+
+
+obtener_repositorio_accesorios: Callable[..., RepositorioAccesorios] = (
+    obtener_repositorio_accesorios_sqlite
+    if USA_SQLITE
+    else obtener_repositorio_accesorios_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_ubicaciones() -> RepositorioUbicaciones:
+def obtener_repositorio_ubicaciones_en_memoria() -> RepositorioUbicaciones:
     return RepositorioUbicacionesEnMemoria()
 
 
+def obtener_repositorio_ubicaciones_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioUbicaciones:
+    return RepositorioUbicacionesSQLAlchemy(sesion)
+
+
+obtener_repositorio_ubicaciones: Callable[..., RepositorioUbicaciones] = (
+    obtener_repositorio_ubicaciones_sqlite
+    if USA_SQLITE
+    else obtener_repositorio_ubicaciones_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_direcciones() -> RepositorioDirecciones:
+def obtener_repositorio_direcciones_en_memoria() -> RepositorioDirecciones:
     return RepositorioDireccionesEnMemoria()
+
+
+def obtener_repositorio_direcciones_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioDirecciones:
+    return RepositorioDireccionesSQLAlchemy(sesion)
+
+
+obtener_repositorio_direcciones: Callable[..., RepositorioDirecciones] = (
+    obtener_repositorio_direcciones_sqlite
+    if USA_SQLITE
+    else obtener_repositorio_direcciones_en_memoria
+)
 
 
 def obtener_listar_accesorios(
@@ -401,18 +550,51 @@ def obtener_obtener_direccion_propia(
 
 
 @lru_cache
-def obtener_repositorio_pedidos() -> RepositorioPedidos:
-    return RepositorioPedidosEnMemoria(obtener_repositorio_accesorios())
+def obtener_repositorio_pedidos_en_memoria() -> RepositorioPedidos:
+    return RepositorioPedidosEnMemoria(obtener_repositorio_accesorios_en_memoria())
+
+
+def obtener_repositorio_pedidos_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioPedidos:
+    return RepositorioPedidosSQLAlchemy(sesion)
+
+
+obtener_repositorio_pedidos: Callable[..., RepositorioPedidos] = (
+    obtener_repositorio_pedidos_sqlite if USA_SQLITE else obtener_repositorio_pedidos_en_memoria
+)
 
 
 @lru_cache
-def obtener_repositorio_pagos() -> RepositorioPagos:
+def obtener_repositorio_pagos_en_memoria() -> RepositorioPagos:
     return RepositorioPagosEnMemoria()
 
 
+def obtener_repositorio_pagos_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioPagos:
+    return RepositorioPagosSQLAlchemy(sesion)
+
+
+obtener_repositorio_pagos: Callable[..., RepositorioPagos] = (
+    obtener_repositorio_pagos_sqlite if USA_SQLITE else obtener_repositorio_pagos_en_memoria
+)
+
+
 @lru_cache
-def obtener_repositorio_envios() -> RepositorioEnvios:
+def obtener_repositorio_envios_en_memoria() -> RepositorioEnvios:
     return RepositorioEnviosEnMemoria()
+
+
+def obtener_repositorio_envios_sqlite(
+    sesion: Annotated[Session, Depends(obtener_sesion)],
+) -> RepositorioEnvios:
+    return RepositorioEnviosSQLAlchemy(sesion)
+
+
+obtener_repositorio_envios: Callable[..., RepositorioEnvios] = (
+    obtener_repositorio_envios_sqlite if USA_SQLITE else obtener_repositorio_envios_en_memoria
+)
 
 
 @lru_cache
@@ -428,7 +610,29 @@ def obtener_expirar_reservas(
     return ExpirarReservas(pedidos, accesorios, reloj)
 
 
-def crear_expirar_reservas() -> ExpirarReservas:
+class ExpirarReservasConSesionPropia:
+    def __init__(self, reloj: Reloj) -> None:
+        self._reloj = reloj
+
+    def ejecutar(self) -> None:
+        sesion = SessionLocal()
+        try:
+            ExpirarReservas(
+                RepositorioPedidosSQLAlchemy(sesion),
+                RepositorioAccesoriosSQLAlchemy(sesion),
+                self._reloj,
+            ).ejecutar()
+            sesion.commit()
+        except Exception:
+            sesion.rollback()
+            raise
+        finally:
+            sesion.close()
+
+
+def crear_expirar_reservas() -> ExpirarReservas | ExpirarReservasConSesionPropia:
+    if USA_SQLITE:
+        return ExpirarReservasConSesionPropia(obtener_reloj_atencion())
     return obtener_expirar_reservas(
         obtener_repositorio_pedidos(),
         obtener_repositorio_accesorios(),

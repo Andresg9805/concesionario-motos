@@ -6,6 +6,9 @@ from app.domain.tienda import MINUTOS_RESERVA
 
 LONGITUD_MINIMA_SECRETO = 32
 URL_WOMPI_SANDBOX = "https://sandbox.wompi.co/v1"
+ALMACENAMIENTO_MEMORIA = "memoria"
+ALMACENAMIENTO_SQLITE = "sqlite"
+ALMACENAMIENTOS_VALIDOS = (ALMACENAMIENTO_MEMORIA, ALMACENAMIENTO_SQLITE)
 
 
 @dataclass(frozen=True)
@@ -21,6 +24,13 @@ class ConfiguracionWompi:
     llave_publica: str
     secreto_integridad: str
     secreto_eventos: str
+
+
+def obtener_almacenamiento() -> str:
+    almacenamiento = os.environ.get("ALMACENAMIENTO", "").strip().lower() or ALMACENAMIENTO_MEMORIA
+    if almacenamiento not in ALMACENAMIENTOS_VALIDOS:
+        raise RuntimeError(f"ALMACENAMIENTO debe ser uno de: {', '.join(ALMACENAMIENTOS_VALIDOS)}")
+    return almacenamiento
 
 
 @lru_cache
