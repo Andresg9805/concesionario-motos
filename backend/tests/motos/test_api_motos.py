@@ -1,6 +1,18 @@
+import asyncio
+from datetime import date
+
+import httpx
 import pytest
 
-from app.domain.catalogo import TipoMoto
+from app.api import dependencias
+from app.application.motos import ObtenerDetalleMoto
+from app.domain.catalogo import TasaCambio, TipoMoto
+from app.domain.excepciones import TasaNoDisponibleError
+from app.domain.puertos import ProveedorTasaCambio
+from app.infrastructure.externos.circuit_breaker import EstadoCircuito
+from app.infrastructure.externos.trm import ProveedorTasaCambioDatosGov
+from app.infrastructure.memoria.catalogo import RepositorioMotosEnMemoria
+from app.main import app
 
 
 def test_listar_marcas(cliente_http):
@@ -67,7 +79,7 @@ def test_listar_motos_con_filtros_invalidos_responde_422(cliente_http, consulta)
     assert cliente_http.get("/motos", params=consulta).status_code == 422
 
 
-def test_detalle_de_moto(cliente_http):
+def test_detalle_de_moto(cliente_http, proveedor_trm):
     respuesta = cliente_http.get("/motos/44")
     assert respuesta.status_code == 200
     cuerpo = respuesta.json()
@@ -76,6 +88,7 @@ def test_detalle_de_moto(cliente_http):
     assert cuerpo["categoria_licencia"] == "A2"
     assert cuerpo["consumo_km_galon"] > 0
     assert "stock" not in cuerpo
+    assert proveedor_trm.llamadas == 1
 
 
 def test_detalle_de_moto_inexistente_responde_404(cliente_http):
@@ -227,3 +240,64 @@ def test_costo_real_de_moto_inexistente_responde_404(cliente_http):
 )
 def test_costo_real_con_datos_invalidos_responde_422(cliente_http, consulta):
     assert cliente_http.get("/motos/1/costo-real", params=consulta).status_code == 422
+
+
+def test_detalle_incluye_precio_en_dolares_con_la_trm(cliente_http, motos, proveedor_trm):
+    moto = motos.buscar_por_id(44)
+    respuesta = cliente_http.get("/motos/44")
+    assert respuesta.json()["precio_usd"] == moto.precio_en_usd(proveedor_trm.trm)
+    assert respuesta.json()["precio_usd"] == round(moto.precio_cop / 4_000.0, 2)
+
+
+def test_detalle_sin_trm_disponible_responde_con_precio_usd_nulo(cliente_http):
+    class SinTrm(ProveedorTasaCambio):
+        async def obtener_trm(self):
+            raise TasaNoDisponibleError("sin TRM")
+
+    app.dependency_overrides[dependencias.obtener_proveedor_trm] = SinTrm
+    respuesta = cliente_http.get("/motos/44")
+    assert respuesta.status_code == 200
+    assert respuesta.json()["precio_usd"] is None
+    assert respuesta.json()["precio_cop"] > 0
+
+
+def test_detalle_sigue_respondiendo_con_el_respaldo_cuando_la_trm_falla(cliente_http, motos):
+    respuestas = [httpx.Response(200, json=[{"valor": "4100", "vigenciadesde": "2026-11-16"}])]
+    respuestas += [httpx.Response(500)] * 3
+
+    def servidor(peticion):
+        return respuestas.pop(0)
+
+    proveedor = ProveedorTasaCambioDatosGov(transporte=httpx.MockTransport(servidor))
+    app.dependency_overrides[dependencias.obtener_proveedor_trm] = lambda: proveedor
+    esperado = round(motos.buscar_por_id(44).precio_cop / 4100.0, 2)
+    for _ in range(4):
+        respuesta = cliente_http.get("/motos/44")
+        assert respuesta.status_code == 200
+        assert respuesta.json()["precio_usd"] == esperado
+    assert proveedor.circuito.estado == EstadoCircuito.ABIERTO
+
+
+def test_detalle_de_moto_inexistente_sigue_siendo_404_con_trm(cliente_http, proveedor_trm):
+    assert cliente_http.get("/motos/999").status_code == 404
+
+
+def test_detalle_consulta_la_moto_y_la_trm_de_forma_concurrente():
+    eventos = []
+
+    class RepositorioLento(RepositorioMotosEnMemoria):
+        def buscar_por_id(self, id):
+            eventos.append("moto")
+            return super().buscar_por_id(id)
+
+    class TrmLenta(ProveedorTasaCambio):
+        async def obtener_trm(self):
+            eventos.append("trm-inicio")
+            await asyncio.sleep(0)
+            eventos.append("trm-fin")
+            return TasaCambio(valor=4_000.0, fecha=date(2026, 11, 16))
+
+    detalle = asyncio.run(ObtenerDetalleMoto(RepositorioLento(), TrmLenta()).ejecutar(44))
+    assert detalle.precio_usd is not None
+    assert eventos.index("trm-inicio") < eventos.index("trm-fin")
+    assert set(eventos) == {"moto", "trm-inicio", "trm-fin"}
