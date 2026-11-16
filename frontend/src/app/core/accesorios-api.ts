@@ -8,6 +8,7 @@ export interface AccesorioApi {
   sku: string;
   nombre: string;
   categoria: string;
+  fabricante: string;
   descripcion: string;
   precio_cop: number;
   stock: number;
@@ -40,6 +41,7 @@ export function accesorioDesdeApi(dato: AccesorioApi): Accesorio {
     id: String(dato.id),
     categoria: textoCategoria(dato.categoria),
     nombre: dato.nombre,
+    fabricante: dato.fabricante || undefined,
     descripcion: dato.descripcion,
     precio: dato.precio_cop,
     stock: dato.stock,

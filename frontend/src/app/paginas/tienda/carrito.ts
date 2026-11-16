@@ -42,7 +42,12 @@ import { IlustracionAccesorio } from '../../shared/ilustracion-accesorio';
                   <app-ilustracion-accesorio [tipo]="linea.accesorio.ilustracion" />
                 </div>
                 <div class="min-w-0">
-                  <p class="text-xs text-muted">{{ linea.accesorio.categoria }}</p>
+                  <p class="text-xs text-muted">
+                    @if (linea.accesorio.fabricante) {
+                      {{ linea.accesorio.fabricante }} ·
+                    }
+                    {{ linea.accesorio.categoria }}
+                  </p>
                   <p class="font-bold">{{ linea.accesorio.nombre }}</p>
                   <p class="num mt-1 text-sm text-muted">{{ linea.accesorio.precio | cop }} c/u</p>
                 </div>

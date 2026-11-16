@@ -95,9 +95,16 @@ type Filtro = 'Todos' | CategoriaAccesorio;
               >
             </div>
             <div class="flex flex-1 flex-col gap-2 p-4">
-              <h3 class="font-display text-base leading-snug font-extrabold">
-                {{ accesorio.nombre }}
-              </h3>
+              <div>
+                @if (accesorio.fabricante) {
+                  <p class="text-[11px] font-bold tracking-wider text-muted uppercase">
+                    {{ accesorio.fabricante }}
+                  </p>
+                }
+                <h3 class="font-display text-base leading-snug font-extrabold">
+                  {{ accesorio.nombre }}
+                </h3>
+              </div>
               <p class="text-sm text-muted">{{ accesorio.descripcion }}</p>
               <div class="mt-auto flex items-center justify-between gap-3 pt-2">
                 <span class="num font-mono text-[15px] font-semibold">{{

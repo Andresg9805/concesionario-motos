@@ -38,6 +38,7 @@ export interface Accesorio {
   id: string;
   categoria: CategoriaAccesorio;
   nombre: string;
+  fabricante?: string;
   descripcion: string;
   precio: number;
   stock: number;

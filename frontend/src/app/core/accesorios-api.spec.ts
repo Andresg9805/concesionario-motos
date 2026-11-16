@@ -8,8 +8,9 @@ import { ACCESORIOS } from './datos-prueba';
 const CASCO = {
   id: 1,
   sku: 'CAS-001',
-  nombre: 'Casco integral ECE 22.06',
+  nombre: 'X-Fifteen',
   categoria: 'CASCO',
+  fabricante: 'SHOEI',
   descripcion: 'Doble visor.',
   precio_cop: 489000,
   stock: 12,
@@ -32,12 +33,17 @@ describe('Accesorios desde la API', () => {
     expect(accesorioDesdeApi(CASCO)).toEqual({
       id: '1',
       categoria: 'Cascos',
-      nombre: 'Casco integral ECE 22.06',
+      nombre: 'X-Fifteen',
+      fabricante: 'SHOEI',
       descripcion: 'Doble visor.',
       precio: 489000,
       stock: 12,
       ilustracion: 'casco',
     });
+  });
+
+  it('si no llega el fabricante no se muestra', () => {
+    expect(accesorioDesdeApi({ ...CASCO, fabricante: '' }).fabricante).toBeUndefined();
   });
 
   it('una categoría nueva se muestra con su nombre', () => {

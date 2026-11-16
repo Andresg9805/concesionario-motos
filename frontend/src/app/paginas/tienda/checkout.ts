@@ -175,7 +175,8 @@ type Campo = 'nombre' | 'telefono' | 'departamento' | 'municipio' | 'direccion';
               @for (linea of carrito.lineas(); track linea.accesorio.id) {
                 <li class="flex justify-between gap-3">
                   <span class="text-muted"
-                    >{{ linea.cantidad }} × {{ linea.accesorio.nombre }}</span
+                    >{{ linea.cantidad }} × {{ linea.accesorio.fabricante ?? '' }}
+                    {{ linea.accesorio.nombre }}</span
                   >
                   <span class="num shrink-0">{{ linea.subtotal | cop }}</span>
                 </li>
