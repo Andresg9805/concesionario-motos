@@ -44,16 +44,33 @@ def _crear_usuario(
 
 
 def seed_usuarios(db: Session) -> None:
-    from app.infrastructure.memoria.datos_prueba import ASESORES
-
     contrasena_asesores = os.environ.get("CONTRASENA_ASESORES_DEMO")
     contrasena_admin = os.environ.get("CONTRASENA_ADMIN_DEMO")
 
-    if not contrasena_asesores:
-        raise ValueError("Falta configurar CONTRASENA_ASESORES_DEMO.")
+    if contrasena_asesores:
+        _crear_asesores(db, contrasena_asesores)
+        _crear_usuario(
+            db=db,
+            nombre="Cliente de Prueba",
+            correo="cliente.prueba@candela.com",
+            telefono="3000000001",
+            contrasena=contrasena_asesores,
+            rol="CLIENTE",
+        )
 
-    if not contrasena_admin:
-        raise ValueError("Falta configurar CONTRASENA_ADMIN_DEMO.")
+    if contrasena_admin:
+        _crear_usuario(
+            db=db,
+            nombre="Administrador Candela",
+            correo="admin@candela.com",
+            telefono="3000000000",
+            contrasena=contrasena_admin,
+            rol="ADMIN",
+        )
+
+
+def _crear_asesores(db: Session, contrasena: str) -> None:
+    from app.infrastructure.memoria.datos_prueba import ASESORES
 
     for marca_id, nombre, correo, telefono in ASESORES:
         usuario = _crear_usuario(
@@ -61,7 +78,7 @@ def seed_usuarios(db: Session) -> None:
             nombre=nombre,
             correo=correo,
             telefono=telefono,
-            contrasena=contrasena_asesores,
+            contrasena=contrasena,
             rol="ASESOR",
         )
 
@@ -79,21 +96,3 @@ def seed_usuarios(db: Session) -> None:
                     marca_id=marca.id,
                 )
             )
-
-    _crear_usuario(
-        db=db,
-        nombre="Administrador Candela",
-        correo="admin@candela.com",
-        telefono="3000000000",
-        contrasena=contrasena_admin,
-        rol="ADMIN",
-    )
-
-    _crear_usuario(
-        db=db,
-        nombre="Cliente de Prueba",
-        correo="cliente.prueba@candela.com",
-        telefono="3000000001",
-        contrasena=contrasena_asesores,
-        rol="CLIENTE",
-    )

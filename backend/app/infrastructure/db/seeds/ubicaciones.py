@@ -1,4 +1,3 @@
-
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -29,9 +28,7 @@ def seed_ubicaciones(db: Session) -> None:
 
     for codigo_departamento, municipios in MUNICIPIOS.items():
         for codigo, nombre in municipios:
-            municipio = db.scalar(
-                select(Municipio).where(Municipio.codigo == codigo)
-            )
+            municipio = db.scalar(select(Municipio).where(Municipio.codigo == codigo))
 
             if municipio is None:
                 db.add(

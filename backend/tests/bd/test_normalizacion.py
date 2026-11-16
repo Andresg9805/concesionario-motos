@@ -1,4 +1,3 @@
-
 import pytest
 from sqlalchemy import func, inspect, select
 from sqlalchemy.exc import IntegrityError
@@ -57,10 +56,7 @@ def contar(sesion, modelo):
 
 
 def columnas(sesion, tabla):
-    return {
-        columna["name"]
-        for columna in inspect(sesion.get_bind()).get_columns(tabla)
-    }
+    return {columna["name"] for columna in inspect(sesion.get_bind()).get_columns(tabla)}
 
 
 def test_la_carga_inicial_llena_el_catalogo(sesion):
@@ -78,18 +74,14 @@ def test_la_carga_inicial_llena_el_catalogo(sesion):
     assert contar(sesion, UsuarioORM) == contar(sesion, Persona)
 
     administradores = sesion.scalar(
-        select(func.count())
-        .select_from(UsuarioORM)
-        .where(UsuarioORM.rol == "ADMIN")
+        select(func.count()).select_from(UsuarioORM).where(UsuarioORM.rol == "ADMIN")
     )
     assert administradores == 1
 
     assert contar(sesion, ParametrosCosto) == 1
     assert contar(sesion, TarifaSoat) == 3
     assert contar(sesion, Departamento) == len(DEPARTAMENTOS)
-    assert contar(sesion, Municipio) == sum(
-        len(municipios) for municipios in MUNICIPIOS.values()
-    )
+    assert contar(sesion, Municipio) == sum(len(municipios) for municipios in MUNICIPIOS.values())
 
 
 def test_cargar_dos_veces_no_duplica_nada(sesion):
@@ -106,18 +98,14 @@ def test_cargar_dos_veces_no_duplica_nada(sesion):
     assert contar(sesion, ParametrosCosto) == 1
     assert contar(sesion, TarifaSoat) == 3
     assert contar(sesion, Departamento) == len(DEPARTAMENTOS)
-    assert contar(sesion, Municipio) == sum(
-        len(municipios) for municipios in MUNICIPIOS.values()
-    )
+    assert contar(sesion, Municipio) == sum(len(municipios) for municipios in MUNICIPIOS.values())
 
 
 def test_cada_tipo_de_moto_tiene_quince_motos(sesion):
     cargar_todo(sesion)
 
     filas = sesion.execute(
-        select(TipoMoto.clave, func.count(Moto.id))
-        .join(Moto.tipo)
-        .group_by(TipoMoto.clave)
+        select(TipoMoto.clave, func.count(Moto.id)).join(Moto.tipo).group_by(TipoMoto.clave)
     ).all()
 
     assert dict(filas) == {
@@ -167,19 +155,11 @@ def test_la_licencia_se_calcula_con_el_cilindraje(sesion):
 
     repositorio = RepositorioMotosSQLAlchemy(sesion)
 
-    a1 = repositorio.listar(
-        FiltrosMoto(categoria_licencia=CategoriaLicencia.A1)
-    )
-    a2 = repositorio.listar(
-        FiltrosMoto(categoria_licencia=CategoriaLicencia.A2)
-    )
+    a1 = repositorio.listar(FiltrosMoto(categoria_licencia=CategoriaLicencia.A1))
+    a2 = repositorio.listar(FiltrosMoto(categoria_licencia=CategoriaLicencia.A2))
 
-    assert [(m.modelo, m.categoria_licencia) for m in a1] == [
-        ("Navi", CategoriaLicencia.A1)
-    ]
-    assert [(m.modelo, m.categoria_licencia) for m in a2] == [
-        ("XR190L", CategoriaLicencia.A2)
-    ]
+    assert [(m.modelo, m.categoria_licencia) for m in a1] == [("Navi", CategoriaLicencia.A1)]
+    assert [(m.modelo, m.categoria_licencia) for m in a2] == [("XR190L", CategoriaLicencia.A2)]
 
 
 def test_un_cliente_que_luego_crea_cuenta_queda_como_una_sola_persona(sesion):
@@ -231,9 +211,7 @@ def test_un_cliente_que_luego_crea_cuenta_queda_como_una_sola_persona(sesion):
         ("accesorios", "categoria"),
     ],
 )
-def test_no_se_guardan_datos_que_se_calculan_o_se_repiten(
-    sesion, tabla, columna
-):
+def test_no_se_guardan_datos_que_se_calculan_o_se_repiten(sesion, tabla, columna):
     assert columna not in columnas(sesion, tabla)
 
 
@@ -257,7 +235,25 @@ def test_las_contrasenas_de_usuarios_estan_hasheadas(sesion):
     usuarios = sesion.scalars(select(UsuarioORM)).all()
 
     assert len(usuarios) == 8
-    assert all(
-        usuario.hash_contrasena.startswith("$2")
-        for usuario in usuarios
-    )
+    assert all(usuario.hash_contrasena.startswith("$2") for usuario in usuarios)
+
+
+def test_los_parametros_que_cambio_el_administrador_no_se_pierden_al_recargar(sesion):
+    cargar_todo(sesion)
+    parametros = sesion.scalar(select(ParametrosCosto))
+    parametros.precio_galon_cop = 18_000
+    sesion.flush()
+
+    cargar_todo(sesion)
+
+    assert sesion.scalar(select(ParametrosCosto)).precio_galon_cop == 18_000
+
+
+def test_sin_contrasenas_configuradas_no_se_crean_usuarios_ni_falla(sesion, monkeypatch):
+    monkeypatch.delenv("CONTRASENA_ASESORES_DEMO", raising=False)
+    monkeypatch.delenv("CONTRASENA_ADMIN_DEMO", raising=False)
+
+    cargar_todo(sesion)
+
+    assert contar(sesion, UsuarioORM) == 0
+    assert contar(sesion, Moto) == 60
