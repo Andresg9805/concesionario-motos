@@ -65,7 +65,5 @@ def test_el_administrador_accede_a_los_listados(cliente_http, admin):
 
 
 @pytest.mark.parametrize("ruta", ["/reportes/demanda", "/reportes/ventas"])
-def test_los_reportes_del_administrador_responden_501_hasta_integrar_duckdb(
-    cliente_http, admin, ruta
-):
-    assert cliente_http.get(ruta, headers=admin).status_code == 501
+def test_el_administrador_accede_a_los_reportes(cliente_http, admin, ruta):
+    assert cliente_http.get(ruta, headers=admin).status_code == 200

@@ -85,6 +85,41 @@ export interface PedidoAdminApi {
   envio: EnvioAdminApi | null;
 }
 
+export interface FilaRadarApi {
+  rango: string;
+  licencia: 'A1' | 'A2';
+  busquedas: number;
+  sin_resultados: number;
+  promedio_resultados: number;
+  motos_en_stock: number;
+}
+
+export interface RadarDemandaApi {
+  total_busquedas: number;
+  filas: FilaRadarApi[];
+}
+
+export interface VentaPorCategoriaApi {
+  categoria: string;
+  semana: string;
+  unidades: number;
+  ingresos_cop: number;
+}
+
+export interface AccesorioMasVendidoApi {
+  nombre: string;
+  unidades: number;
+  ingresos_cop: number;
+}
+
+export interface ReporteVentasApi {
+  pedidos: number;
+  ingresos_cop: number;
+  ticket_promedio_cop: number;
+  por_categoria_y_semana: VentaPorCategoriaApi[];
+  mas_vendidos: AccesorioMasVendidoApi[];
+}
+
 export type GrupoPedidos = 'despachar' | 'pendientes' | 'entregados' | 'todos';
 
 export function siguientePaso(estado: EstadoEnvio): { estado: EstadoEnvio; nombre: string } | null {
@@ -101,6 +136,10 @@ export function grupoDelPedido(pedido: PedidoAdminApi): Exclude<GrupoPedidos, 't
 
 export function licenciaPorCilindraje(cilindraje: number): 'A1' | 'A2' {
   return cilindraje <= 125 ? 'A1' : 'A2';
+}
+
+export function demandaSinAtender(fila: FilaRadarApi): boolean {
+  return fila.busquedas > 0 && fila.motos_en_stock <= 1;
 }
 
 export function detalleDelError(error: unknown, defecto: string): string {
@@ -170,5 +209,13 @@ export class AdminApiService {
 
   avanzarEnvio(envioId: number, estado: EstadoEnvio, nota: string): Observable<EnvioAdminApi> {
     return this.api.patch<EnvioAdminApi>(`/envios/${envioId}/estado`, { estado, nota });
+  }
+
+  radarDemanda(): Observable<RadarDemandaApi> {
+    return this.api.get<RadarDemandaApi>('/reportes/demanda');
+  }
+
+  reporteVentas(): Observable<ReporteVentasApi> {
+    return this.api.get<ReporteVentasApi>('/reportes/ventas');
   }
 }

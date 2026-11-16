@@ -1,5 +1,6 @@
 import {
   PedidoAdminApi,
+  demandaSinAtender,
   detalleDelError,
   grupoDelPedido,
   licenciaPorCilindraje,
@@ -47,5 +48,18 @@ describe('reglas del panel del administrador', () => {
     expect(detalleDelError(error, 'x')).toBe('Revisa el campo precio_cop: debe ser mayor que 0');
     expect(detalleDelError({ error: { detail: 'No existe' } }, 'x')).toBe('No existe');
     expect(detalleDelError(null, 'Falló')).toBe('Falló');
+  });
+
+  it('marca como demanda sin atender cuando hay búsquedas y casi no hay motos', () => {
+    const fila = {
+      rango: 'Menos de $300.000',
+      licencia: 'A2' as const,
+      busquedas: 10,
+      sin_resultados: 8,
+      promedio_resultados: 0.4,
+      motos_en_stock: 1,
+    };
+    expect(demandaSinAtender(fila)).toBe(true);
+    expect(demandaSinAtender({ ...fila, motos_en_stock: 6 })).toBe(false);
   });
 });

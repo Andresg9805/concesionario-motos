@@ -50,6 +50,7 @@ from app.application.pedidos import (
     ProcesarEventoPago,
     VerificarPago,
 )
+from app.application.reportes import GenerarRadarDemanda, GenerarReporteVentas
 from app.application.tienda import (
     CrearDireccion,
     ListarAccesorios,
@@ -69,6 +70,7 @@ from app.config import (
 from app.domain.atencion import Rol
 from app.domain.excepciones import TokenInvalidoError
 from app.domain.puertos import (
+    MotorReportes,
     PasarelaPago,
     ProveedorTasaCambio,
     RepositorioAccesorios,
@@ -137,6 +139,7 @@ from app.infrastructure.memoria.usuarios import (
     RepositorioClientesEnMemoria,
     RepositorioUsuariosEnMemoria,
 )
+from app.infrastructure.reportes.duckdb_reportes import MotorReportesDuckDB
 from app.infrastructure.seguridad.bcrypt_hasheador import HasheadorBcrypt
 from app.infrastructure.seguridad.jwt_emisor import EmisorTokensJWT
 
@@ -805,3 +808,24 @@ def obtener_avanzar_envio(
     reloj: Annotated[Reloj, Depends(obtener_reloj_atencion)],
 ) -> AvanzarEnvio:
     return AvanzarEnvio(envios, reloj)
+
+
+@lru_cache
+def obtener_motor_reportes() -> MotorReportes:
+    return MotorReportesDuckDB()
+
+
+def obtener_generar_radar_demanda(
+    busquedas: Annotated[RepositorioBusquedas, Depends(obtener_repositorio_busquedas)],
+    motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
+    parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
+    motor: Annotated[MotorReportes, Depends(obtener_motor_reportes)],
+) -> GenerarRadarDemanda:
+    return GenerarRadarDemanda(busquedas, motos, parametros, motor)
+
+
+def obtener_generar_reporte_ventas(
+    pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
+    motor: Annotated[MotorReportes, Depends(obtener_motor_reportes)],
+) -> GenerarReporteVentas:
+    return GenerarReporteVentas(pedidos, motor)

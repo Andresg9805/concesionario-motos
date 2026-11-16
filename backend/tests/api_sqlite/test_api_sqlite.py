@@ -146,3 +146,16 @@ def test_una_base_de_datos_vieja_se_actualiza_sola_al_arrancar(base_de_datos_vie
     assert _consultar(
         base_de_datos_vieja, "SELECT valor_matricula_cop, valor_tramites_cop FROM parametros_costo"
     ) == [(520_000, 380_000)]
+
+
+def test_el_radar_de_demanda_lee_las_busquedas_guardadas_en_sqlite(cliente_sqlite):
+    for cuota in (250_000, 1_200_000):
+        cliente_sqlite.get("/motos/por-cuota", params={"cuota_maxima_cop": cuota})
+
+    respuesta = cliente_sqlite.get("/reportes/demanda", headers=_cabeceras_admin(cliente_sqlite))
+
+    assert respuesta.status_code == 200, respuesta.text
+    cuerpo = respuesta.json()
+    assert cuerpo["total_busquedas"] == 2
+    assert {fila["rango"] for fila in cuerpo["filas"]} == {"Menos de $300.000", "$800.000 o más"}
+    assert any(fila["motos_en_stock"] > 0 for fila in cuerpo["filas"])

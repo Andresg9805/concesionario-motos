@@ -15,6 +15,7 @@ from app.domain.catalogo import (
 )
 from app.domain.costo_real import ParametrosCosto
 from app.domain.pagos_envios import Envio, Pago, ResultadoPago
+from app.domain.reportes import FilaRadar, ReporteVentas
 from app.domain.tienda import (
     Accesorio,
     CategoriaAccesorio,
@@ -239,3 +240,13 @@ class PasarelaPago(ABC):
 
     @abstractmethod
     def consultar_transaccion(self, transaccion_id: str) -> ResultadoPago: ...
+
+
+class MotorReportes(ABC):
+    @abstractmethod
+    def radar_demanda(
+        self, busquedas: list[Busqueda], motos: list[Moto], tasa_mensual: float
+    ) -> list[FilaRadar]: ...
+
+    @abstractmethod
+    def ventas_accesorios(self, pedidos: list[Pedido]) -> ReporteVentas: ...

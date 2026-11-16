@@ -27,7 +27,7 @@ const CATEGORIAS: Record<string, { texto: string; ilustracion: IlustracionAcceso
 
 export const ORDEN_CATEGORIAS = Object.values(CATEGORIAS).map((c) => c.texto);
 
-function textoCategoria(clave: string): string {
+export function textoCategoria(clave: string): string {
   const conocida = CATEGORIAS[clave];
   if (conocida) {
     return conocida.texto;
