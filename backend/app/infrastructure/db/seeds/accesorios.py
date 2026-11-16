@@ -4,6 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.infrastructure.models.accesorio import Accesorio
+from app.infrastructure.models.categoria_accesorio import CategoriaAccesorio
+from app.infrastructure.models.fabricante import Fabricante
 
 DESC_HON_MAN_001 = (
     "Lubricante de cadena oficial Pro Honda de alto rendimiento para transmisiones por cadena."
@@ -141,6 +143,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "HON-MAN-001",
         "nombre": "Lubricante de cadena Pro Honda",
+        "fabricante": "Honda",
         "categoria": "MANTENIMIENTO",
         "descripcion": DESC_HON_MAN_001,
         "precio_cop": 45000,
@@ -150,6 +153,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "HON-MAN-002",
         "nombre": "Litro Lubricante Pro Honda Moto 4T 10W-30 Semisintético",
+        "fabricante": "Honda",
         "categoria": "MANTENIMIENTO",
         "descripcion": DESC_HON_MAN_002,
         "precio_cop": 38000,
@@ -159,6 +163,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "HON-MAN-003",
         "nombre": "Litro Lubricante Pro Honda Moto 4T 10W-30 Full Sintético",
+        "fabricante": "Honda",
         "categoria": "MANTENIMIENTO",
         "descripcion": DESC_HON_MAN_003,
         "precio_cop": 62000,
@@ -168,6 +173,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "HON-MAN-004",
         "nombre": "Renovador de partes plásticas Pro Honda",
+        "fabricante": "Honda",
         "categoria": "MANTENIMIENTO",
         "descripcion": DESC_HON_MAN_004,
         "precio_cop": 32000,
@@ -177,6 +183,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "HON-MAN-005",
         "nombre": "Casco-fresh desinfectante cascos Pro Honda",
+        "fabricante": "Honda",
         "categoria": "MANTENIMIENTO",
         "descripcion": DESC_HON_MAN_005,
         "precio_cop": 28000,
@@ -185,7 +192,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-CHA-001",
-        "nombre": "SHOEI Chaqueta Softshell 2.0",
+        "nombre": "Chaqueta Softshell 2.0",
+        "fabricante": "SHOEI",
         "categoria": "CHAQUETA",
         "descripcion": DESC_SHO_CHA_001,
         "precio_cop": 480000,
@@ -194,7 +202,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "KAW-CHA-002",
-        "nombre": "Kawasaki Chaquetilla con cremallera Sports 2026",
+        "nombre": "Chaquetilla con cremallera Sports 2026",
+        "fabricante": "Kawasaki",
         "categoria": "CHAQUETA",
         "descripcion": DESC_KAW_CHA_002,
         "precio_cop": 520000,
@@ -203,7 +212,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "KAW-CHA-003",
-        "nombre": "Kawasaki Chaqueta softshell WSBK 2026",
+        "nombre": "Chaqueta softshell WSBK 2026",
+        "fabricante": "Kawasaki",
         "categoria": "CHAQUETA",
         "descripcion": DESC_KAW_CHA_003,
         "precio_cop": 650000,
@@ -212,7 +222,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "HON-CHA-004",
-        "nombre": "Honda CHAQUETA COACH ELSINORE",
+        "nombre": "Chaqueta Coach Elsinore",
+        "fabricante": "Honda",
         "categoria": "CHAQUETA",
         "descripcion": DESC_HON_CHA_004,
         "precio_cop": 450000,
@@ -221,7 +232,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "YAM-CHA-005",
-        "nombre": "Yamaha CORTAVIENTOS YAMAHA MULTI GRIS AZUL",
+        "nombre": "Cortavientos Multi gris azul",
+        "fabricante": "Yamaha",
         "categoria": "CHAQUETA",
         "descripcion": DESC_YAM_CHA_005,
         "precio_cop": 310000,
@@ -230,7 +242,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-CAS-001",
-        "nombre": "SHOEI X-Fifteen",
+        "nombre": "X-Fifteen",
+        "fabricante": "SHOEI",
         "categoria": "CASCO",
         "descripcion": DESC_SHO_CAS_001,
         "precio_cop": 3500000,
@@ -239,7 +252,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-CAS-002",
-        "nombre": "SHOEI RF-SR2",
+        "nombre": "RF-SR2",
+        "fabricante": "SHOEI",
         "categoria": "CASCO",
         "descripcion": DESC_SHO_CAS_002,
         "precio_cop": 2200000,
@@ -248,7 +262,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-CAS-003",
-        "nombre": "SHOEI RF-1500 LINE UP",
+        "nombre": "RF-1500 Line Up",
+        "fabricante": "SHOEI",
         "categoria": "CASCO",
         "descripcion": DESC_SHO_CAS_003,
         "precio_cop": 2400000,
@@ -257,7 +272,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-CAS-004",
-        "nombre": "SHOEI Neotec 3 Fragments",
+        "nombre": "Neotec 3 Fragments",
+        "fabricante": "SHOEI",
         "categoria": "CASCO",
         "descripcion": DESC_SHO_CAS_004,
         "precio_cop": 3100000,
@@ -266,7 +282,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-CAS-005",
-        "nombre": "SHOEI Hornet X2",
+        "nombre": "Hornet X2",
+        "fabricante": "SHOEI",
         "categoria": "CASCO",
         "descripcion": DESC_SHO_CAS_005,
         "precio_cop": 2800000,
@@ -275,7 +292,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "ALP-GUA-001",
-        "nombre": "alpinestars Guantes Techdura",
+        "nombre": "Guantes Techdura",
+        "fabricante": "Alpinestars",
         "categoria": "GUANTES",
         "descripcion": DESC_ALP_GUA_001,
         "precio_cop": 290000,
@@ -284,7 +302,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "ALP-GUA-002",
-        "nombre": "alpinestars Guantes Pro-Dura 2026",
+        "nombre": "Guantes Pro-Dura 2026",
+        "fabricante": "Alpinestars",
         "categoria": "GUANTES",
         "descripcion": DESC_ALP_GUA_002,
         "precio_cop": 340000,
@@ -294,6 +313,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "ALP-GUA-003",
         "nombre": "Full Bore V2 Gloves",
+        "fabricante": "Alpinestars",
         "categoria": "GUANTES",
         "descripcion": DESC_ALP_GUA_003,
         "precio_cop": 210000,
@@ -303,6 +323,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "ALP-GUA-004",
         "nombre": "Megawatt V2 Gloves",
+        "fabricante": "Alpinestars",
         "categoria": "GUANTES",
         "descripcion": DESC_ALP_GUA_004,
         "precio_cop": 260000,
@@ -312,6 +333,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "ALP-GUA-005",
         "nombre": "Full Bore XT Gloves",
+        "fabricante": "Alpinestars",
         "categoria": "GUANTES",
         "descripcion": DESC_ALP_GUA_005,
         "precio_cop": 240000,
@@ -320,7 +342,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "SHO-MAL-001",
-        "nombre": "SHOEI Mochila 2.0",
+        "nombre": "Mochila 2.0",
+        "fabricante": "SHOEI",
         "categoria": "MALETA",
         "descripcion": DESC_SHO_MAL_001,
         "precio_cop": 550000,
@@ -330,6 +353,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "GIV-MAL-002",
         "nombre": "Trekker Outback Evo Smart 42",
+        "fabricante": "GIVI",
         "categoria": "MALETA",
         "descripcion": DESC_GIV_MAL_002,
         "precio_cop": 2100000,
@@ -339,6 +363,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "GIV-MAL-003",
         "nombre": "B37 Blade",
+        "fabricante": "GIVI",
         "categoria": "MALETA",
         "descripcion": DESC_GIV_MAL_003,
         "precio_cop": 650000,
@@ -348,6 +373,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "GIV-MAL-004",
         "nombre": "Trekker Dolomiti DLM46",
+        "fabricante": "GIVI",
         "categoria": "MALETA",
         "descripcion": DESC_GIV_MAL_004,
         "precio_cop": 2300000,
@@ -357,6 +383,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "GIV-MAL-005",
         "nombre": "Trekker Alaska ALA44",
+        "fabricante": "GIVI",
         "categoria": "MALETA",
         "descripcion": DESC_GIV_MAL_005,
         "precio_cop": 2450000,
@@ -365,7 +392,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "ALP-ROD-001",
-        "nombre": "Protector De Rodilla Nucleon Morph STEALTH alpinestars",
+        "nombre": "Protector de rodilla Nucleon Morph Stealth",
+        "fabricante": "Alpinestars",
         "categoria": "RODILLERA",
         "descripcion": DESC_ALP_ROD_001,
         "precio_cop": 450000,
@@ -374,7 +402,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "ALP-ROD-002",
-        "nombre": "Protectores De Rodillas Nucleon Flex Pro alpinestars",
+        "nombre": "Protectores de rodillas Nucleon Flex Pro",
+        "fabricante": "Alpinestars",
         "categoria": "RODILLERA",
         "descripcion": DESC_ALP_ROD_002,
         "precio_cop": 380000,
@@ -383,7 +412,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "ALP-ROD-003",
-        "nombre": "Protectores De Rodillas Nucleon Flex Plus",
+        "nombre": "Protectores de rodillas Nucleon Flex Plus",
+        "fabricante": "Alpinestars",
         "categoria": "RODILLERA",
         "descripcion": DESC_ALP_ROD_003,
         "precio_cop": 320000,
@@ -393,6 +423,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "ALP-ROD-004",
         "nombre": "SX-1 Plasma Knee Protector",
+        "fabricante": "Alpinestars",
         "categoria": "RODILLERA",
         "descripcion": DESC_ALP_ROD_004,
         "precio_cop": 490000,
@@ -402,6 +433,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "ALP-ROD-005",
         "nombre": "Bionic Pro Plasma Knee Protectors",
+        "fabricante": "Alpinestars",
         "categoria": "RODILLERA",
         "descripcion": DESC_ALP_ROD_005,
         "precio_cop": 580000,
@@ -410,7 +442,8 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     },
     {
         "sku": "ALP-HOM-001",
-        "nombre": "Protectores De Hombros Nucleon Flex Pro alpinestars",
+        "nombre": "Protectores de hombros Nucleon Flex Pro",
+        "fabricante": "Alpinestars",
         "categoria": "HOMBRERA",
         "descripcion": DESC_ALP_HOM_001,
         "precio_cop": 210000,
@@ -420,6 +453,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "ALP-HOM-002",
         "nombre": "Nucleon Flex Plus Shoulder Protectors",
+        "fabricante": "Alpinestars",
         "categoria": "HOMBRERA",
         "descripcion": DESC_ALP_HOM_002,
         "precio_cop": 190000,
@@ -429,6 +463,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "SAS-HOM-003",
         "nombre": "SC-1/02",
+        "fabricante": "SAS-TEC",
         "categoria": "HOMBRERA",
         "descripcion": DESC_SAS_HOM_003,
         "precio_cop": 150000,
@@ -438,6 +473,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "SAS-HOM-004",
         "nombre": "SC-1/01",
+        "fabricante": "SAS-TEC",
         "categoria": "HOMBRERA",
         "descripcion": DESC_SAS_HOM_004,
         "precio_cop": 130000,
@@ -447,6 +483,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
     {
         "sku": "SAS-HOM-005",
         "nombre": "SC-1/03",
+        "fabricante": "SAS-TEC",
         "categoria": "HOMBRERA",
         "descripcion": DESC_SAS_HOM_005,
         "precio_cop": 170000,
@@ -457,8 +494,19 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
 
 
 def seed_accesorios(db: Session) -> None:
+    categorias = {c.clave: c.id for c in db.scalars(select(CategoriaAccesorio))}
+    fabricantes = {f.nombre: f.id for f in db.scalars(select(Fabricante))}
     for datos in ACCESORIOS_INICIALES:
-        accesorio_existente = db.scalar(select(Accesorio).where(Accesorio.sku == datos["sku"]))
-
-        if accesorio_existente is None:
-            db.add(Accesorio(**datos))
+        if db.scalar(select(Accesorio).where(Accesorio.sku == datos["sku"])) is None:
+            columnas = {
+                clave: valor
+                for clave, valor in datos.items()
+                if clave not in ("categoria", "fabricante")
+            }
+            db.add(
+                Accesorio(
+                    **columnas,
+                    categoria_id=categorias[datos["categoria"]],
+                    fabricante_id=fabricantes[datos["fabricante"]],
+                )
+            )

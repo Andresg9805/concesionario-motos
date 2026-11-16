@@ -1,58 +1,37 @@
-from typing import Any
-
 from app.domain.atencion import Rol, Usuario
-from app.domain.catalogo import CategoriaLicencia, Marca, Moto, TipoMoto
+from app.domain.catalogo import Marca, Moto, TipoMoto
 from app.domain.costo_real import ParametrosCosto, TarifaSoat
 from app.domain.tienda import Accesorio, CategoriaAccesorio
 from app.infrastructure.db.seeds.accesorios import ACCESORIOS_INICIALES
-from app.infrastructure.db.seeds.motos_honda import MOTOS_HONDA
-from app.infrastructure.db.seeds.motos_kawasaki import MOTOS_KAWASAKI
-from app.infrastructure.db.seeds.motos_yamaha import MOTOS_YAMAHA
-
-MOTOS_POR_MARCA: tuple[tuple[int, list[dict[str, Any]]], ...] = (
-    (1, MOTOS_HONDA),
-    (2, MOTOS_KAWASAKI),
-    (3, MOTOS_YAMAHA),
-)
+from app.infrastructure.db.seeds.marcas import MARCAS_INICIALES
+from app.infrastructure.db.seeds.motos import MOTOS_POR_MARCA
 
 
 def marcas_iniciales() -> list[Marca]:
     return [
         Marca(
-            id=1,
-            nombre="Honda",
-            color_hex="#CC0000",
-            descripcion="Motos confiables para ciudad, trabajo y aventura.",
-        ),
-        Marca(
-            id=2,
-            nombre="Kawasaki",
-            color_hex="#66CC33",
-            descripcion="Desempeño deportivo y naked de carácter.",
-        ),
-        Marca(
-            id=3,
-            nombre="Yamaha",
-            color_hex="#0033A0",
-            descripcion="Tecnología y versatilidad del trail a la pista.",
-        ),
+            id=indice,
+            nombre=datos["nombre"],
+            color_hex=datos["color_hex"],
+            descripcion=datos["descripcion"],
+        )
+        for indice, datos in enumerate(MARCAS_INICIALES, start=1)
     ]
 
 
 def motos_iniciales() -> list[Moto]:
-    marcas = {marca.id: marca for marca in marcas_iniciales()}
+    marcas = {marca.nombre: marca for marca in marcas_iniciales()}
     motos: list[Moto] = []
-    for marca_id, lista in MOTOS_POR_MARCA:
+    for nombre_marca, lista in MOTOS_POR_MARCA:
         for datos in lista:
             motos.append(
                 Moto(
                     id=len(motos) + 1,
-                    marca=marcas[marca_id],
+                    marca=marcas[nombre_marca],
                     modelo=datos["modelo"],
                     anio=datos["anio"],
                     cilindraje_cc=datos["cilindraje_cc"],
                     tipo=TipoMoto(datos["tipo"]),
-                    categoria_licencia=CategoriaLicencia(datos["categoria_licencia"]),
                     precio_cop=datos["precio_cop"],
                     stock=datos["stock"],
                     consumo_km_galon=datos["consumo_km_galon"],
@@ -102,19 +81,31 @@ def asesores_iniciales(hash_contrasena: str) -> list[Usuario]:
     ]
 
 
+CORREO_ADMIN = "admin@candela.com"
+
+
+def administrador_inicial(hash_contrasena: str) -> Usuario:
+    return Usuario(
+        nombre="Administrador Candela",
+        correo=CORREO_ADMIN,
+        telefono="3000000000",
+        hash_contrasena=hash_contrasena,
+        rol=Rol.ADMIN,
+    )
+
+
 def accesorios_iniciales() -> list[Accesorio]:
-    motos = motos_iniciales()
     return [
         Accesorio(
             id=indice,
             sku=datos["sku"],
             nombre=datos["nombre"],
             categoria=CategoriaAccesorio(datos["categoria"]),
+            fabricante=datos["fabricante"],
             descripcion=datos["descripcion"],
             precio_cop=datos["precio_cop"],
             stock=datos["stock"],
             imagen_url=datos["imagen_url"],
-            motos_compatibles=list(motos),
         )
         for indice, datos in enumerate(ACCESORIOS_INICIALES, start=1)
     ]

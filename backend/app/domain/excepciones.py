@@ -74,3 +74,7 @@ class PasarelaNoDisponibleError(DominioError):
 
 class EventoIgnoradoError(DominioError):
     pass
+
+
+class TasaNoDisponibleError(DominioError):
+    pass

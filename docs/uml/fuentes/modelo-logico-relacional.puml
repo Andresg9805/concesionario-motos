@@ -4,26 +4,33 @@ skinparam linetype ortho
 entity "marcas" {
   + id : int [PK]
   --
-  nombre : varchar
-  color_hex : char(7)
+  nombre : varchar [UNIQUE]
+  color_hex : varchar(7)
   descripcion : text
+}
+
+entity "tipos_moto" {
+  + id : int [PK]
+  --
+  clave : varchar(20) [UNIQUE]
+  nombre : varchar [UNIQUE]
 }
 
 entity "motos" {
   + id : int [PK]
   --
   # marca_id : int [FK]
+  # tipo_id : int [FK]
   modelo : varchar
   anio : smallint
   cilindraje_cc : int
-  tipo : enum("naked", "deportiva", "trail", "doble_proposito")
-  categoria_licencia : enum("A1", "A2")
   precio_cop : int
   stock : int
   consumo_km_galon : float
   costo_mantenimiento_km_cop : int
   descripcion : text
   imagen_url : varchar
+  .. UNIQUE(marca_id, modelo, anio) ..
 }
 
 entity "parametros_costo" {
@@ -48,30 +55,31 @@ entity "busquedas" {
   fecha : datetime
   cuota_maxima_cop : int
   cuota_inicial_cop : int
-  categoria_licencia : enum("A1", "A2")
   uso : enum("ciudad", "carretera", "trabajo")
   # marca_id : int [FK, nullable]
   cantidad_resultados : int
 }
 
-entity "usuarios" {
+entity "personas" {
   + id : int [PK]
   --
   nombre : varchar
   correo : varchar [UNIQUE]
-  telefono : varchar
-  hash_contrasena : varchar
-  rol : enum("cliente", "asesor", "admin")
-  # marca_especialidad_id : int [FK, nullable]
+  telefono : varchar(20)
 }
 
-entity "clientes" {
+entity "usuarios" {
   + id : int [PK]
   --
-  nombre : varchar
-  correo : varchar
-  telefono : varchar
-  # usuario_id : int [FK, nullable]
+  # persona_id : int [FK, UNIQUE]
+  hash_contrasena : varchar
+  rol : enum("cliente", "asesor", "admin")
+}
+
+entity "asesores" {
+  + usuario_id : int [PK, FK]
+  --
+  # marca_id : int [FK]
 }
 
 entity "cotizaciones" {
@@ -86,7 +94,6 @@ entity "cotizaciones" {
   cuota_inicial_cop : int
   plazo_meses : smallint
   tasa_mensual : decimal(7,4)
-  cuota_mensual_cop : int
   estado_atencion : enum("nuevo", "contactado", "test_drive", "negociando", "vendido", "descartado")
 }
 
@@ -98,8 +105,21 @@ entity "test_drives" {
   # moto_id : int [FK]
   # asesor_id : int [FK]
   fecha_solicitud : datetime
-  fecha_programada : datetime
+  fecha_programada : datetime [nullable]
   estado : enum("pendiente", "programado", "realizado", "cancelado")
+}
+
+entity "fabricantes" {
+  + id : int [PK]
+  --
+  nombre : varchar [UNIQUE]
+}
+
+entity "categorias_accesorio" {
+  + id : int [PK]
+  --
+  clave : varchar(20) [UNIQUE]
+  nombre : varchar [UNIQUE]
 }
 
 entity "accesorios" {
@@ -107,16 +127,12 @@ entity "accesorios" {
   --
   sku : varchar [UNIQUE]
   nombre : varchar
-  categoria : enum("casco", "chaqueta", "guantes", "rodillera", "hombrera", "maleta", "mantenimiento")
+  # categoria_id : int [FK]
+  # fabricante_id : int [FK]
   descripcion : text
   precio_cop : int
   stock : int
   imagen_url : varchar
-}
-
-entity "compatibilidades" {
-  + accesorio_id : int [PK, FK]
-  + moto_id : int [PK, FK]
 }
 
 entity "departamentos" {
@@ -139,8 +155,8 @@ entity "direcciones" {
   --
   # usuario_id : int [FK]
   # municipio_codigo : char(5) [FK]
-  detalle : text
   telefono_contacto : varchar(20)
+  detalle : text
 }
 
 entity "pedidos" {
@@ -149,9 +165,7 @@ entity "pedidos" {
   # usuario_id : int [FK]
   # direccion_id : int [FK]
   estado : enum("pendiente_pago", "pagado", "expirado")
-  subtotal_cop : int
   costo_envio_cop : int
-  total_cop : int
   creado_en : datetime
   reservado_hasta : datetime
 }
@@ -192,8 +206,6 @@ entity "envios" {
   --
   # pedido_id : int [FK, UNIQUE]
   numero_guia : varchar [UNIQUE]
-  costo_cop : int
-  estado : enum("preparando", "enviado", "en_camino", "entregado")
   creado_en : datetime
 }
 
@@ -209,23 +221,26 @@ entity "eventos_envio" {
 ' Relaciones
 
 marcas ||--o{ motos
+tipos_moto ||--o{ motos
 marcas |o--o{ busquedas
-marcas |o--o{ usuarios
+marcas ||--o{ asesores
+
+personas ||--o| usuarios
+usuarios ||--o| asesores
 
 motos ||--o{ cotizaciones
 motos ||--o{ test_drives
-motos ||--{ compatibilidades
-accesorios ||--{ compatibilidades
-accesorios ||--|{ items_pedido
+personas ||--o{ cotizaciones
+personas ||--o{ test_drives
+asesores ||--o{ cotizaciones
+asesores ||--o{ test_drives
 
-clientes ||--o{ cotizaciones
-clientes ||--o{ test_drives
-usuarios ||--o{ cotizaciones
-usuarios ||--o{ test_drives
+fabricantes ||--o{ accesorios
+categorias_accesorio ||--o{ accesorios
+accesorios ||--o{ items_pedido
 
 usuarios ||--o{ direcciones
 usuarios ||--o{ pedidos
-usuarios ||--o| clientes
 
 departamentos ||--o{ municipios
 municipios ||--o{ direcciones

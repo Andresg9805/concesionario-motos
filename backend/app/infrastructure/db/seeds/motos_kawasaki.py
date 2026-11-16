@@ -1,11 +1,5 @@
 from typing import Any
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from app.infrastructure.models.marca import Marca
-from app.infrastructure.models.moto import Moto
-
 DESC_Z125 = (
     "La puerta de entrada perfecta al universo Supernaked de Kawasaki, "
     "con chasis ligero, suspensión trasera Uni Trak y diseño agresivo."
@@ -120,7 +114,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 125,
         "tipo": "NAKED",
-        "categoria_licencia": "A1",
         "precio_cop": 16990000,
         "stock": 5,
         "consumo_km_galon": 130.0,
@@ -133,7 +126,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 451,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 28990000,
         "stock": 4,
         "consumo_km_galon": 95.0,
@@ -146,7 +138,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 948,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 52990000,
         "stock": 3,
         "consumo_km_galon": 55.0,
@@ -159,7 +150,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 948,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 61990000,
         "stock": 2,
         "consumo_km_galon": 54.0,
@@ -172,7 +162,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "NAKED",
-        "categoria_licencia": "A2",
         "precio_cop": 115000000,
         "stock": 1,
         "consumo_km_galon": 38.0,
@@ -185,7 +174,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 245000000,
         "stock": 1,
         "consumo_km_galon": 30.0,
@@ -198,7 +186,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 155000000,
         "stock": 2,
         "consumo_km_galon": 35.0,
@@ -211,7 +198,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 168000000,
         "stock": 1,
         "consumo_km_galon": 35.0,
@@ -224,7 +210,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 998,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 135000000,
         "stock": 2,
         "consumo_km_galon": 42.0,
@@ -237,7 +222,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 1099,
         "tipo": "DEPORTIVA",
-        "categoria_licencia": "A2",
         "precio_cop": 74990000,
         "stock": 3,
         "consumo_km_galon": 50.0,
@@ -250,7 +234,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 1099,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 82990000,
         "stock": 2,
         "consumo_km_galon": 48.0,
@@ -263,7 +246,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 900,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 64990000,
         "stock": 3,
         "consumo_km_galon": 55.0,
@@ -276,7 +258,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 649,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 42990000,
         "stock": 4,
         "consumo_km_galon": 75.0,
@@ -289,7 +270,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 649,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 46990000,
         "stock": 3,
         "consumo_km_galon": 70.0,
@@ -302,7 +282,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 451,
         "tipo": "TRAIL",
-        "categoria_licencia": "A2",
         "precio_cop": 35990000,
         "stock": 5,
         "consumo_km_galon": 92.0,
@@ -315,7 +294,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 292,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 31990000,
         "stock": 3,
         "consumo_km_galon": 90.0,
@@ -328,7 +306,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 233,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 23990000,
         "stock": 5,
         "consumo_km_galon": 110.0,
@@ -341,7 +318,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 144,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 14990000,
         "stock": 4,
         "consumo_km_galon": 100.0,
@@ -354,7 +330,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 233,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 28500000,
         "stock": 3,
         "consumo_km_galon": 100.0,
@@ -367,7 +342,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "anio": 2027,
         "cilindraje_cc": 292,
         "tipo": "DOBLE_PROPOSITO",
-        "categoria_licencia": "A2",
         "precio_cop": 40090000,
         "stock": 2,
         "consumo_km_galon": 90.0,
@@ -376,18 +350,3 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "imagen_url": "",
     },
 ]
-
-
-def seed_motos_kawasaki(db: Session) -> None:
-    marca = db.scalar(select(Marca).where(Marca.nombre.ilike("Kawasaki")))
-    if marca is None:
-        return
-    for datos in MOTOS_KAWASAKI:
-        moto_existente = db.scalar(
-            select(Moto).where(
-                Moto.marca_id == marca.id,
-                Moto.modelo.ilike(datos["modelo"]),
-            )
-        )
-        if moto_existente is None:
-            db.add(Moto(**datos, marca_id=marca.id))

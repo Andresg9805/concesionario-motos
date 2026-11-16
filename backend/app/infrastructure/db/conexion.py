@@ -1,9 +1,16 @@
 import os
+from pathlib import Path
 
 from sqlalchemy import create_engine, event
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./concesionario.db")
+
+if DATABASE_URL.startswith("sqlite"):
+    ruta_base_datos = make_url(DATABASE_URL).database
+    if ruta_base_datos and ruta_base_datos != ":memory:":
+        Path(ruta_base_datos).parent.mkdir(parents=True, exist_ok=True)
 
 engine = create_engine(
     DATABASE_URL,
