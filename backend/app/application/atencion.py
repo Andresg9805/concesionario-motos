@@ -11,6 +11,7 @@ from app.domain.atencion import (
     validar_codigo,
 )
 from app.domain.catalogo import Moto, PlanCredito
+from app.domain.estructuras.cola_test_drives import ColaTestDrives
 from app.domain.excepciones import EntidadNoEncontradaError, PermisoDenegadoError
 from app.domain.puertos import (
     RepositorioClientes,
@@ -205,12 +206,19 @@ class CambiarEstadoCotizacion:
         return self._cotizaciones.guardar(cotizacion)
 
 
+def cola_del_asesor(test_drives: RepositorioTestDrives, asesor_id: int) -> ColaTestDrives:
+    cola = ColaTestDrives()
+    for test_drive in test_drives.listar_pendientes(asesor_id):
+        cola.encolar(test_drive)
+    return cola
+
+
 class ListarColaTestDrives:
     def __init__(self, test_drives: RepositorioTestDrives) -> None:
         self._test_drives = test_drives
 
     def ejecutar(self, asesor_id: int) -> list[TestDrive]:
-        return self._test_drives.listar_pendientes(asesor_id)
+        return list(cola_del_asesor(self._test_drives, asesor_id))
 
 
 class AtenderSiguienteTestDrive:
@@ -218,10 +226,10 @@ class AtenderSiguienteTestDrive:
         self._test_drives = test_drives
 
     def ejecutar(self, asesor_id: int, fecha: datetime) -> TestDrive:
-        cola = self._test_drives.listar_pendientes(asesor_id)
-        if not cola:
+        cola = cola_del_asesor(self._test_drives, asesor_id)
+        if cola.esta_vacia():
             raise EntidadNoEncontradaError("No tienes test drives pendientes")
-        siguiente = cola[0]
+        siguiente = cola.desencolar()
         siguiente.programar(fecha)
         return self._test_drives.guardar(siguiente)
 

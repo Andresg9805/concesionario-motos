@@ -35,3 +35,7 @@ Esto permite mantener independientes los turnos de cada asesor.
 | `encolar()` | O(1) promedio | Busca la cola en el diccionario y agrega el nodo. |
 | `siguiente()` | O(1) promedio | Busca la cola y retira el primer elemento. |
 | `pendientes()` | O(1) promedio | Busca la cola y consulta su contador. |
+
+### Dónde se usa
+
+Los casos de uso del asesor (`ListarColaTestDrives` y `AtenderSiguienteTestDrive`, en `app/application/atencion.py`) arman la `ColaTestDrives` del asesor con sus test drives pendientes, en orden de llegada. "Programar siguiente" en el panel del asesor hace `desencolar()`, así siempre se atiende primero al cliente que lleva más tiempo esperando.
