@@ -81,6 +81,19 @@ def asesores_iniciales(hash_contrasena: str) -> list[Usuario]:
     ]
 
 
+CORREO_ADMIN = "admin@candela.com"
+
+
+def administrador_inicial(hash_contrasena: str) -> Usuario:
+    return Usuario(
+        nombre="Administrador Candela",
+        correo=CORREO_ADMIN,
+        telefono="3000000000",
+        hash_contrasena=hash_contrasena,
+        rol=Rol.ADMIN,
+    )
+
+
 def accesorios_iniciales() -> list[Accesorio]:
     return [
         Accesorio(
