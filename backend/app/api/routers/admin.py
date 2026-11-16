@@ -12,6 +12,7 @@ from app.api.dependencias import (
     obtener_crear_moto,
     obtener_eliminar_accesorio,
     obtener_eliminar_moto,
+    obtener_listar_motos,
     obtener_listar_pedidos_admin,
     obtener_obtener_parametros,
     requerir_rol,
@@ -20,6 +21,7 @@ from app.api.schemas.admin import (
     AccesorioEntrada,
     EnvioAdminSalida,
     EnvioEstadoEntrada,
+    MotoAdminSalida,
     MotoEntrada,
     ParametrosEntrada,
     ParametrosSalida,
@@ -39,8 +41,10 @@ from app.application.admin import (
     ListarPedidosAdmin,
     ObtenerParametros,
 )
+from app.application.motos import ListarMotos
 from app.domain.atencion import Rol
 from app.domain.excepciones import EntidadNoEncontradaError, TransicionInvalidaError
+from app.domain.puertos import FiltrosMoto
 
 router = APIRouter(tags=["Administración"], dependencies=[Depends(requerir_rol(Rol.ADMIN))])
 
@@ -76,6 +80,13 @@ def con_asociaciones() -> HTTPException:
 def invalido(error: ValueError | TransicionInvalidaError) -> HTTPException:
     detalle = error.mensaje if isinstance(error, TransicionInvalidaError) else str(error)
     return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=detalle)
+
+
+@router.get("/admin/motos", response_model=list[MotoAdminSalida], responses=RESPUESTAS_ADMIN)
+def listar_motos_admin(
+    caso_de_uso: Annotated[ListarMotos, Depends(obtener_listar_motos)],
+) -> list[MotoAdminSalida]:
+    return [MotoAdminSalida.desde_moto(moto) for moto in caso_de_uso.ejecutar(FiltrosMoto())]
 
 
 @router.post(

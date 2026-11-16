@@ -18,17 +18,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [soloRol('ADMIN')],
-    loadComponent: () =>
-      import('./paginas/panel/panel-provisional').then((m) => m.PanelProvisional),
+    loadComponent: () => import('./paginas/admin/panel-admin').then((m) => m.PanelAdmin),
     title: 'Administración | Candela Motors',
-    data: {
-      titulo: 'Administración',
-      historias: [
-        'Gestión de envíos (HU-11)',
-        'Motos, accesorios y parámetros de costo (HU-12)',
-        'Radar de demanda (HU-13)',
-      ],
-    },
   },
   {
     path: 'cuenta',
