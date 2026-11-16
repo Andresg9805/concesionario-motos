@@ -132,10 +132,10 @@ Un pedido puede tener varios intentos de pago (si el primero es rechazado). Cuan
 | `accesorios` | id, sku, nombre, categoria_id, fabricante_id, descripcion, precio_cop, stock, imagen_url |
 | `departamentos` | codigo, nombre, costo_envio_cop, dias_envio |
 | `municipios` | codigo, nombre, departamento_codigo |
-| `direcciones` | id, usuario_id, municipio_codigo, detalle, telefono_contacto |
+| `direcciones` | id, usuario_id, municipio_codigo, nombre_recibe, detalle, telefono_contacto |
 | `pedidos` | id, usuario_id, direccion_id, estado, costo_envio_cop, creado_en, reservado_hasta |
 | `items_pedido` | id, pedido_id, accesorio_id, cantidad, precio_unitario_cop |
-| `pagos` | id, pedido_id, referencia, transaccion_id, metodo, estado, monto_cop, creado_en, actualizado_en |
+| `pagos` | id, pedido_id, referencia, transaccion_id (vacío hasta que Wompi responde), metodo, estado, monto_cop, creado_en, actualizado_en |
 | `eventos_pago` | id, pago_id, checksum (único), estado_recibido, recibido_en |
 | `envios` | id, pedido_id, numero_guia, creado_en |
 | `eventos_envio` | id, envio_id, estado, fecha, nota |
