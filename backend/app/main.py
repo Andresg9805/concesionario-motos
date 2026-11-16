@@ -23,16 +23,13 @@ from app.api.routers import (
     ubicaciones,
 )
 from app.api.tareas import ciclo_expirar_reservas
-from app.infrastructure.db.base import Base
-from app.infrastructure.db.conexion import engine
-from app.infrastructure.db.inicializacion import ejecutar_seeds
+from app.infrastructure.db.inicializacion import preparar_base_de_datos
 
 
 @asynccontextmanager
 async def ciclo_de_vida(_: FastAPI) -> AsyncIterator[None]:
     if USA_SQLITE:
-        Base.metadata.create_all(engine)
-        ejecutar_seeds()
+        preparar_base_de_datos()
     tarea = asyncio.create_task(ciclo_expirar_reservas(crear_expirar_reservas))
     try:
         yield

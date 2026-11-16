@@ -22,6 +22,10 @@ class Busqueda(Base):
     cuota_maxima_cop: Mapped[int] = mapped_column(Integer, nullable=False)
     cuota_inicial_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
+    categoria_licencia: Mapped[str] = mapped_column(
+        Enum("A1", "A2", name="licencia_busqueda"),
+        nullable=False,
+    )
     uso: Mapped[str] = mapped_column(
         Enum("CIUDAD", "CARRETERA", "TRABAJO", name="uso_busqueda"),
         nullable=False,

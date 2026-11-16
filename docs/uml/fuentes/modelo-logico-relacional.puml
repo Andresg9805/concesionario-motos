@@ -38,6 +38,9 @@ entity "parametros_costo" {
   --
   precio_galon_cop : int
   porcentaje_impuesto : decimal(5,2)
+  valor_matricula_cop : int
+  valor_tramites_cop : int
+  tasa_mensual : decimal(6,4)
   actualizado_en : datetime
 }
 
@@ -55,6 +58,7 @@ entity "busquedas" {
   fecha : datetime
   cuota_maxima_cop : int
   cuota_inicial_cop : int
+  categoria_licencia : enum("A1", "A2")
   uso : enum("ciudad", "carretera", "trabajo")
   # marca_id : int [FK, nullable]
   cantidad_resultados : int
