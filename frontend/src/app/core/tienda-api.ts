@@ -113,7 +113,7 @@ export class TiendaApiService {
 
   crearPedido(
     direccion: DatosDireccion,
-    items: { accesorio_id: string; cantidad: number }[],
+    items: { accesorio_id: number | string; cantidad: number }[],
   ): Observable<PedidoCreado> {
     return this.api
       .post<{ id: number }>('/mis-direcciones', direccion)

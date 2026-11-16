@@ -25,6 +25,6 @@ describe('App', () => {
     const enlaces = Array.from(html.querySelectorAll('nav[aria-label="Principal"] a')).map((a) =>
       a.textContent?.trim(),
     );
-    expect(enlaces).toEqual(['Inicio', 'Marcas', 'Catálogo', 'Accesorios', 'Cotizar']);
+    expect(enlaces).toEqual(['Inicio', 'Marcas', 'Catálogo', 'Cotizar', 'Tienda']);
   });
 });
