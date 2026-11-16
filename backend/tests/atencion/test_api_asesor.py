@@ -106,15 +106,22 @@ def test_cambio_de_estado_con_datos_malos(cliente_http, token_de, cotizacion_id,
 
 def test_la_cola_de_test_drives_va_en_orden_de_llegada(cliente_http, token_de):
     primero = cliente_http.post("/test-drives", json=TEST_DRIVE).json()
-    segundo = cliente_http.post(
-        "/test-drives", json={**TEST_DRIVE, "correo": "luis@correo.com"}
-    ).json()
+    segundo = cliente_http.post("/test-drives", json=TEST_DRIVE).json()
+    tercero = cliente_http.post("/test-drives", json=TEST_DRIVE).json()
+
     cliente_http.post("/test-drives", json={**TEST_DRIVE, "moto_id": MOTO_KAWASAKI})
 
-    cola = cliente_http.get("/asesor/test-drives", headers=token_de(LAURA)).json()
+    cola_laura = cliente_http.get("/asesor/test-drives", headers=token_de(LAURA)).json()
+    cola_sofia = cliente_http.get(
+        "/asesor/test-drives", headers=token_de("sofia.gomez@candela.com")
+    ).json()
 
-    assert [t["codigo"] for t in cola] == [primero["codigo"], segundo["codigo"]]
-    assert all(t["estado"] == "PENDIENTE" for t in cola)
+    assert [t["codigo"] for t in cola_laura] == [
+        primero["codigo"],
+        tercero["codigo"],
+    ]
+    assert [t["codigo"] for t in cola_sofia] == [segundo["codigo"]]
+    assert all(t["estado"] == "PENDIENTE" for t in cola_laura + cola_sofia)
 
 
 def test_atender_el_siguiente_lo_programa_y_sale_de_la_cola(cliente_http, token_de):
@@ -132,8 +139,15 @@ def test_atender_el_siguiente_lo_programa_y_sale_de_la_cola(cliente_http, token_
     assert cuerpo["codigo"] == primero["codigo"]
     assert cuerpo["estado"] == "PROGRAMADO"
     assert cuerpo["fecha_programada"] == "2026-11-15T10:00:00-05:00"
-    cola = cliente_http.get("/asesor/test-drives", headers=token_de(LAURA)).json()
-    assert [t["codigo"] for t in cola] == [segundo["codigo"]]
+
+    cola_laura = cliente_http.get("/asesor/test-drives", headers=token_de(LAURA)).json()
+    cola_sofia = cliente_http.get(
+        "/asesor/test-drives",
+        headers=token_de("sofia.gomez@candela.com"),
+    ).json()
+
+    assert cola_laura == []
+    assert [t["codigo"] for t in cola_sofia] == [segundo["codigo"]]
 
 
 def test_atender_con_la_cola_vacia_responde_404(cliente_http, token_de):

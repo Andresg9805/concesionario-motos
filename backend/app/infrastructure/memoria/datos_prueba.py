@@ -61,8 +61,11 @@ def parametros_iniciales() -> ParametrosCosto:
 
 ASESORES: tuple[tuple[int, str, str, str], ...] = (
     (1, "Laura Ruiz", "laura.ruiz@candela.com", "3001112233"),
-    (2, "Camilo Torres", "camilo.torres@candela.com", "3002223344"),
+    (1, "Sofía Gómez", "sofia.gomez@candela.com", "3004445566"),
+    (2, "Santiago Mejía", "santiago.mejia@candela.com", "3002223344"),
+    (2, "Andrés Velasco", "andres.velasco@candela.com", "3005556677"),
     (3, "Daniela Pardo", "daniela.pardo@candela.com", "3003334455"),
+    (3, "Camilo Torres", "camilo.torres@candela.com", "3001112234"),
 )
 
 
