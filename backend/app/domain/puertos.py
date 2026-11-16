@@ -193,6 +193,9 @@ class RepositorioPedidos(ABC):
     def listar_por_usuario(self, usuario_id: int) -> list[Pedido]: ...
 
     @abstractmethod
+    def listar(self) -> list[Pedido]: ...
+
+    @abstractmethod
     def listar_vencidos(self, ahora: datetime) -> list[Pedido]: ...
 
 
@@ -213,6 +216,9 @@ class RepositorioPagos(ABC):
 class RepositorioEnvios(ABC):
     @abstractmethod
     def guardar(self, envio: Envio) -> Envio: ...
+
+    @abstractmethod
+    def buscar_por_id(self, id: int) -> Envio | None: ...
 
     @abstractmethod
     def buscar_por_pedido(self, pedido_id: int) -> Envio | None: ...

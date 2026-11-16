@@ -53,6 +53,10 @@ class RepositorioPedidosEnMemoria(RepositorioPedidos):
         with self._candado:
             return [pedido for pedido in self._pedidos.values() if pedido.usuario.id == usuario_id]
 
+    def listar(self) -> list[Pedido]:
+        with self._candado:
+            return list(self._pedidos.values())
+
     def listar_vencidos(self, ahora: datetime) -> list[Pedido]:
         with self._candado:
             return [pedido for pedido in self._pedidos.values() if pedido.reserva_vencida(ahora)]
@@ -103,6 +107,10 @@ class RepositorioEnviosEnMemoria(RepositorioEnvios):
                 envio.id = next(self._ids)
             self._envios[envio.id] = envio
             return envio
+
+    def buscar_por_id(self, id: int) -> Envio | None:
+        with self._candado:
+            return self._envios.get(id)
 
     def buscar_por_pedido(self, pedido_id: int) -> Envio | None:
         with self._candado:
