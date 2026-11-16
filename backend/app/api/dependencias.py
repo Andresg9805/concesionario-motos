@@ -414,6 +414,14 @@ def obtener_expirar_reservas(
     return ExpirarReservas(pedidos, accesorios, reloj)
 
 
+def crear_expirar_reservas() -> ExpirarReservas:
+    return obtener_expirar_reservas(
+        obtener_repositorio_pedidos(),
+        obtener_repositorio_accesorios(),
+        obtener_reloj_atencion(),
+    )
+
+
 def obtener_confirmar_pago(
     pagos: Annotated[RepositorioPagos, Depends(obtener_repositorio_pagos)],
     pedidos: Annotated[RepositorioPedidos, Depends(obtener_repositorio_pedidos)],
