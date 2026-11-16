@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CarritoService } from '../core/carrito.service';
+import { CatalogoService } from '../core/catalogo.service';
 import { INICIO_POR_ROL, NOMBRE_ROL, SesionService } from '../core/sesion.service';
 import { TemaService } from '../core/tema.service';
 import { UiService } from '../core/ui.service';
@@ -72,9 +73,9 @@ import { Icono } from '../shared/icono';
       </a>
 
       <nav class="ml-auto hidden items-center gap-1 lg:flex" aria-label="Principal">
-        @for (enlace of enlaces; track enlace.fragmento) {
+        @for (enlace of enlaces; track enlace.texto) {
           <a
-            routerLink="/"
+            [routerLink]="enlace.ruta"
             [fragment]="enlace.fragmento"
             class="rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface2 hover:text-fg"
             >{{ enlace.texto }}</a
@@ -171,9 +172,9 @@ import { Icono } from '../shared/icono';
         aria-label="Principal móvil"
       >
         <div class="mx-auto grid max-w-7xl grid-cols-2 gap-1 sm:grid-cols-5">
-          @for (enlace of enlaces; track enlace.fragmento) {
+          @for (enlace of enlaces; track enlace.texto) {
             <a
-              routerLink="/"
+              [routerLink]="enlace.ruta"
               [fragment]="enlace.fragmento"
               class="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-surface2"
               (click)="menuAbierto.set(false)"
@@ -190,6 +191,10 @@ export class Encabezado {
   protected readonly ui = inject(UiService);
   protected readonly sesion = inject(SesionService);
   protected readonly carrito = inject(CarritoService);
+
+  constructor() {
+    inject(CatalogoService).cargarAccesorios();
+  }
   protected readonly tema = inject(TemaService);
   private readonly router = inject(Router);
   protected readonly menuAbierto = signal(false);
@@ -198,11 +203,11 @@ export class Encabezado {
   protected readonly iconoMenu = computed(() => (this.menuAbierto() ? 'x' : 'menu'));
 
   protected readonly enlaces = [
-    { fragmento: 'inicio', texto: 'Inicio' },
-    { fragmento: 'marcas', texto: 'Marcas' },
-    { fragmento: 'catalogo', texto: 'Catálogo' },
-    { fragmento: 'accesorios', texto: 'Accesorios' },
-    { fragmento: 'cotizar', texto: 'Cotizar' },
+    { ruta: '/', fragmento: 'inicio', texto: 'Inicio' },
+    { ruta: '/', fragmento: 'marcas', texto: 'Marcas' },
+    { ruta: '/', fragmento: 'catalogo', texto: 'Catálogo' },
+    { ruta: '/', fragmento: 'cotizar', texto: 'Cotizar' },
+    { ruta: '/tienda', fragmento: undefined, texto: 'Tienda' },
   ];
 
   protected iniciales(nombre: string): string {
