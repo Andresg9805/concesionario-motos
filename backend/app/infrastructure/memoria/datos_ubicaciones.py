@@ -71,8 +71,7 @@ MUNICIPIOS: dict[str, tuple[tuple[str, str], ...]] = {
     "54": (("54001", "Cúcuta"), ("54498", "Ocaña"), ("54518", "Pamplona")),
     "63": (("63001", "Armenia"), ("63130", "Calarcá"), ("63401", "La Tebaida")),
     "66": (("66001", "Pereira"), ("66170", "Dosquebradas"), ("66682", "Santa Rosa de Cabal")),
-    "68": (("68001", "Bucaramanga"),("68276", "Floridablanca"),("68307", "Girón"),("68861", "Vélez")
-           ),
+    "68": (("68001", "Bucaramanga"), ("68276", "Floridablanca"), ("68861", "Vélez")),
     "70": (("70001", "Sincelejo"), ("70215", "Corozal"), ("70708", "San Marcos")),
     "73": (("73001", "Ibagué"), ("73268", "Espinal"), ("73449", "Melgar")),
     "76": (("76001", "Cali"), ("76109", "Buenaventura"), ("76520", "Palmira")),

@@ -3,7 +3,6 @@ import os
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.infrastructure.memoria.datos_prueba import ASESORES
 from app.infrastructure.models.asesor import Asesor
 from app.infrastructure.models.marca import Marca
 from app.infrastructure.models.persona import Persona
@@ -30,9 +29,7 @@ def _crear_usuario(
         db.add(persona)
         db.flush()
 
-    usuario = db.scalar(
-        select(Usuario).where(Usuario.persona_id == persona.id)
-    )
+    usuario = db.scalar(select(Usuario).where(Usuario.persona_id == persona.id))
 
     if usuario is None:
         usuario = Usuario(
@@ -47,6 +44,8 @@ def _crear_usuario(
 
 
 def seed_usuarios(db: Session) -> None:
+    from app.infrastructure.memoria.datos_prueba import ASESORES
+
     contrasena_asesores = os.environ.get("CONTRASENA_ASESORES_DEMO")
     contrasena_admin = os.environ.get("CONTRASENA_ADMIN_DEMO")
 

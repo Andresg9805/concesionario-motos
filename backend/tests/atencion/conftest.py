@@ -9,7 +9,6 @@ from fastapi.testclient import TestClient
 
 from app.api import dependencias
 from app.application.atencion import ZONA_COLOMBIA
-from app.domain.atencion import Rol, Usuario
 from app.infrastructure.memoria.atencion import (
     RepositorioCotizacionesEnMemoria,
     RepositorioTestDrivesEnMemoria,
@@ -18,7 +17,7 @@ from app.infrastructure.memoria.catalogo import (
     RepositorioMotosEnMemoria,
     RepositorioParametrosEnMemoria,
 )
-from app.infrastructure.memoria.datos_prueba import asesores_iniciales, marcas_iniciales
+from app.infrastructure.memoria.datos_prueba import asesores_iniciales
 from app.infrastructure.memoria.usuarios import (
     RepositorioClientesEnMemoria,
     RepositorioUsuariosEnMemoria,
@@ -94,13 +93,4 @@ def token_de(usuarios, emisor):
 
 @pytest.fixture
 def segunda_asesora_honda(usuarios):
-    return usuarios.guardar(
-        Usuario(
-            nombre="Sofía Gómez",
-            correo="sofia.gomez@candela.com",
-            telefono="3004445566",
-            hash_contrasena="hash",
-            rol=Rol.ASESOR,
-            marca_especialidad=marcas_iniciales()[0],
-        )
-    )
+    return usuarios.buscar_por_correo("sofia.gomez@candela.com")
