@@ -115,13 +115,11 @@ import { Icono } from '../shared/icono';
           </a>
         }
         @if (sesion.usuario(); as usuario) {
-          @if (usuario.rol !== 'CLIENTE') {
-            <a
-              [routerLink]="inicioPorRol[usuario.rol]"
-              class="hidden h-10 items-center rounded-md border border-line px-3 text-sm font-medium hover:bg-surface2 sm:inline-flex"
-              >{{ usuario.rol === 'ASESOR' ? 'Mi panel' : 'Administración' }}</a
-            >
-          }
+          <a
+            [routerLink]="usuario.rol === 'CLIENTE' ? '/cuenta' : inicioPorRol[usuario.rol]"
+            class="hidden h-10 items-center rounded-md border border-line px-3 text-sm font-medium hover:bg-surface2 sm:inline-flex"
+            >{{ textoPanel[usuario.rol] }}</a
+          >
           <span class="flex items-center gap-2 rounded-md border border-line py-1 pr-1 pl-1">
             <span
               class="grid h-8 w-8 place-items-center rounded bg-accentsoft font-mono text-xs font-semibold text-accenttext"
@@ -181,6 +179,14 @@ import { Icono } from '../shared/icono';
               >{{ enlace.texto }}</a
             >
           }
+          @if (sesion.usuario(); as usuario) {
+            <a
+              [routerLink]="usuario.rol === 'CLIENTE' ? '/cuenta' : inicioPorRol[usuario.rol]"
+              class="rounded-md px-3 py-2.5 text-sm font-bold hover:bg-surface2"
+              (click)="menuAbierto.set(false)"
+              >{{ textoPanel[usuario.rol] }}</a
+            >
+          }
         </div>
       </nav>
     }
@@ -200,6 +206,11 @@ export class Encabezado {
   protected readonly menuAbierto = signal(false);
   protected readonly nombreRol = NOMBRE_ROL;
   protected readonly inicioPorRol = INICIO_POR_ROL;
+  protected readonly textoPanel = {
+    CLIENTE: 'Mi cuenta',
+    ASESOR: 'Mi panel',
+    ADMIN: 'Administración',
+  };
   protected readonly iconoMenu = computed(() => (this.menuAbierto() ? 'x' : 'menu'));
 
   protected readonly enlaces = [

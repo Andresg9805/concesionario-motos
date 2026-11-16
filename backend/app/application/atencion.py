@@ -66,14 +66,19 @@ class AsignacionAtencion:
         return moto
 
     def cliente(self, contacto: DatosContacto) -> Cliente:
+        usuario = self._usuarios.buscar_por_correo(contacto.correo)
         existente = self._clientes.buscar_por_correo(contacto.correo)
         if existente is not None:
+            if existente.usuario is None and usuario is not None:
+                existente.usuario = usuario
+                return self._clientes.guardar(existente)
             return existente
         return self._clientes.guardar(
             Cliente(
                 nombre=contacto.nombre.strip(),
                 correo=contacto.correo,
                 telefono=contacto.celular,
+                usuario=usuario,
             )
         )
 
@@ -219,3 +224,11 @@ class AtenderSiguienteTestDrive:
         siguiente = cola[0]
         siguiente.programar(fecha)
         return self._test_drives.guardar(siguiente)
+
+
+class ListarMisCotizaciones:
+    def __init__(self, cotizaciones: RepositorioCotizaciones) -> None:
+        self._cotizaciones = cotizaciones
+
+    def ejecutar(self, usuario_id: int) -> list[Cotizacion]:
+        return self._cotizaciones.listar_por_usuario(usuario_id)
