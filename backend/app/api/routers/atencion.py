@@ -4,22 +4,27 @@ from fastapi import APIRouter, Depends, HTTPException, Path, status
 
 from app.api.dependencias import (
     obtener_consultar_seguimiento,
+    obtener_listar_mis_cotizaciones,
     obtener_solicitar_cotizacion,
     obtener_solicitar_test_drive,
+    requerir_rol,
 )
 from app.api.schemas.atencion import AtencionSalida, CotizacionEntrada, TestDriveEntrada
 from app.application.atencion import (
     ConsultarSeguimiento,
     DatosContacto,
+    ListarMisCotizaciones,
     SolicitarCotizacion,
     SolicitarTestDrive,
 )
+from app.domain.atencion import Rol
 from app.domain.excepciones import (
     CreditoInvalidoError,
     DominioError,
     EntidadNoEncontradaError,
     SinAsesorDisponibleError,
 )
+from app.domain.seguridad import DatosToken
 
 router = APIRouter(tags=["Atención personalizada"])
 
@@ -93,3 +98,14 @@ def consultar_seguimiento(
     except EntidadNoEncontradaError as error:
         raise _error_http(error) from error
     return AtencionSalida.desde_dominio(atencion)
+
+
+@router.get("/mis-cotizaciones", response_model=list[AtencionSalida])
+def listar_mis_cotizaciones(
+    sesion: Annotated[DatosToken, Depends(requerir_rol(Rol.CLIENTE))],
+    caso_de_uso: Annotated[ListarMisCotizaciones, Depends(obtener_listar_mis_cotizaciones)],
+) -> list[AtencionSalida]:
+    return [
+        AtencionSalida.desde_dominio(cotizacion)
+        for cotizacion in caso_de_uso.ejecutar(sesion.usuario_id)
+    ]

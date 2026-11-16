@@ -27,6 +27,7 @@ from app.application.atencion import (
     ConsultarSeguimiento,
     ListarAtencionesAsesor,
     ListarColaTestDrives,
+    ListarMisCotizaciones,
     Reloj,
     SolicitarCotizacion,
     SolicitarTestDrive,
@@ -431,6 +432,12 @@ def obtener_cambiar_estado_cotizacion(
     cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
 ) -> CambiarEstadoCotizacion:
     return CambiarEstadoCotizacion(cotizaciones)
+
+
+def obtener_listar_mis_cotizaciones(
+    cotizaciones: Annotated[RepositorioCotizaciones, Depends(obtener_repositorio_cotizaciones)],
+) -> ListarMisCotizaciones:
+    return ListarMisCotizaciones(cotizaciones)
 
 
 def obtener_listar_cola_test_drives(

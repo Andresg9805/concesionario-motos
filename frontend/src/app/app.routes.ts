@@ -31,6 +31,12 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cuenta',
+    canActivate: [soloRol('CLIENTE')],
+    loadComponent: () => import('./paginas/cuenta/cuenta').then((m) => m.Cuenta),
+    title: 'Mi cuenta | Candela Motors',
+  },
+  {
     path: 'tienda',
     loadComponent: () => import('./paginas/tienda/tienda').then((m) => m.Tienda),
     title: 'Tienda del motociclista | Candela Motors',
