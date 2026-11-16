@@ -29,11 +29,7 @@ class Pedido(Base):
         Enum("PENDIENTE_PAGO", "PAGADO", "EXPIRADO", name="estado_pedido"), nullable=False
     )
 
-    subtotal_cop: Mapped[int] = mapped_column(Integer, nullable=False)
-
     costo_envio_cop: Mapped[int] = mapped_column(Integer, nullable=False)
-
-    total_cop: Mapped[int] = mapped_column(Integer, nullable=False)
 
     creado_en: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 

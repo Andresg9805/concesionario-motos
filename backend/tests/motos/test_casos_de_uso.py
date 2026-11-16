@@ -28,14 +28,15 @@ def consulta(**cambios):
     return ConsultaPorCuota(**datos)
 
 
-def test_datos_de_prueba_tienen_22_motos_de_las_tres_marcas(motos):
+def test_datos_de_prueba_tienen_60_motos_de_las_tres_marcas(motos):
     catalogo = motos.listar(FiltrosMoto())
-    assert len(catalogo) == 22
+    assert len(catalogo) == 60
     assert Counter(moto.marca.nombre for moto in catalogo) == {
-        "Honda": 8,
-        "Kawasaki": 7,
-        "Yamaha": 7,
+        "Honda": 20,
+        "Kawasaki": 20,
+        "Yamaha": 20,
     }
+    assert Counter(moto.tipo for moto in catalogo) == {tipo: 15 for tipo in TipoMoto}
     assert {moto.tipo for moto in catalogo} == set(TipoMoto)
 
 
@@ -82,7 +83,7 @@ def test_por_cuota_con_licencia_a1_excluye_motos_de_mas_de_125_cc(buscar_por_cuo
 
 def test_por_cuota_filtra_por_marca(buscar_por_cuota):
     resultado = buscar_por_cuota.ejecutar(consulta(cuota_maxima_cop=3_000_000, marca_id=3))
-    assert len(resultado.motos) == 7
+    assert len(resultado.motos) == 18
     assert {item.moto.marca.nombre for item in resultado.motos} == {"Yamaha"}
 
 
@@ -116,7 +117,7 @@ def test_por_cuota_apila_la_simulacion_por_sesion(buscar_por_cuota, simulaciones
 def test_costo_real_suma_adquisicion_y_costo_mensual(motos, parametros):
     resultado = CalcularCostoReal(motos, parametros).ejecutar(
         ConsultaCostoReal(
-            moto_id=14,
+            moto_id=15,
             km_mes=800,
             uso=UsoMoto.CIUDAD,
             cuota_inicial_cop=5_000_000,
@@ -125,16 +126,16 @@ def test_costo_real_suma_adquisicion_y_costo_mensual(motos, parametros):
     )
     datos = parametros.obtener()
     adquisicion = resultado.adquisicion
-    assert resultado.moto.modelo == "Ninja 400"
+    assert resultado.moto.modelo == "NX500"
     assert adquisicion.precio_lista_cop == 35_990_000
     assert adquisicion.matricula_cop == datos.valor_matricula_cop
     assert adquisicion.tramites_cop == datos.valor_tramites_cop
-    assert adquisicion.soat_cop == datos.soat_anual(399)
+    assert adquisicion.soat_cop == datos.soat_anual(471)
     assert adquisicion.impuesto_cop == round(35_990_000 * datos.porcentaje_impuesto / 100)
     assert adquisicion.total() == (
         35_990_000
         + datos.valor_matricula_cop
-        + datos.soat_anual(399)
+        + datos.soat_anual(471)
         + adquisicion.impuesto_cop
         + datos.valor_tramites_cop
     )
@@ -145,7 +146,7 @@ def test_costo_real_suma_adquisicion_y_costo_mensual(motos, parametros):
 def test_costo_real_moto_a1_no_paga_impuesto(motos, parametros):
     resultado = CalcularCostoReal(motos, parametros).ejecutar(
         ConsultaCostoReal(
-            moto_id=1, km_mes=600, uso=UsoMoto.TRABAJO, cuota_inicial_cop=0, plazo_meses=36
+            moto_id=56, km_mes=600, uso=UsoMoto.TRABAJO, cuota_inicial_cop=0, plazo_meses=36
         )
     )
     assert resultado.adquisicion.impuesto_cop == 0

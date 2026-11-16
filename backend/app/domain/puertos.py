@@ -145,9 +145,7 @@ class ProveedorTasaCambio(ABC):
 
 class RepositorioAccesorios(ABC):
     @abstractmethod
-    def listar(
-        self, categoria: CategoriaAccesorio | None = None, moto_id: int | None = None
-    ) -> list[Accesorio]: ...
+    def listar(self, categoria: CategoriaAccesorio | None = None) -> list[Accesorio]: ...
 
     @abstractmethod
     def buscar_por_id(self, id: int) -> Accesorio | None: ...

@@ -3,7 +3,7 @@ classDiagram
 
     class RepositorioAccesorios {
         <<interface>>
-        +listar(categoria: CategoriaAccesorio, moto_id: int) list~Accesorio~
+        +listar(categoria: CategoriaAccesorio) list~Accesorio~
         +buscar_por_id(id: int) Accesorio
         +guardar(accesorio: Accesorio) Accesorio
         +eliminar(id: int) None

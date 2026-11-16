@@ -16,12 +16,8 @@ class ListarAccesorios:
     def __init__(self, accesorios: RepositorioAccesorios) -> None:
         self._accesorios = accesorios
 
-    def ejecutar(
-        self, categoria: CategoriaAccesorio | None = None, moto_id: int | None = None
-    ) -> list[Accesorio]:
-        return sorted(
-            self._accesorios.listar(categoria, moto_id), key=lambda accesorio: accesorio.id or 0
-        )
+    def ejecutar(self, categoria: CategoriaAccesorio | None = None) -> list[Accesorio]:
+        return sorted(self._accesorios.listar(categoria), key=lambda accesorio: accesorio.id or 0)
 
 
 class ObtenerAccesorio:

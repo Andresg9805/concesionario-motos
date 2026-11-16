@@ -12,6 +12,7 @@ class AccesorioSalida(BaseModel):
     sku: str
     nombre: str
     categoria: CategoriaAccesorio
+    fabricante: str
     descripcion: str
     precio_cop: int
     stock: int
@@ -24,6 +25,7 @@ class AccesorioSalida(BaseModel):
             sku=accesorio.sku,
             nombre=accesorio.nombre,
             categoria=accesorio.categoria,
+            fabricante=accesorio.fabricante,
             descripcion=accesorio.descripcion,
             precio_cop=accesorio.precio_cop,
             stock=accesorio.stock,

@@ -27,6 +27,7 @@ from app.infrastructure.memoria.tienda import (
 from app.infrastructure.memoria.usuarios import RepositorioUsuariosEnMemoria
 from app.infrastructure.seguridad.jwt_emisor import EmisorTokensJWT
 from app.main import app
+from tests.datos_accesorios import accesorios_de_prueba
 from tests.tienda.conftest import DIRECCION
 
 ZONA = timezone(timedelta(hours=-5), "COT")
@@ -144,7 +145,7 @@ def transporte():
 
 @pytest.fixture
 def accesorios():
-    return RepositorioAccesoriosEnMemoria()
+    return RepositorioAccesoriosEnMemoria(accesorios_de_prueba())
 
 
 @pytest.fixture

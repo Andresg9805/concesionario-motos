@@ -17,7 +17,7 @@ def test_crear_cotizacion_asigna_asesor_de_la_marca_y_codigo(cliente_http, clien
     assert respuesta.status_code == 201
     cuerpo = respuesta.json()
     cuota = PlanCredito(
-        precio_cop=12_890_000, cuota_inicial_cop=1_289_000, plazo_meses=36, tasa_mensual=0.0179
+        precio_cop=12_990_000, cuota_inicial_cop=1_289_000, plazo_meses=36, tasa_mensual=0.0179
     ).cuota_mensual()
     assert cuerpo == {
         "codigo": cuerpo["codigo"],
@@ -25,8 +25,8 @@ def test_crear_cotizacion_asigna_asesor_de_la_marca_y_codigo(cliente_http, clien
         "estado": "NUEVO",
         "creada_en": "2026-11-13T20:00:00-05:00",
         "moto": {
-            "id": 3,
-            "modelo": "CB190R",
+            "id": 20,
+            "modelo": "XR190L",
             "marca": {"id": 1, "nombre": "Honda", "clave": "honda", "color_hex": "#CC0000"},
         },
         "asesor": {"nombre": "Laura Ruiz", "whatsapp": "3001112233"},
