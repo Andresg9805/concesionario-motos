@@ -25,7 +25,7 @@ from app.application.motos import (
     CalcularCostoReal,
     ListarMarcas,
     ListarMotos,
-    ObtenerMoto,
+    ObtenerDetalleMoto,
 )
 from app.application.pedidos import (
     ConfirmarPago,
@@ -209,6 +209,11 @@ def obtener_repositorio_simulaciones() -> RepositorioSimulaciones:
     return RepositorioSimulacionesEnMemoria()
 
 
+@lru_cache
+def obtener_proveedor_trm() -> ProveedorTasaCambio:
+    return ProveedorTasaCambioDatosGov(url_trm_configurada())
+
+
 def obtener_listar_marcas(
     marcas: Annotated[RepositorioMarcas, Depends(obtener_repositorio_marcas)],
 ) -> ListarMarcas:
@@ -221,10 +226,11 @@ def obtener_listar_motos(
     return ListarMotos(motos)
 
 
-def obtener_obtener_moto(
+def obtener_detalle_moto(
     motos: Annotated[RepositorioMotos, Depends(obtener_repositorio_motos)],
-) -> ObtenerMoto:
-    return ObtenerMoto(motos)
+    tasa_cambio: Annotated[ProveedorTasaCambio, Depends(obtener_proveedor_trm)],
+) -> ObtenerDetalleMoto:
+    return ObtenerDetalleMoto(motos, tasa_cambio)
 
 
 def obtener_buscar_por_cuota(
@@ -241,11 +247,6 @@ def obtener_calcular_costo_real(
     parametros: Annotated[RepositorioParametros, Depends(obtener_repositorio_parametros)],
 ) -> CalcularCostoReal:
     return CalcularCostoReal(motos, parametros)
-
-
-@lru_cache
-def obtener_proveedor_trm() -> ProveedorTasaCambio:
-    return ProveedorTasaCambioDatosGov(url_trm_configurada())
 
 
 @lru_cache
