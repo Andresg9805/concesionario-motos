@@ -59,3 +59,16 @@ def test_eliminar_moto(cliente_http, admin):
     assert cliente_http.delete(f"/admin/motos/{creada['id']}", headers=admin).status_code == 204
     assert cliente_http.get(f"/motos/{creada['id']}").status_code == 404
     assert cliente_http.delete(f"/admin/motos/{creada['id']}", headers=admin).status_code == 404
+
+
+def test_listar_motos_del_administrador_incluye_el_stock(cliente_http, admin):
+    respuesta = cliente_http.get("/admin/motos", headers=admin)
+
+    assert respuesta.status_code == 200
+    motos = respuesta.json()
+    assert len(motos) == 60
+    assert all("stock" in moto for moto in motos)
+
+
+def test_listar_motos_del_administrador_requiere_sesion(cliente_http):
+    assert cliente_http.get("/admin/motos").status_code == 401

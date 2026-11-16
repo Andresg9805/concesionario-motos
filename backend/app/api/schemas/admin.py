@@ -3,10 +3,11 @@ from datetime import datetime
 from pydantic import BaseModel, Field, model_validator
 
 from app.api.schemas.auth import EntradaEstricta
+from app.api.schemas.motos import MotoDetalleSalida
 from app.api.schemas.pedidos import EventoEnvioSalida, ItemPedidoSalida
 from app.application.admin import DatosAccesorio, DatosMoto, DatosParametros, DatosTarifaSoat
 from app.application.pedidos import VistaPedido
-from app.domain.catalogo import TipoMoto
+from app.domain.catalogo import Moto, TipoMoto
 from app.domain.costo_real import ParametrosCosto, TarifaSoat
 from app.domain.pagos_envios import Envio, EstadoEnvio, EstadoPago
 from app.domain.tienda import CategoriaAccesorio, EstadoPedido
@@ -158,3 +159,12 @@ class PedidoAdminSalida(BaseModel):
             items=[ItemPedidoSalida.desde_dominio(item) for item in pedido.items],
             envio=EnvioAdminSalida.desde_dominio(vista.envio) if vista.envio else None,
         )
+
+
+class MotoAdminSalida(MotoDetalleSalida):
+    stock: int
+
+    @classmethod
+    def desde_moto(cls, moto: Moto) -> "MotoAdminSalida":
+        detalle = MotoDetalleSalida.desde_dominio(moto)
+        return cls(**detalle.model_dump(), stock=moto.stock)
