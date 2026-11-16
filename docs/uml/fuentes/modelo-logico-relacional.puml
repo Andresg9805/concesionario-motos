@@ -155,6 +155,7 @@ entity "direcciones" {
   --
   # usuario_id : int [FK]
   # municipio_codigo : char(5) [FK]
+  nombre_recibe : varchar
   telefono_contacto : varchar(20)
   detalle : text
 }
@@ -184,7 +185,7 @@ entity "pagos" {
   --
   # pedido_id : int [FK]
   referencia : varchar [UNIQUE]
-  transaccion_id : varchar
+  transaccion_id : varchar [nullable]
   metodo : enum("tarjeta", "nequi", "pse")
   estado : enum("pendiente", "aprobado", "rechazado", "error")
   monto_cop : int

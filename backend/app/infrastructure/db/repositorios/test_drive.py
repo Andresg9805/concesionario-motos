@@ -5,6 +5,8 @@ from app.domain.atencion import EstadoTestDrive, TestDrive
 from app.domain.puertos import RepositorioTestDrives
 from app.infrastructure.db.repositorios.conversiones import (
     cliente_a_dominio,
+    fecha_a_bd,
+    fecha_desde_bd,
     moto_a_dominio,
     usuario_a_dominio,
 )
@@ -23,8 +25,10 @@ def _a_dominio(modelo: TestDriveModelo) -> TestDrive:
         cliente=cliente_a_dominio(modelo.cliente),
         moto=moto_a_dominio(modelo.moto),
         asesor=usuario_a_dominio(modelo.asesor.usuario),
-        fecha_solicitud=modelo.fecha_solicitud,
-        fecha_programada=modelo.fecha_programada,
+        fecha_solicitud=fecha_desde_bd(modelo.fecha_solicitud),
+        fecha_programada=(
+            None if modelo.fecha_programada is None else fecha_desde_bd(modelo.fecha_programada)
+        ),
         estado=EstadoTestDrive(modelo.estado),
     )
 
@@ -66,8 +70,10 @@ class RepositorioTestDrivesSQLAlchemy(RepositorioTestDrives):
         modelo.cliente_id = cliente.id
         modelo.moto_id = moto.id
         modelo.asesor_id = asesor.usuario_id
-        modelo.fecha_solicitud = test_drive.fecha_solicitud
-        modelo.fecha_programada = test_drive.fecha_programada
+        modelo.fecha_solicitud = fecha_a_bd(test_drive.fecha_solicitud)
+        modelo.fecha_programada = (
+            None if test_drive.fecha_programada is None else fecha_a_bd(test_drive.fecha_programada)
+        )
         modelo.estado = test_drive.estado.value
 
         self.sesion.flush()
