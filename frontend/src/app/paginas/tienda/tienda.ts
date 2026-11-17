@@ -79,22 +79,24 @@ type Filtro = 'Todos' | CategoriaAccesorio;
       <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         @for (accesorio of lista(); track accesorio.id) {
           <article
-            class="tarjeta-hover flex flex-col overflow-hidden rounded-lg border border-line bg-bg"
+            class="tarjeta-hover group flex flex-col overflow-hidden rounded-lg border border-line bg-bg"
           >
             <div
-              class="relative aspect-[4/3] max-w-full bg-surface2 p-8"
+              class="relative aspect-[4/3] max-w-full overflow-hidden bg-surface2"
               style="color: color-mix(in srgb, var(--fg) 88%, var(--bg))"
             >
               @if (accesorio.imagen) {
                 <img
                   [src]="accesorio.imagen"
                   [alt]="accesorio.nombre"
-                  class="h-full w-full object-contain"
+                  class="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
                   loading="lazy"
                   decoding="async"
                 />
               } @else {
-                <app-ilustracion-accesorio [tipo]="accesorio.ilustracion" />
+                <div class="h-full w-full p-8">
+                  <app-ilustracion-accesorio [tipo]="accesorio.ilustracion" />
+                </div>
               }
               <span
                 class="absolute top-3 left-3 rounded bg-surface px-2 py-0.5 text-[11px] font-bold text-muted"

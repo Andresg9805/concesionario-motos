@@ -38,12 +38,15 @@ import { IlustracionAccesorio } from '../../shared/ilustracion-accesorio';
               <li
                 class="grid grid-cols-[72px_1fr] gap-4 rounded-lg border border-line bg-surface p-3 sm:grid-cols-[96px_1fr_auto]"
               >
-                <div class="grid aspect-square place-items-center rounded-md bg-surface2 p-2">
+                <div
+                  class="grid aspect-square place-items-center overflow-hidden rounded-md bg-surface2"
+                  [class.p-2]="!linea.accesorio.imagen"
+                >
                   @if (linea.accesorio.imagen) {
                     <img
                       [src]="linea.accesorio.imagen"
                       [alt]="linea.accesorio.nombre"
-                      class="h-full w-full object-contain"
+                      class="h-full w-full object-cover"
                     />
                   } @else {
                     <app-ilustracion-accesorio [tipo]="linea.accesorio.ilustracion" />
