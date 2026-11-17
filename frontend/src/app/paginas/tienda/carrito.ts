@@ -39,7 +39,15 @@ import { IlustracionAccesorio } from '../../shared/ilustracion-accesorio';
                 class="grid grid-cols-[72px_1fr] gap-4 rounded-lg border border-line bg-surface p-3 sm:grid-cols-[96px_1fr_auto]"
               >
                 <div class="grid aspect-square place-items-center rounded-md bg-surface2 p-2">
-                  <app-ilustracion-accesorio [tipo]="linea.accesorio.ilustracion" />
+                  @if (linea.accesorio.imagen) {
+                    <img
+                      [src]="linea.accesorio.imagen"
+                      [alt]="linea.accesorio.nombre"
+                      class="h-full w-full object-contain"
+                    />
+                  } @else {
+                    <app-ilustracion-accesorio [tipo]="linea.accesorio.ilustracion" />
+                  }
                 </div>
                 <div class="min-w-0">
                   <p class="text-xs text-muted">

@@ -75,7 +75,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 120.0,
         "costo_mantenimiento_km_cop": 40,
         "descripcion": DESC_FZ150,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/fz150-v3-0.webp",
     },
     {
         "modelo": "FZ25 ABS",
@@ -87,7 +87,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 95.0,
         "costo_mantenimiento_km_cop": 55,
         "descripcion": DESC_FZ25,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/fz25-abs.webp",
     },
     {
         "modelo": "MT-15",
@@ -99,7 +99,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 115.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_MT15,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/mt-15.webp",
     },
     {
         "modelo": "MT-03",
@@ -111,7 +111,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 80.0,
         "costo_mantenimiento_km_cop": 70,
         "descripcion": DESC_MT03,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/mt-03.webp",
     },
     {
         "modelo": "MT-09",
@@ -123,7 +123,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 52.0,
         "costo_mantenimiento_km_cop": 120,
         "descripcion": DESC_MT09,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/mt-09.webp",
     },
     {
         "modelo": "R15 V4",
@@ -135,7 +135,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 115.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_R15,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/r15-v4.webp",
     },
     {
         "modelo": "R3",
@@ -147,7 +147,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 75.0,
         "costo_mantenimiento_km_cop": 75,
         "descripcion": DESC_R3,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/r3.webp",
     },
     {
         "modelo": "R7",
@@ -159,7 +159,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 58.0,
         "costo_mantenimiento_km_cop": 125,
         "descripcion": DESC_R7,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/r7.webp",
     },
     {
         "modelo": "YZF-R9",
@@ -171,7 +171,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 50.0,
         "costo_mantenimiento_km_cop": 160,
         "descripcion": DESC_R9,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/yzf-r9.webp",
     },
     {
         "modelo": "YZF-R1",
@@ -183,7 +183,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 38.0,
         "costo_mantenimiento_km_cop": 250,
         "descripcion": DESC_R1,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/yzf-r1.webp",
     },
     {
         "modelo": "TÉNÉRÉ 700",
@@ -195,7 +195,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 60.0,
         "costo_mantenimiento_km_cop": 110,
         "descripcion": DESC_TENERE,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/tenere-700.webp",
     },
     {
         "modelo": "SUPER TÉNÉRÉ 1200 ZE",
@@ -207,7 +207,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 45.0,
         "costo_mantenimiento_km_cop": 180,
         "descripcion": DESC_SUPER_TENERE,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/super-tenere-1200-ze.webp",
     },
     {
         "modelo": "WR250F",
@@ -219,7 +219,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 55.0,
         "costo_mantenimiento_km_cop": 130,
         "descripcion": DESC_WR250F,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/wr250f.webp",
     },
     {
         "modelo": "WR450F",
@@ -231,7 +231,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 48.0,
         "costo_mantenimiento_km_cop": 160,
         "descripcion": DESC_WR450F,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/wr450f.webp",
     },
     {
         "modelo": "XT250",
@@ -243,7 +243,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 90.0,
         "costo_mantenimiento_km_cop": 65,
         "descripcion": DESC_XT250,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/xt250.webp",
     },
     {
         "modelo": "XTZ 125",
@@ -255,7 +255,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 125.0,
         "costo_mantenimiento_km_cop": 35,
         "descripcion": DESC_XTZ125,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/xtz-125.webp",
     },
     {
         "modelo": "XTZ 150",
@@ -267,7 +267,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 115.0,
         "costo_mantenimiento_km_cop": 42,
         "descripcion": DESC_XTZ150,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/xtz-150.webp",
     },
     {
         "modelo": "XTZ 250",
@@ -279,7 +279,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 90.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_XTZ250,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/xtz-250.webp",
     },
     {
         "modelo": "WR125R",
@@ -291,7 +291,7 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 120.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_WR125R,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/wr125r.webp",
     },
     {
         "modelo": "WR250R",
@@ -303,6 +303,6 @@ MOTOS_YAMAHA: list[dict[str, Any]] = [
         "consumo_km_galon": 85.0,
         "costo_mantenimiento_km_cop": 70,
         "descripcion": DESC_WR250R,
-        "imagen_url": "",
+        "imagen_url": "/motos/yamaha/wr250r.webp",
     },
 ]

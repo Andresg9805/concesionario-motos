@@ -10,9 +10,10 @@ const CON_FOTO: Moto = {
   cc: 471,
   tipo: 'NAKED',
   precio: 32_990_000,
+  imagen: '/motos/honda/cb500-hornet.webp',
 };
 
-const SIN_FOTO: Moto = { ...CON_FOTO, id: '99', modelo: 'Moto sin foto' };
+const SIN_FOTO: Moto = { ...CON_FOTO, id: '99', modelo: 'Moto sin foto', imagen: undefined };
 
 function abrir(moto: Moto): HTMLElement {
   TestBed.configureTestingModule({ providers: [provideRouter([])] });

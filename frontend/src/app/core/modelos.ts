@@ -44,6 +44,7 @@ export interface Accesorio {
   precio: number;
   stock: number;
   ilustracion: IlustracionAccesorio;
+  imagen?: string;
 }
 
 export interface Asesor {

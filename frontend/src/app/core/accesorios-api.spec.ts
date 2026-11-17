@@ -42,6 +42,12 @@ describe('Accesorios desde la API', () => {
     });
   });
 
+  it('usa la imagen que viene de la base de datos', () => {
+    const conFoto = accesorioDesdeApi({ ...CASCO, imagen_url: '/accesorios/cas-001.webp' });
+    expect(conFoto.imagen).toBe('/accesorios/cas-001.webp');
+    expect(accesorioDesdeApi(CASCO).imagen).toBeUndefined();
+  });
+
   it('si no llega el fabricante no se muestra', () => {
     expect(accesorioDesdeApi({ ...CASCO, fabricante: '' }).fabricante).toBeUndefined();
   });

@@ -113,7 +113,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 85.0,
         "costo_mantenimiento_km_cop": 55,
         "descripcion": DESC_CB500_HORNET,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cb500-hornet.webp",
     },
     {
         "modelo": "CB650R",
@@ -125,7 +125,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 58.0,
         "costo_mantenimiento_km_cop": 120,
         "descripcion": DESC_CB650R,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cb650r.webp",
     },
     {
         "modelo": "CB750 HORNET",
@@ -137,7 +137,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 65.0,
         "costo_mantenimiento_km_cop": 95,
         "descripcion": DESC_CB750_HORNET,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cb750-hornet.webp",
     },
     {
         "modelo": "CB1000F",
@@ -149,7 +149,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 45.0,
         "costo_mantenimiento_km_cop": 180,
         "descripcion": DESC_CB1000F,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cb1000f.webp",
     },
     {
         "modelo": "CB1000 HORNET SP",
@@ -161,7 +161,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 40.0,
         "costo_mantenimiento_km_cop": 210,
         "descripcion": DESC_CB1000_HORNET_SP,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cb1000-hornet-sp.webp",
     },
     {
         "modelo": "CBR500R",
@@ -173,7 +173,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 85.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_CBR500R,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cbr500r.webp",
     },
     {
         "modelo": "CBR650R",
@@ -185,7 +185,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 58.0,
         "costo_mantenimiento_km_cop": 130,
         "descripcion": DESC_CBR650R,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cbr650r.webp",
     },
     {
         "modelo": "CBR600RR",
@@ -197,7 +197,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 48.0,
         "costo_mantenimiento_km_cop": 170,
         "descripcion": DESC_CBR600RR,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cbr600rr.webp",
     },
     {
         "modelo": "CBR1000RR",
@@ -209,7 +209,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 40.0,
         "costo_mantenimiento_km_cop": 220,
         "descripcion": DESC_CBR1000RR,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cbr1000rr.webp",
     },
     {
         "modelo": "CBR1000RR-R FIREBLADE SP",
@@ -221,7 +221,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 35.0,
         "costo_mantenimiento_km_cop": 280,
         "descripcion": DESC_CBR1000RR_R_FIREBLADE_SP,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/cbr1000rr-r-fireblade-sp.webp",
     },
     {
         "modelo": "CRF1100L AFRICA TWIN",
@@ -233,7 +233,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 52.0,
         "costo_mantenimiento_km_cop": 130,
         "descripcion": DESC_CRF1100L_AFRICA_TWIN,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/crf1100l-africa-twin.webp",
     },
     {
         "modelo": "AFRICA TWIN ADVENTURE SPORTS",
@@ -245,7 +245,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 50.0,
         "costo_mantenimiento_km_cop": 145,
         "descripcion": DESC_AFRICA_TWIN_ADVENTURE_SPORTS,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/africa-twin-adventure-sports.webp",
     },
     {
         "modelo": "XL750 TRANSALP",
@@ -257,7 +257,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 68.0,
         "costo_mantenimiento_km_cop": 95,
         "descripcion": DESC_XL750_TRANSALP,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/xl750-transalp.webp",
     },
     {
         "modelo": "NC750X",
@@ -269,7 +269,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 82.0,
         "costo_mantenimiento_km_cop": 75,
         "descripcion": DESC_NC750X,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/nc750x.webp",
     },
     {
         "modelo": "NX500",
@@ -281,7 +281,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 88.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_NX500,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/nx500.webp",
     },
     {
         "modelo": "CRF450RL",
@@ -293,7 +293,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 70.0,
         "costo_mantenimiento_km_cop": 95,
         "descripcion": DESC_CRF450RL,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/crf450rl.webp",
     },
     {
         "modelo": "CRF300L",
@@ -305,7 +305,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 95.0,
         "costo_mantenimiento_km_cop": 50,
         "descripcion": DESC_CRF300L,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/crf300l.webp",
     },
     {
         "modelo": "XR650L",
@@ -317,7 +317,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 65.0,
         "costo_mantenimiento_km_cop": 75,
         "descripcion": DESC_XR650L,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/xr650l.webp",
     },
     {
         "modelo": "XR150L",
@@ -329,7 +329,7 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 125.0,
         "costo_mantenimiento_km_cop": 35,
         "descripcion": DESC_XR150L,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/xr150l.webp",
     },
     {
         "modelo": "XR190L",
@@ -341,6 +341,6 @@ MOTOS_HONDA: list[dict[str, Any]] = [
         "consumo_km_galon": 110.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_XR190L,
-        "imagen_url": "",
+        "imagen_url": "/motos/honda/xr190l.webp",
     },
 ]

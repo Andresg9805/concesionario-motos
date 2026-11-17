@@ -543,7 +543,7 @@ export class DetalleMoto {
   });
   protected readonly foto = computed(() => {
     const moto = this.detalle();
-    return moto ? fotoDeMoto(claveDeMarca(moto.marca), moto.modelo, moto.imagen_url) : null;
+    return moto ? fotoDeMoto(moto.imagen_url) : null;
   });
 
   protected reintentar(): void {
