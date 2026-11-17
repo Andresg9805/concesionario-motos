@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { cuotaMensual, licenciaPara } from '../core/finanzas';
+import { fotoDeMoto } from '../core/fotos-motos';
 import { MARCAS, NOMBRE_TIPO, SILUETA_TIPO } from '../core/marcas';
 import { Moto } from '../core/modelos';
 import { UiService } from '../core/ui.service';
@@ -14,19 +15,33 @@ import { SiluetaMoto } from './silueta-moto';
   host: { class: 'block' },
   template: `
     <article
-      class="flex h-full flex-col overflow-hidden rounded-lg border"
+      class="tarjeta-hover group flex h-full flex-col overflow-hidden rounded-lg border"
       [class]="marco()"
       [style.--mark]="marca().color"
     >
-      <div
-        class="relative aspect-[12/7] max-w-full px-6 pt-4"
+      <a
+        [routerLink]="['/motos', moto().id]"
+        tabindex="-1"
+        aria-hidden="true"
+        class="relative block aspect-[12/7] max-w-full overflow-hidden"
         [class]="
-          banda()
-            ? 'bg-[color-mix(in_srgb,var(--on-band)_7%,transparent)] text-onband'
-            : 'bg-surface2 text-fg'
+          foto()
+            ? 'bg-white'
+            : banda()
+              ? 'bg-[color-mix(in_srgb,var(--on-band)_7%,transparent)] px-6 pt-4 text-onband'
+              : 'bg-surface2 px-6 pt-4 text-fg'
         "
       >
-        <app-silueta-moto [tipo]="silueta()" />
+        @if (foto(); as src) {
+          <img
+            [src]="src"
+            [alt]="marca().nombre + ' ' + moto().modelo"
+            loading="lazy"
+            class="h-full w-full object-contain transition-transform duration-300 motion-safe:group-hover:scale-105"
+          />
+        } @else {
+          <app-silueta-moto [tipo]="silueta()" />
+        }
         <span
           class="absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-bold"
           [class]="
@@ -45,7 +60,7 @@ import { SiluetaMoto } from './silueta-moto';
             >推奨 · Recomendada</span
           >
         }
-      </div>
+      </a>
       <div class="flex flex-1 flex-col gap-3 p-4">
         <div>
           <p class="flex items-center gap-1.5 text-xs" [class]="atenuado()">
@@ -126,6 +141,9 @@ export class TarjetaMoto {
   protected readonly cuota = computed(() => cuotaMensual(this.moto().precio));
   protected readonly tipo = computed(() => NOMBRE_TIPO[this.moto().tipo]);
   protected readonly silueta = computed(() => SILUETA_TIPO[this.moto().tipo]);
+  protected readonly foto = computed(() =>
+    fotoDeMoto(this.moto().marca, this.moto().modelo, this.moto().imagen),
+  );
   protected readonly marco = computed(() => {
     const fondo = this.banda()
       ? 'bg-[color-mix(in_srgb,var(--on-band)_4%,transparent)]'

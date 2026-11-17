@@ -99,7 +99,7 @@ interface OpcionMarca {
               role="radio"
               [attr.aria-checked]="opcion.clave === marcaService.actual()"
               [attr.tabindex]="opcion.clave === marcaService.actual() ? 0 : -1"
-              class="brand-card group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-lg border border-bandline p-4 text-left hover:border-bandmuted"
+              class="brand-card tarjeta-hover group relative flex min-h-[112px] flex-col justify-between overflow-hidden rounded-lg border border-bandline p-4 text-left hover:border-bandmuted"
               (click)="marcaService.elegir(opcion.clave)"
             >
               <span

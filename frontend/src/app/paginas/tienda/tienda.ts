@@ -78,7 +78,9 @@ type Filtro = 'Todos' | CategoriaAccesorio;
       </div>
       <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         @for (accesorio of lista(); track accesorio.id) {
-          <article class="flex flex-col overflow-hidden rounded-lg border border-line bg-bg">
+          <article
+            class="tarjeta-hover flex flex-col overflow-hidden rounded-lg border border-line bg-bg"
+          >
             <div
               class="relative aspect-[4/3] max-w-full bg-surface2 p-8"
               style="color: color-mix(in srgb, var(--fg) 88%, var(--bg))"
