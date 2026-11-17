@@ -54,3 +54,5 @@ class SesionSalida(BaseModel):
     nombre: str
     rol: Rol
     marca: str | None = None
+    correo: str = ""
+    celular: str = ""
