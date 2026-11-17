@@ -1,6 +1,7 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { CatalogoService } from './catalogo.service';
 import { Accesorio } from './modelos';
+import { SesionService } from './sesion.service';
 
 export interface ItemCarrito {
   accesorioId: string;
@@ -15,9 +16,13 @@ export interface LineaCarrito {
 
 const LLAVE = 'cm-carrito';
 
-function leer(): ItemCarrito[] {
+export function llaveDelCarrito(usuarioId: string | null): string {
+  return usuarioId ? `${LLAVE}:${usuarioId}` : LLAVE;
+}
+
+function leer(llave: string): ItemCarrito[] {
   try {
-    const datos = JSON.parse(localStorage.getItem(LLAVE) ?? '[]');
+    const datos = JSON.parse(localStorage.getItem(llave) ?? '[]');
     return Array.isArray(datos)
       ? datos.filter(
           (item): item is ItemCarrito =>
@@ -29,10 +34,28 @@ function leer(): ItemCarrito[] {
   }
 }
 
+function escribir(llave: string, items: ItemCarrito[]): void {
+  try {
+    if (items.length > 0) {
+      localStorage.setItem(llave, JSON.stringify(items));
+    } else {
+      localStorage.removeItem(llave);
+    }
+  } catch {
+    return;
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class CarritoService {
   private readonly catalogo = inject(CatalogoService);
-  private readonly items = signal<ItemCarrito[]>(leer());
+  private readonly sesion = inject(SesionService);
+  private readonly cambios = signal(0);
+  private readonly llave = computed(() => llaveDelCarrito(this.sesion.usuario()?.id ?? null));
+  private readonly items = computed<ItemCarrito[]>(() => {
+    this.cambios();
+    return leer(this.llave());
+  });
 
   readonly lineas = computed<LineaCarrito[]>(() =>
     this.items().flatMap((item) => {
@@ -51,11 +74,9 @@ export class CarritoService {
 
   constructor() {
     effect(() => {
-      const items = this.items();
-      try {
-        localStorage.setItem(LLAVE, JSON.stringify(items));
-      } catch {
-        return;
+      const usuario = this.sesion.usuario();
+      if (usuario) {
+        untracked(() => this.traerCarritoDeVisitante(llaveDelCarrito(usuario.id)));
       }
     });
   }
@@ -75,17 +96,34 @@ export class CarritoService {
 
   fijar(accesorio: Accesorio, cantidad: number): void {
     const limite = Math.max(0, Math.min(Math.floor(cantidad), accesorio.stock));
-    this.items.update((items) => {
-      const otros = items.filter((item) => item.accesorioId !== accesorio.id);
-      return limite > 0 ? [...otros, { accesorioId: accesorio.id, cantidad: limite }] : otros;
-    });
+    const otros = this.items().filter((item) => item.accesorioId !== accesorio.id);
+    this.guardar(limite > 0 ? [...otros, { accesorioId: accesorio.id, cantidad: limite }] : otros);
   }
 
   quitar(accesorioId: string): void {
-    this.items.update((items) => items.filter((item) => item.accesorioId !== accesorioId));
+    this.guardar(this.items().filter((item) => item.accesorioId !== accesorioId));
   }
 
   vaciar(): void {
-    this.items.set([]);
+    this.guardar([]);
+  }
+
+  private guardar(items: ItemCarrito[]): void {
+    escribir(this.llave(), items);
+    this.cambios.update((n) => n + 1);
+  }
+
+  private traerCarritoDeVisitante(llaveUsuario: string): void {
+    const visitante = leer(LLAVE);
+    if (visitante.length === 0) {
+      return;
+    }
+    const propios = leer(llaveUsuario);
+    const nuevos = visitante.filter(
+      (item) => !propios.some((propio) => propio.accesorioId === item.accesorioId),
+    );
+    escribir(llaveUsuario, [...propios, ...nuevos]);
+    escribir(LLAVE, []);
+    this.cambios.update((n) => n + 1);
   }
 }
