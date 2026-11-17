@@ -85,7 +85,17 @@ type Filtro = 'Todos' | CategoriaAccesorio;
               class="relative aspect-[4/3] max-w-full bg-surface2 p-8"
               style="color: color-mix(in srgb, var(--fg) 88%, var(--bg))"
             >
-              <app-ilustracion-accesorio [tipo]="accesorio.ilustracion" />
+              @if (accesorio.imagen) {
+                <img
+                  [src]="accesorio.imagen"
+                  [alt]="accesorio.nombre"
+                  class="h-full w-full object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+              } @else {
+                <app-ilustracion-accesorio [tipo]="accesorio.ilustracion" />
+              }
               <span
                 class="absolute top-3 left-3 rounded bg-surface px-2 py-0.5 text-[11px] font-bold text-muted"
                 >{{ accesorio.categoria }}</span

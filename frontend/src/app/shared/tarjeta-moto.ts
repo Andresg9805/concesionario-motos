@@ -141,9 +141,7 @@ export class TarjetaMoto {
   protected readonly cuota = computed(() => cuotaMensual(this.moto().precio));
   protected readonly tipo = computed(() => NOMBRE_TIPO[this.moto().tipo]);
   protected readonly silueta = computed(() => SILUETA_TIPO[this.moto().tipo]);
-  protected readonly foto = computed(() =>
-    fotoDeMoto(this.moto().marca, this.moto().modelo, this.moto().imagen),
-  );
+  protected readonly foto = computed(() => fotoDeMoto(this.moto().imagen));
   protected readonly marco = computed(() => {
     const fondo = this.banda()
       ? 'bg-[color-mix(in_srgb,var(--on-band)_4%,transparent)]'

@@ -119,7 +119,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 130.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_Z125,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/z125.webp",
     },
     {
         "modelo": "Z500",
@@ -131,7 +131,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 95.0,
         "costo_mantenimiento_km_cop": 65,
         "descripcion": DESC_Z500,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/z500.webp",
     },
     {
         "modelo": "Z900",
@@ -143,7 +143,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 55.0,
         "costo_mantenimiento_km_cop": 110,
         "descripcion": DESC_Z900,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/z900.webp",
     },
     {
         "modelo": "Z900 SE",
@@ -155,7 +155,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 54.0,
         "costo_mantenimiento_km_cop": 125,
         "descripcion": DESC_Z900_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/z900-se.webp",
     },
     {
         "modelo": "Z H2 SE",
@@ -167,7 +167,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 38.0,
         "costo_mantenimiento_km_cop": 220,
         "descripcion": DESC_Z_H2_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/z-h2-se.webp",
     },
     {
         "modelo": "NINJA H2R",
@@ -179,7 +179,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 30.0,
         "costo_mantenimiento_km_cop": 350,
         "descripcion": DESC_NINJA_H2R,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/ninja-h2r.webp",
     },
     {
         "modelo": "NINJA H2",
@@ -191,7 +191,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 35.0,
         "costo_mantenimiento_km_cop": 250,
         "descripcion": DESC_NINJA_H2,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/ninja-h2.webp",
     },
     {
         "modelo": "NINJA H2 CARBON",
@@ -203,7 +203,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 35.0,
         "costo_mantenimiento_km_cop": 260,
         "descripcion": DESC_NINJA_H2_CARBON,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/ninja-h2-carbon.webp",
     },
     {
         "modelo": "NINJA H2 SX SE",
@@ -215,7 +215,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 42.0,
         "costo_mantenimiento_km_cop": 210,
         "descripcion": DESC_NINJA_H2_SX_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/ninja-h2-sx-se.webp",
     },
     {
         "modelo": "NINJA 1100SX SE",
@@ -227,7 +227,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 50.0,
         "costo_mantenimiento_km_cop": 140,
         "descripcion": DESC_NINJA_1100_SX_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/ninja-1100sx-se.webp",
     },
     {
         "modelo": "VERSYS 1100 SE",
@@ -239,7 +239,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 48.0,
         "costo_mantenimiento_km_cop": 140,
         "descripcion": DESC_VERSYS_1100_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/versys-1100-se.webp",
     },
     {
         "modelo": "VERSYS 900 SE",
@@ -251,7 +251,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 55.0,
         "costo_mantenimiento_km_cop": 115,
         "descripcion": DESC_VERSYS_900_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/versys-900-se.webp",
     },
     {
         "modelo": "VERSYS 650",
@@ -263,7 +263,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 75.0,
         "costo_mantenimiento_km_cop": 80,
         "descripcion": DESC_VERSYS_650,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/versys-650.webp",
     },
     {
         "modelo": "KLE650 SE",
@@ -275,7 +275,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 70.0,
         "costo_mantenimiento_km_cop": 85,
         "descripcion": DESC_KLE_650_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/kle650-se.webp",
     },
     {
         "modelo": "KLE500 SE",
@@ -287,7 +287,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 92.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_KLE_500_SE,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/kle500-se.webp",
     },
     {
         "modelo": "KLX 300",
@@ -299,7 +299,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 90.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_KLX_300,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/klx-300.webp",
     },
     {
         "modelo": "KLX 230 S",
@@ -311,7 +311,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 110.0,
         "costo_mantenimiento_km_cop": 45,
         "descripcion": DESC_KLX_230_S,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/klx-230-s.webp",
     },
     {
         "modelo": "KLX 150",
@@ -323,7 +323,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 100.0,
         "costo_mantenimiento_km_cop": 40,
         "descripcion": DESC_KLX_150,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/klx-150.webp",
     },
     {
         "modelo": "KLX 230 DF",
@@ -335,7 +335,7 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 100.0,
         "costo_mantenimiento_km_cop": 50,
         "descripcion": DESC_KLX_230_DF,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/klx-230-df.webp",
     },
     {
         "modelo": "KLX 300 DF",
@@ -347,6 +347,6 @@ MOTOS_KAWASAKI: list[dict[str, Any]] = [
         "consumo_km_galon": 90.0,
         "costo_mantenimiento_km_cop": 60,
         "descripcion": DESC_KLX_300_DF,
-        "imagen_url": "",
+        "imagen_url": "/motos/kawasaki/klx-300-df.webp",
     },
 ]

@@ -34,3 +34,5 @@ def seed_motos(db: Session) -> None:
             if existente is None:
                 columnas = {clave: valor for clave, valor in datos.items() if clave != "tipo"}
                 db.add(Moto(**columnas, marca_id=marca.id, tipo_id=tipos[datos["tipo"]]))
+            elif not existente.imagen_url and datos["imagen_url"]:
+                existente.imagen_url = datos["imagen_url"]

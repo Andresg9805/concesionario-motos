@@ -46,6 +46,7 @@ export function accesorioDesdeApi(dato: AccesorioApi): Accesorio {
     precio: dato.precio_cop,
     stock: dato.stock,
     ilustracion: CATEGORIAS[dato.categoria]?.ilustracion ?? 'maleta',
+    imagen: dato.imagen_url?.trim() || undefined,
   };
 }
 
