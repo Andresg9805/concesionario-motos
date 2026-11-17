@@ -1,9 +1,21 @@
-import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AtencionApiService } from '../core/atencion-api';
+import { AuthService } from '../core/auth.service';
 import { cuotaMensual, licenciaPara } from '../core/finanzas';
 import { MARCAS } from '../core/marcas';
 import { Atencion, TipoAtencion } from '../core/modelos';
+import { SesionService } from '../core/sesion.service';
 import { UiService } from '../core/ui.service';
 import { CopPipe } from '../shared/cop.pipe';
 import { Icono } from '../shared/icono';
@@ -298,6 +310,9 @@ const CELULAR = /^3\d{9}$/;
 export class CotizarDialogo {
   protected readonly ui = inject(UiService);
   private readonly atencion = inject(AtencionApiService);
+  private readonly auth = inject(AuthService);
+  private readonly sesion = inject(SesionService);
+  private readonly cambios = inject(ChangeDetectorRef);
   private readonly dialogo = viewChild.required<ElementRef<HTMLDialogElement>>('dialogo');
 
   protected readonly plazos = [12, 24, 36, 48, 60];
@@ -334,12 +349,38 @@ export class CotizarDialogo {
         this.errores.set({});
         this.copiado.set(false);
         this.errorEnvio.set('');
+        untracked(() => this.llenarConLaCuenta());
         if (!dialogo.open) {
           dialogo.showModal?.();
         }
       } else if (dialogo.open) {
         dialogo.close();
       }
+    });
+  }
+
+  private cuentaDeLosDatos: string | null = null;
+
+  private llenarConLaCuenta(): void {
+    const usuario = this.sesion.usuario();
+    const cuenta = usuario?.rol === 'CLIENTE' ? usuario.id : null;
+    if (cuenta !== this.cuentaDeLosDatos) {
+      this.cuentaDeLosDatos = cuenta;
+      this.nombre = '';
+      this.correo = '';
+      this.celular = '';
+    }
+    if (!cuenta || (this.nombre && this.correo && this.celular)) {
+      return;
+    }
+    this.auth.perfil().subscribe({
+      next: (perfil) => {
+        this.nombre ||= perfil.nombre;
+        this.correo ||= perfil.correo;
+        this.celular ||= perfil.celular;
+        this.cambios.markForCheck();
+      },
+      error: () => undefined,
     });
   }
 

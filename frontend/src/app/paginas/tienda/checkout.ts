@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { of, switchMap } from 'rxjs';
+import { AuthService } from '../../core/auth.service';
 import { CarritoService } from '../../core/carrito.service';
 import { DatosDireccion, Departamento, TiendaApiService } from '../../core/tienda-api';
 import { SesionService } from '../../core/sesion.service';
@@ -224,6 +225,7 @@ export class Checkout {
   private readonly sesion = inject(SesionService);
   private readonly ui = inject(UiService);
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
 
   protected readonly nombre = signal(this.sesion.usuario()?.nombre ?? '');
   protected readonly telefono = signal('');
@@ -235,6 +237,23 @@ export class Checkout {
 
   protected readonly errores = signal<Partial<Record<Campo, string>>>({});
   protected readonly errorServidor = signal('');
+
+  constructor() {
+    if (this.sesion.rol() !== 'CLIENTE') {
+      return;
+    }
+    this.auth.perfil().subscribe({
+      next: (perfil) => {
+        if (!this.nombre().trim()) {
+          this.nombre.set(perfil.nombre);
+        }
+        if (!this.telefono().trim()) {
+          this.telefono.set(perfil.celular);
+        }
+      },
+      error: () => undefined,
+    });
+  }
   protected readonly enviando = signal(false);
 
   private readonly cargaDepartamentos = toSignal(this.tienda.departamentos(), {

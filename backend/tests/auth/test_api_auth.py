@@ -134,6 +134,8 @@ def test_yo_requiere_token_valido(cliente_http, asesora_yamaha):
         "nombre": "Daniela Pardo",
         "rol": "ASESOR",
         "marca": "yamaha",
+        "correo": "daniela@candela.com",
+        "celular": "3109876543",
     }
 
 
@@ -176,3 +178,18 @@ def test_cors_rechaza_otros_origenes(cliente_http):
     )
 
     assert "access-control-allow-origin" not in respuesta.headers
+
+
+def test_yo_devuelve_el_correo_y_el_celular_del_cliente(cliente_http):
+    cliente_http.post("/auth/registro", json=REGISTRO)
+    token = iniciar_sesion(cliente_http, REGISTRO["correo"], REGISTRO["contrasena"]).json()
+
+    respuesta = cliente_http.get(
+        "/auth/yo", headers={"Authorization": f"Bearer {token['access_token']}"}
+    )
+
+    assert respuesta.status_code == 200
+    cuerpo = respuesta.json()
+    assert cuerpo["rol"] == "CLIENTE"
+    assert cuerpo["correo"] == REGISTRO["correo"]
+    assert cuerpo["celular"] == REGISTRO["celular"]

@@ -11,6 +11,14 @@ export interface DatosRegistro {
   contrasena: string;
 }
 
+export interface PerfilApi {
+  id: number;
+  nombre: string;
+  rol: string;
+  correo: string;
+  celular: string;
+}
+
 interface RespuestaToken {
   access_token: string;
   token_type: string;
@@ -59,5 +67,9 @@ export class AuthService {
       map(() => undefined),
       catchError((error) => throwError(() => new Error(mensajeDeError(error, 'registrar')))),
     );
+  }
+
+  perfil(): Observable<PerfilApi> {
+    return this.api.get<PerfilApi>('/auth/yo');
   }
 }

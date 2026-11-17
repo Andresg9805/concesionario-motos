@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.api.dependencias import (
     obtener_iniciar_sesion,
     obtener_registrar_cliente,
+    obtener_repositorio_usuarios,
     obtener_sesion_actual,
 )
 from app.api.schemas.auth import (
@@ -16,6 +17,7 @@ from app.api.schemas.auth import (
 )
 from app.application.autenticacion import DatosRegistro, IniciarSesion, RegistrarCliente
 from app.domain.excepciones import CorreoYaRegistradoError, CredencialesInvalidasError
+from app.domain.puertos import RepositorioUsuarios
 from app.domain.seguridad import DatosToken
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
@@ -68,7 +70,16 @@ def iniciar_sesion(
 
 
 @router.get("/yo", response_model=SesionSalida)
-def sesion_actual(sesion: Annotated[DatosToken, Depends(obtener_sesion_actual)]) -> SesionSalida:
+def sesion_actual(
+    sesion: Annotated[DatosToken, Depends(obtener_sesion_actual)],
+    usuarios: Annotated[RepositorioUsuarios, Depends(obtener_repositorio_usuarios)],
+) -> SesionSalida:
+    usuario = usuarios.buscar_por_id(sesion.usuario_id)
     return SesionSalida(
-        id=sesion.usuario_id, nombre=sesion.nombre, rol=sesion.rol, marca=sesion.marca
+        id=sesion.usuario_id,
+        nombre=sesion.nombre,
+        rol=sesion.rol,
+        marca=sesion.marca,
+        correo=usuario.correo if usuario else "",
+        celular=usuario.telefono if usuario else "",
     )
