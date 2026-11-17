@@ -21,6 +21,7 @@ export interface Moto {
   cc: number;
   tipo: TipoMoto;
   precio: number;
+  imagen?: string;
   recomendada?: boolean;
 }
 

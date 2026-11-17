@@ -95,6 +95,7 @@ export function motoDesdeApi(moto: MotoApi): Moto {
     cc: moto.cilindraje_cc,
     tipo: moto.tipo,
     precio: moto.precio_cop,
+    imagen: moto.imagen_url || undefined,
   };
 }
 

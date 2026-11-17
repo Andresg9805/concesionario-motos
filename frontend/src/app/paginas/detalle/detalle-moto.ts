@@ -15,6 +15,7 @@ import {
   motoDesdeApi,
 } from '../../core/motos-api';
 import { CatalogoService } from '../../core/catalogo.service';
+import { fotoDeMoto } from '../../core/fotos-motos';
 import { UiService } from '../../core/ui.service';
 import { CopPipe } from '../../shared/cop.pipe';
 import { Icono } from '../../shared/icono';
@@ -77,12 +78,23 @@ const USOS: { id: UsoMoto; texto: string }[] = [
               [style.--mark]="colorMarca()"
               aria-labelledby="tituloMoto"
             >
-              <div class="relative rounded-lg border border-line bg-surface2 px-8 pt-10 pb-6">
+              <div
+                class="relative overflow-hidden rounded-lg border border-line"
+                [class]="foto() ? 'bg-white p-4' : 'bg-surface2 px-8 pt-10 pb-6'"
+              >
                 <span
-                  class="absolute top-4 left-4 rounded bg-surface px-2 py-0.5 text-[11px] font-bold"
+                  class="absolute top-4 left-4 z-10 rounded bg-surface px-2 py-0.5 text-[11px] font-bold"
                   >{{ tipo() }}</span
                 >
-                <app-silueta-moto [tipo]="silueta()" />
+                @if (foto(); as src) {
+                  <img
+                    [src]="src"
+                    [alt]="m.marca.nombre + ' ' + m.modelo"
+                    class="aspect-[12/7] w-full object-contain"
+                  />
+                } @else {
+                  <app-silueta-moto [tipo]="silueta()" />
+                }
               </div>
               <div class="flex flex-col gap-4">
                 <div>
@@ -528,6 +540,10 @@ export class DetalleMoto {
   protected readonly silueta = computed(() => {
     const moto = this.detalle();
     return moto ? SILUETA_TIPO[moto.tipo] : 'naked';
+  });
+  protected readonly foto = computed(() => {
+    const moto = this.detalle();
+    return moto ? fotoDeMoto(claveDeMarca(moto.marca), moto.modelo, moto.imagen_url) : null;
   });
 
   protected reintentar(): void {
