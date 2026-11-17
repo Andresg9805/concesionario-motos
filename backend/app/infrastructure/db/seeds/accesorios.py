@@ -148,7 +148,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_HON_MAN_001,
         "precio_cop": 45000,
         "stock": 15,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/hon-man-001.webp",
     },
     {
         "sku": "HON-MAN-002",
@@ -158,7 +158,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_HON_MAN_002,
         "precio_cop": 38000,
         "stock": 20,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/hon-man-002.webp",
     },
     {
         "sku": "HON-MAN-003",
@@ -168,7 +168,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_HON_MAN_003,
         "precio_cop": 62000,
         "stock": 12,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/hon-man-003.webp",
     },
     {
         "sku": "HON-MAN-004",
@@ -178,7 +178,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_HON_MAN_004,
         "precio_cop": 32000,
         "stock": 18,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/hon-man-004.webp",
     },
     {
         "sku": "HON-MAN-005",
@@ -188,7 +188,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_HON_MAN_005,
         "precio_cop": 28000,
         "stock": 25,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/hon-man-005.webp",
     },
     {
         "sku": "SHO-CHA-001",
@@ -198,7 +198,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_CHA_001,
         "precio_cop": 480000,
         "stock": 5,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-cha-001.webp",
     },
     {
         "sku": "KAW-CHA-002",
@@ -208,7 +208,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_KAW_CHA_002,
         "precio_cop": 520000,
         "stock": 4,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/kaw-cha-002.webp",
     },
     {
         "sku": "KAW-CHA-003",
@@ -218,7 +218,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_KAW_CHA_003,
         "precio_cop": 650000,
         "stock": 3,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/kaw-cha-003.webp",
     },
     {
         "sku": "HON-CHA-004",
@@ -228,7 +228,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_HON_CHA_004,
         "precio_cop": 450000,
         "stock": 6,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/hon-cha-004.webp",
     },
     {
         "sku": "YAM-CHA-005",
@@ -238,7 +238,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_YAM_CHA_005,
         "precio_cop": 310000,
         "stock": 8,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/yam-cha-005.webp",
     },
     {
         "sku": "SHO-CAS-001",
@@ -248,7 +248,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_CAS_001,
         "precio_cop": 3500000,
         "stock": 3,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-cas-001.webp",
     },
     {
         "sku": "SHO-CAS-002",
@@ -258,7 +258,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_CAS_002,
         "precio_cop": 2200000,
         "stock": 4,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-cas-002.webp",
     },
     {
         "sku": "SHO-CAS-003",
@@ -268,7 +268,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_CAS_003,
         "precio_cop": 2400000,
         "stock": 4,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-cas-003.webp",
     },
     {
         "sku": "SHO-CAS-004",
@@ -278,7 +278,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_CAS_004,
         "precio_cop": 3100000,
         "stock": 2,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-cas-004.webp",
     },
     {
         "sku": "SHO-CAS-005",
@@ -288,7 +288,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_CAS_005,
         "precio_cop": 2800000,
         "stock": 3,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-cas-005.webp",
     },
     {
         "sku": "ALP-GUA-001",
@@ -298,7 +298,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_GUA_001,
         "precio_cop": 290000,
         "stock": 7,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-gua-001.webp",
     },
     {
         "sku": "ALP-GUA-002",
@@ -308,7 +308,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_GUA_002,
         "precio_cop": 340000,
         "stock": 6,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-gua-002.webp",
     },
     {
         "sku": "ALP-GUA-003",
@@ -318,7 +318,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_GUA_003,
         "precio_cop": 210000,
         "stock": 10,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-gua-003.webp",
     },
     {
         "sku": "ALP-GUA-004",
@@ -328,7 +328,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_GUA_004,
         "precio_cop": 260000,
         "stock": 8,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-gua-004.webp",
     },
     {
         "sku": "ALP-GUA-005",
@@ -338,7 +338,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_GUA_005,
         "precio_cop": 240000,
         "stock": 9,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-gua-005.webp",
     },
     {
         "sku": "SHO-MAL-001",
@@ -348,7 +348,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SHO_MAL_001,
         "precio_cop": 550000,
         "stock": 5,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sho-mal-001.webp",
     },
     {
         "sku": "GIV-MAL-002",
@@ -358,7 +358,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_GIV_MAL_002,
         "precio_cop": 2100000,
         "stock": 2,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/giv-mal-002.webp",
     },
     {
         "sku": "GIV-MAL-003",
@@ -368,7 +368,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_GIV_MAL_003,
         "precio_cop": 650000,
         "stock": 4,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/giv-mal-003.webp",
     },
     {
         "sku": "GIV-MAL-004",
@@ -378,7 +378,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_GIV_MAL_004,
         "precio_cop": 2300000,
         "stock": 2,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/giv-mal-004.webp",
     },
     {
         "sku": "GIV-MAL-005",
@@ -388,7 +388,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_GIV_MAL_005,
         "precio_cop": 2450000,
         "stock": 3,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/giv-mal-005.webp",
     },
     {
         "sku": "ALP-ROD-001",
@@ -398,7 +398,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_ROD_001,
         "precio_cop": 450000,
         "stock": 5,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-rod-001.webp",
     },
     {
         "sku": "ALP-ROD-002",
@@ -408,7 +408,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_ROD_002,
         "precio_cop": 380000,
         "stock": 6,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-rod-002.webp",
     },
     {
         "sku": "ALP-ROD-003",
@@ -418,7 +418,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_ROD_003,
         "precio_cop": 320000,
         "stock": 7,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-rod-003.webp",
     },
     {
         "sku": "ALP-ROD-004",
@@ -428,7 +428,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_ROD_004,
         "precio_cop": 490000,
         "stock": 4,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-rod-004.webp",
     },
     {
         "sku": "ALP-ROD-005",
@@ -438,7 +438,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_ROD_005,
         "precio_cop": 580000,
         "stock": 3,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-rod-005.webp",
     },
     {
         "sku": "ALP-HOM-001",
@@ -448,7 +448,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_HOM_001,
         "precio_cop": 210000,
         "stock": 8,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-hom-001.webp",
     },
     {
         "sku": "ALP-HOM-002",
@@ -458,7 +458,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_ALP_HOM_002,
         "precio_cop": 190000,
         "stock": 8,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/alp-hom-002.webp",
     },
     {
         "sku": "SAS-HOM-003",
@@ -468,7 +468,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SAS_HOM_003,
         "precio_cop": 150000,
         "stock": 10,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sas-hom-003.webp",
     },
     {
         "sku": "SAS-HOM-004",
@@ -478,7 +478,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SAS_HOM_004,
         "precio_cop": 130000,
         "stock": 10,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sas-hom-004.webp",
     },
     {
         "sku": "SAS-HOM-005",
@@ -488,7 +488,7 @@ ACCESORIOS_INICIALES: list[dict[str, Any]] = [
         "descripcion": DESC_SAS_HOM_005,
         "precio_cop": 170000,
         "stock": 9,
-        "imagen_url": "",
+        "imagen_url": "/accesorios/sas-hom-005.webp",
     },
 ]
 
@@ -497,16 +497,20 @@ def seed_accesorios(db: Session) -> None:
     categorias = {c.clave: c.id for c in db.scalars(select(CategoriaAccesorio))}
     fabricantes = {f.nombre: f.id for f in db.scalars(select(Fabricante))}
     for datos in ACCESORIOS_INICIALES:
-        if db.scalar(select(Accesorio).where(Accesorio.sku == datos["sku"])) is None:
-            columnas = {
-                clave: valor
-                for clave, valor in datos.items()
-                if clave not in ("categoria", "fabricante")
-            }
-            db.add(
-                Accesorio(
-                    **columnas,
-                    categoria_id=categorias[datos["categoria"]],
-                    fabricante_id=fabricantes[datos["fabricante"]],
-                )
+        existente = db.scalar(select(Accesorio).where(Accesorio.sku == datos["sku"]))
+        if existente is not None:
+            if not existente.imagen_url and datos["imagen_url"]:
+                existente.imagen_url = datos["imagen_url"]
+            continue
+        columnas = {
+            clave: valor
+            for clave, valor in datos.items()
+            if clave not in ("categoria", "fabricante")
+        }
+        db.add(
+            Accesorio(
+                **columnas,
+                categoria_id=categorias[datos["categoria"]],
+                fabricante_id=fabricantes[datos["fabricante"]],
             )
+        )
