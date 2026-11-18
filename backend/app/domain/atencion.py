@@ -4,6 +4,7 @@ from datetime import date, datetime
 from enum import StrEnum
 
 from app.domain.catalogo import Marca, Moto, PlanCredito
+from app.domain.estados_cotizacion import EstadoAtencion, EstadoDeCotizacion, estado_de
 from app.domain.excepciones import TestDriveInvalidoError, TransicionInvalidaError
 
 PATRON_CODIGO = re.compile(r"^CM-[A-Z0-9]{4}$")
@@ -18,29 +19,6 @@ class Rol(StrEnum):
     CLIENTE = "CLIENTE"
     ASESOR = "ASESOR"
     ADMIN = "ADMIN"
-
-
-class EstadoAtencion(StrEnum):
-    NUEVO = "NUEVO"
-    CONTACTADO = "CONTACTADO"
-    TEST_DRIVE = "TEST_DRIVE"
-    NEGOCIANDO = "NEGOCIANDO"
-    VENDIDO = "VENDIDO"
-    DESCARTADO = "DESCARTADO"
-
-
-TRANSICIONES_ATENCION: dict[EstadoAtencion, set[EstadoAtencion]] = {
-    EstadoAtencion.NUEVO: {EstadoAtencion.CONTACTADO, EstadoAtencion.DESCARTADO},
-    EstadoAtencion.CONTACTADO: {
-        EstadoAtencion.TEST_DRIVE,
-        EstadoAtencion.NEGOCIANDO,
-        EstadoAtencion.DESCARTADO,
-    },
-    EstadoAtencion.TEST_DRIVE: {EstadoAtencion.NEGOCIANDO, EstadoAtencion.DESCARTADO},
-    EstadoAtencion.NEGOCIANDO: {EstadoAtencion.VENDIDO, EstadoAtencion.DESCARTADO},
-    EstadoAtencion.VENDIDO: set(),
-    EstadoAtencion.DESCARTADO: set(),
-}
 
 
 class EstadoTestDrive(StrEnum):
@@ -125,15 +103,15 @@ class Cotizacion:
     def cuota_mensual(self) -> int:
         return self.plan.cuota_mensual()
 
+    @property
+    def situacion(self) -> EstadoDeCotizacion:
+        return estado_de(self.estado)
+
     def esta_abierta(self) -> bool:
-        return self.estado not in (EstadoAtencion.VENDIDO, EstadoAtencion.DESCARTADO)
+        return self.situacion.esta_abierta()
 
     def cambiar_estado(self, nuevo: EstadoAtencion) -> None:
-        if nuevo not in TRANSICIONES_ATENCION[self.estado]:
-            raise TransicionInvalidaError(
-                f"No se puede pasar de {self.estado.value} a {nuevo.value}"
-            )
-        self.estado = nuevo
+        self.estado = self.situacion.pasar_a(nuevo).clave
 
 
 @dataclass(kw_only=True)

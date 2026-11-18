@@ -8,6 +8,7 @@ import { CatalogoService } from '../../../core/catalogo.service';
 import { FiltrosService } from '../../../core/filtros.service';
 import { formatoCop, leerPesos, precioMaximoPorCuota } from '../../../core/finanzas';
 import { MarcaService } from '../../../core/marca.service';
+import { MotosApiService } from '../../../core/motos-api';
 import { MARCAS } from '../../../core/marcas';
 import { Atencion, CategoriaLicencia } from '../../../core/modelos';
 import { UiService } from '../../../core/ui.service';
@@ -172,6 +173,9 @@ import { Icono } from '../../../shared/icono';
                   {{ nombreMarca(atencion) }} {{ atencion.moto }} · Asesor:
                   {{ atencion.asesor.nombre }}{{ atencion.ejemplo ? ' · código de ejemplo' : '' }}
                 </p>
+                @if (atencion.mensaje) {
+                  <p class="mt-2 font-medium">{{ atencion.mensaje }}</p>
+                }
                 <ol class="mt-3 flex flex-wrap gap-1.5">
                   @for (paso of pasos(); track paso; let i = $index) {
                     <li
@@ -202,6 +206,7 @@ export class Cotizar {
   private readonly catalogo = inject(CatalogoService);
   private readonly marcaService = inject(MarcaService);
   private readonly atencionApi = inject(AtencionApiService);
+  private readonly motosApi = inject(MotosApiService);
   private readonly ui = inject(UiService);
 
   protected readonly plazos = [12, 24, 36, 48, 60];
@@ -259,7 +264,21 @@ export class Cotizar {
       return;
     }
     this.errorCuota.set('');
-    const maximo = precioMaximoPorCuota(cuota, leerPesos(this.inicial), this.plazo);
+    const inicial = leerPesos(this.inicial);
+    this.motosApi
+      .porCuota({
+        cuota_maxima_cop: cuota,
+        cuota_inicial_cop: inicial,
+        plazo_meses: this.plazo,
+        licencia: this.licencia,
+      })
+      .subscribe({
+        next: (respuesta) => this.mostrarResultado(respuesta.precio_maximo_cop),
+        error: () => this.mostrarResultado(precioMaximoPorCuota(cuota, inicial, this.plazo)),
+      });
+  }
+
+  private mostrarResultado(maximo: number): void {
     this.filtros.precioMaximo.set(maximo);
     this.filtros.rango.set('todos');
     this.filtros.segmento.set(this.licencia === 'A1' ? 'a1' : 'todas');

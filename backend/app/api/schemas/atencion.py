@@ -91,6 +91,7 @@ class AtencionSalida(BaseModel):
     moto: MotoAtencionSalida
     asesor: AsesorAtencionSalida
     cuota_mensual_cop: int | None
+    mensaje: str = ""
 
     @classmethod
     def campos(cls, atencion: Atencion) -> dict[str, object]:
@@ -107,6 +108,11 @@ class AtencionSalida(BaseModel):
             ),
             "cuota_mensual_cop": (
                 atencion.cuota_mensual() if isinstance(atencion, Cotizacion) else None
+            ),
+            "mensaje": (
+                atencion.situacion.mensaje_para_cliente()
+                if isinstance(atencion, Cotizacion)
+                else ""
             ),
         }
 

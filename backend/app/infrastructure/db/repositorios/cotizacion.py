@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.domain.atencion import Cotizacion, EstadoAtencion
 from app.domain.catalogo import PlanCredito
+from app.domain.estados_cotizacion import ESTADOS_CERRADOS
 from app.domain.puertos import RepositorioCotizaciones
 from app.infrastructure.db.repositorios.conversiones import (
     cliente_a_dominio,
@@ -17,7 +18,7 @@ from app.infrastructure.models.moto import Moto as MotoModelo
 from app.infrastructure.models.persona import Persona as PersonaModelo
 from app.infrastructure.models.usuario import Usuario as UsuarioModelo
 
-ESTADOS_CERRADOS = (EstadoAtencion.VENDIDO.value, EstadoAtencion.DESCARTADO.value)
+ESTADOS_CERRADOS_BD = tuple(estado.value for estado in ESTADOS_CERRADOS)
 
 
 def _a_dominio(modelo: CotizacionModelo) -> Cotizacion:
@@ -112,7 +113,7 @@ class RepositorioCotizacionesSQLAlchemy(RepositorioCotizaciones):
             .join(CotizacionModelo.asesor)
             .where(
                 AsesorModelo.marca_id == marca_id,
-                CotizacionModelo.estado_atencion.notin_(ESTADOS_CERRADOS),
+                CotizacionModelo.estado_atencion.notin_(ESTADOS_CERRADOS_BD),
             )
             .group_by(CotizacionModelo.asesor_id)
         ).all()

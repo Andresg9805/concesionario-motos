@@ -1,0 +1,39 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+title Patrón Adapter: servicios externos detrás de los puertos del dominio
+
+package "Dominio" {
+  interface PasarelaPago {
+    datos_para_widget(pago): dict
+    leer_evento(cuerpo): ResultadoPago
+    consultar_transaccion(id): ResultadoPago
+  }
+  interface ProveedorTasaCambio {
+    obtener_trm(): TasaCambio
+  }
+  interface MotorReportes {
+    radar_demanda(busquedas, motos, tasa): list[FilaRadar]
+    ventas_accesorios(pedidos): ReporteVentas
+  }
+}
+
+package "Infraestructura" {
+  class PasarelaWompi
+  class ProveedorTasaCambioDatosGov
+  class MotorReportesDuckDB
+  class CircuitBreaker
+}
+
+class "API de Wompi" as Wompi
+class "datos.gov.co (TRM)" as DatosGov
+class "DuckDB" as Duck
+
+PasarelaPago <|.. PasarelaWompi
+ProveedorTasaCambio <|.. ProveedorTasaCambioDatosGov
+MotorReportes <|.. MotorReportesDuckDB
+PasarelaWompi --> Wompi : adapta
+ProveedorTasaCambioDatosGov --> CircuitBreaker : pasa por (Proxy)
+CircuitBreaker --> DatosGov
+MotorReportesDuckDB --> Duck : adapta
+@enduml

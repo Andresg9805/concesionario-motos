@@ -4,18 +4,16 @@ import secrets
 from app.domain.atencion import Usuario
 from app.domain.catalogo import Moto, PlanCredito, UsoMoto
 from app.domain.costo_real import CostoAdquisicion, CostoMensual, ParametrosCosto, PerfilUso
+from app.domain.estrategias_consumo import ESTRATEGIAS_CONSUMO, EstrategiaConsumo
 from app.domain.excepciones import CreditoInvalidoError, SinAsesorDisponibleError
-
-FACTORES_CONSUMO: dict[UsoMoto, float] = {
-    UsoMoto.CIUDAD: 1.15,
-    UsoMoto.CARRETERA: 0.95,
-    UsoMoto.TRABAJO: 1.20,
-}
 
 ALFABETO_CODIGO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 
 
 class CalculadoraCostoReal:
+    def __init__(self, estrategias: dict[UsoMoto, EstrategiaConsumo] | None = None) -> None:
+        self._estrategias = estrategias if estrategias is not None else ESTRATEGIAS_CONSUMO
+
     def calcular(
         self,
         moto: Moto,
@@ -25,8 +23,10 @@ class CalculadoraCostoReal:
     ) -> CostoMensual:
         if plan.precio_cop != moto.precio_cop:
             raise CreditoInvalidoError("El plan de crédito debe usar el precio de la moto")
-        galones = perfil.km_mes / moto.consumo_km_galon
-        gasolina = round(galones * parametros.precio_galon_cop * FACTORES_CONSUMO[perfil.uso])
+        estrategia = self._estrategias[perfil.uso]
+        gasolina = estrategia.costo_gasolina(
+            perfil.km_mes, moto.consumo_km_galon, parametros.precio_galon_cop
+        )
         return CostoMensual(
             cuota_credito_cop=plan.cuota_mensual(),
             gasolina_cop=gasolina,
