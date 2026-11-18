@@ -25,6 +25,7 @@ export interface AtencionApi {
   moto: { id: number; modelo: string; marca: MarcaResumenApi };
   asesor: { nombre: string; whatsapp: string };
   cuota_mensual_cop: number | null;
+  mensaje?: string;
 }
 
 export function atencionDesdeApi(dato: AtencionApi): Atencion {
@@ -35,6 +36,7 @@ export function atencionDesdeApi(dato: AtencionApi): Atencion {
     asesor: { nombre: dato.asesor.nombre, whatsapp: dato.asesor.whatsapp, abiertas: 0 },
     marca: claveDeMarca(dato.moto.marca),
     moto: dato.moto.modelo,
+    mensaje: dato.mensaje || undefined,
   };
 }
 

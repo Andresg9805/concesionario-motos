@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -15,8 +15,15 @@ export class ApiService {
     return `${this.base}${limpia}`;
   }
 
-  get<T>(ruta: string, parametros?: Parametros): Observable<T> {
-    return this.http.get<T>(this.url(ruta), { params: this.armarParametros(parametros) });
+  get<T>(
+    ruta: string,
+    parametros?: Parametros,
+    encabezados?: Record<string, string>,
+  ): Observable<T> {
+    return this.http.get<T>(this.url(ruta), {
+      params: this.armarParametros(parametros),
+      headers: new HttpHeaders(encabezados ?? {}),
+    });
   }
 
   post<T>(ruta: string, cuerpo: unknown): Observable<T> {

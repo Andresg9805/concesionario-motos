@@ -1,0 +1,31 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+title Patrón Strategy: gasolina según el uso de la moto
+
+class CalculadoraCostoReal {
+  _estrategias: dict[UsoMoto, EstrategiaConsumo]
+  calcular(moto, plan, perfil, parametros): CostoMensual
+}
+
+abstract class EstrategiaConsumo {
+  {abstract} factor(): float
+  {abstract} descripcion(): str
+  costo_gasolina(km_mes, consumo_km_galon, precio_galon_cop): int
+}
+
+class ConsumoCiudad {
+  factor(): 1.15
+}
+class ConsumoCarretera {
+  factor(): 0.95
+}
+class ConsumoTrabajo {
+  factor(): 1.20
+}
+
+CalculadoraCostoReal o--> "3" EstrategiaConsumo : usa según perfil.uso
+EstrategiaConsumo <|-- ConsumoCiudad
+EstrategiaConsumo <|-- ConsumoCarretera
+EstrategiaConsumo <|-- ConsumoTrabajo
+@enduml

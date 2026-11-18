@@ -88,6 +88,15 @@ describe('AtencionApiService', () => {
     expect(fallo).toBe(true);
   });
 
+  it('el seguimiento trae el mensaje del estado de la cotización', () => {
+    let encontrada: Atencion | undefined;
+    servicio.buscar('CM-4HQ8').subscribe((a) => (encontrada = a));
+    http
+      .expectOne('http://localhost:8000/seguimiento/CM-4HQ8')
+      .flush({ ...RESPUESTA, mensaje: 'Tu asesor ya se comunicó contigo.' });
+    expect(encontrada?.mensaje).toBe('Tu asesor ya se comunicó contigo.');
+  });
+
   it('el seguimiento consulta la API y si no hay servidor usa el código de ejemplo', () => {
     let encontrada: Atencion | undefined;
     servicio.buscar('cm-7k2q').subscribe((a) => (encontrada = a));

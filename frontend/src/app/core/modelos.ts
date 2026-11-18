@@ -63,4 +63,5 @@ export interface Atencion {
   marca: ClaveMarca;
   moto: string;
   ejemplo?: boolean;
+  mensaje?: string;
 }

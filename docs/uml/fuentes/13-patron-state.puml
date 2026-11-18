@@ -1,0 +1,41 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+title Patrón State: estados de la cotización
+
+class Cotizacion {
+  estado: EstadoAtencion
+  situacion: EstadoDeCotizacion
+  cambiar_estado(nuevo)
+  esta_abierta(): bool
+}
+
+abstract class EstadoDeCotizacion {
+  clave: EstadoAtencion
+  {abstract} siguientes(): frozenset
+  {abstract} mensaje_para_cliente(): str
+  esta_abierta(): bool
+  pasar_a(nuevo): EstadoDeCotizacion
+}
+
+abstract class EstadoCerrado {
+  siguientes(): frozenset
+  esta_abierta(): bool
+}
+
+class Nuevo
+class Contactado
+class EnTestDrive
+class Negociando
+class Vendido
+class Descartado
+
+Cotizacion --> EstadoDeCotizacion : delega en
+EstadoDeCotizacion <|-- Nuevo
+EstadoDeCotizacion <|-- Contactado
+EstadoDeCotizacion <|-- EnTestDrive
+EstadoDeCotizacion <|-- Negociando
+EstadoDeCotizacion <|-- EstadoCerrado
+EstadoCerrado <|-- Vendido
+EstadoCerrado <|-- Descartado
+@enduml

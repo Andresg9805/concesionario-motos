@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { CategoriaLicencia, ClaveMarca, Moto, TipoMoto } from './modelos';
 
@@ -32,6 +32,22 @@ export interface MotoDetalleApi extends MotoApi {
   consumo_km_galon: number;
   costo_mantenimiento_km_cop: number;
   descripcion: string;
+}
+
+export interface ConsultaPorCuota {
+  cuota_maxima_cop: number;
+  cuota_inicial_cop: number;
+  plazo_meses: number;
+  licencia: CategoriaLicencia;
+}
+
+export interface PorCuotaApi {
+  busqueda_id: number;
+  sesion_id: string;
+  simulaciones_en_sesion: number;
+  precio_maximo_cop: number;
+  cantidad_resultados: number;
+  motos: { moto: MotoApi; cuota_mensual_cop: number }[];
 }
 
 export interface ConsultaCostoReal {
@@ -102,6 +118,7 @@ export function motoDesdeApi(moto: MotoApi): Moto {
 @Injectable({ providedIn: 'root' })
 export class MotosApiService {
   private readonly api = inject(ApiService);
+  private sesionId = '';
 
   listar(): Observable<Moto[]> {
     return this.api.get<MotoApi[]>('/motos').pipe(map((motos) => motos.map(motoDesdeApi)));
@@ -109,6 +126,15 @@ export class MotosApiService {
 
   detalle(id: string): Observable<MotoDetalleApi> {
     return this.api.get<MotoDetalleApi>(`/motos/${encodeURIComponent(id)}`);
+  }
+
+  porCuota(consulta: ConsultaPorCuota): Observable<PorCuotaApi> {
+    const encabezados: Record<string, string> = this.sesionId
+      ? { 'X-Sesion-Id': this.sesionId }
+      : {};
+    return this.api
+      .get<PorCuotaApi>('/motos/por-cuota', { ...consulta }, encabezados)
+      .pipe(tap((respuesta) => (this.sesionId = respuesta.sesion_id)));
   }
 
   costoReal(id: string, consulta: ConsultaCostoReal): Observable<CostoRealApi> {

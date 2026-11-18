@@ -31,6 +31,7 @@ def test_crear_cotizacion_asigna_asesor_de_la_marca_y_codigo(cliente_http, clien
         },
         "asesor": {"nombre": "Laura Ruiz", "whatsapp": "3001112233"},
         "cuota_mensual_cop": cuota,
+        "mensaje": "Recibimos tu solicitud. Tu asesor te va a contactar pronto.",
     }
     assert re.match(PATRON_CODIGO, cuerpo["codigo"])
     assert clientes.buscar_por_correo("ana@correo.com").telefono == "3001234567"
@@ -64,6 +65,20 @@ def test_seguimiento_encuentra_la_atencion(cliente_http, ruta, cuerpo):
 
     assert respuesta.status_code == 200
     assert respuesta.json() == creada
+
+
+def test_seguimiento_de_cotizacion_trae_el_mensaje_de_su_estado(cliente_http):
+    creada = cliente_http.post("/cotizaciones", json=COTIZACION).json()
+
+    cuerpo = cliente_http.get(f"/seguimiento/{creada['codigo']}").json()
+
+    assert cuerpo["mensaje"] == "Recibimos tu solicitud. Tu asesor te va a contactar pronto."
+
+
+def test_seguimiento_de_test_drive_no_trae_mensaje(cliente_http):
+    creado = cliente_http.post("/test-drives", json=TEST_DRIVE).json()
+
+    assert cliente_http.get(f"/seguimiento/{creado['codigo']}").json()["mensaje"] == ""
 
 
 @pytest.mark.parametrize("codigo", ["CM-ZZZZ", "CM-12", "XX-ABCD", "cm_abcd"])
